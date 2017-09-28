@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  28 SEP 2017 13:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  28 SEP 2017 13:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -309,16 +309,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 32--62
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 67--83
-
- []
-
-
-Overfull \hbox (1.0772pt too wide) in paragraph at lines 159--159
-[] 
- []
-
-
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 14.49998pt.
  We now make it that large for the rest of the document.
@@ -337,11 +327,11 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 Here is how much of TeX's memory you used:
  4017 strings out of 493014
  54544 string characters out of 6133351
- 136014 words of memory out of 5000000
+ 133014 words of memory out of 5000000
  7471 multiletter control sequences out of 15000+600000
  11458 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,12n,43p,298b,218s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,12n,43p,298b,222s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
@@ -356,7 +346,7 @@ y8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti1
 sam10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbo
 ls/msbm10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/stmaryrd/s
 tmary10.pfb>
-Output written on Language.pdf (2 pages, 110291 bytes).
+Output written on Language.pdf (2 pages, 110180 bytes).
 PDF statistics:
  63 PDF objects out of 1000 (max. 8388607)
  45 compressed objects within 1 object stream

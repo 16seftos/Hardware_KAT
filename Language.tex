@@ -64,79 +64,79 @@
 	%\begin{tabular}{>{\small}c}
 	%	test q test
 	%\end{tabular}
-	\begin{tabular}{>{$}r<{$} >{$}c<{$} >{$}l<{$}}
-		\llbracket \cdot \rrbracket 
-			& : &
+	\begin{align*}
+		\llbracket \cdot \rrbracket\ 
+			:\ \ &
 			P(A)\times P(R) \rightarrow P(A)\times P(R) 
 			\\
 		%Falsity
 		\llbracket 0 \rrbracket(-, -)
-			& \triangleq &
+			\triangleq\ &
 			(\emptyset , \emptyset)
 			\\ %or should I use {}?
 		%Identity
 		\llbracket 1 \rrbracket(\mathit{is}, \mathit{rs})
-			& \triangleq &
+			\triangleq\ &
 			(\mathit{is}, \mathit{rs})
 			\\
-	\end{tabular}\\
-	\begin{align*}
 		%Test
 		\llbracket f=n \rrbracket(\mathit{is}, \mathit{rs})
-				& \triangleq &
+				\triangleq\ &
                 (\mathsf{filter}\ (f=n)\ \mathit{is},
                 \mathsf{filter}\ (f=n)\ \mathit{rs}) \\
                 %Sum
 		\llbracket a + b \rrbracket(\mathit{is}, \mathit{rs})
-		& \triangleq &
+		\triangleq\ &
                 \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
                 &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
                 \llbracket b \rrbracket(\mathit{is}, \mathit{rs}) \\
                 &(\mathit{is}_a \cup \mathit{is}_b,\mathit{rs}_a \cup \mathit{rs}_b) \\
+    %\end{align*}
+    %\begin{align*}
                 %Product
 		\llbracket a \cdot b \rrbracket(\mathit{is}, \mathit{rs})
-		& \triangleq &
+			\triangleq\ &
                 \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
                 &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
                 \llbracket b \rrbracket(\mathit{is}, \mathit{rs}) \\
                 &(\mathit{is}_a \cap \mathit{is}_b,\mathit{rs}_a \cap \mathit{rs}_b) \\
                 %Negation
 		\llbracket \neg a \rrbracket(\mathit{is}, \mathit{rs})
-		& \triangleq &
+			\triangleq\ &
                 \mathsf{let}\ (\mathit{is}',\mathit{rs}') = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
                 &(\mathit{is} - \mathit{is}',\mathit{rs} - \mathit{rs}') \\
 		%Action-only Slice
 		\llbracket act(p) \rrbracket(\mathit{is}, \mathit{rs})
-			& \triangleq &
-		\mathsf{let}\ (\mathit{is}',\mathit{rs}')
+			\triangleq\ &
+			\mathsf{let}\ (\mathit{is}',\mathit{rs}')
                 = \llbracket p\rrbracket(\mathit{is}, \mathit{rs})\ 
                 \mathsf{in}\ (\mathit{is}',\mathit{rs})
 			\\
 		%Result-only Slice
 		\llbracket res(p) \rrbracket(\mathit{is}, \mathit{rs})
-			& \triangleq &
+			\triangleq\ &
 		\mathsf{let}\ (\mathit{is}',\mathit{rs}')
                 = \llbracket p\rrbracket(\mathit{is}, \mathit{rs})\ 
                 \mathsf{in}\ (\mathit{is},\mathit{rs}')
 			\\
 		%Injection Action
 		\llbracket inj_{i}(i) \rrbracket(\mathit{is}, \mathit{rs})
-			& \triangleq &
+			\triangleq\ &
 			(\{i\} \cup \mathit{is}, \mathit{rs})
 			\\
 		%Injection Result
 		\llbracket inj_{r}(r) \rrbracket(\mathit{is}, \mathit{rs})
-			& \triangleq &
+			\triangleq\ &
 			(\mathit{is}, \{r\} \cup \mathit{rs})
 			\\
 		%Modification
 		\llbracket f \leftarrow n \rrbracket(\mathit{is}, \mathit{rs})
-			& \triangleq &
+			\triangleq\ &
                 (\mathsf{map}\ (f\leftarrow n)\ \mathit{is},
                  \mathsf{map}\ (f\leftarrow n)\ \mathit{rs}) \\
 		%Policy Union
 		 \llbracket p + q \rrbracket(\mathit{is}, \mathit{rs})
-                 &\triangleq &
+                \triangleq\ &
                  \mathsf{let}\ (\mathit{is}_p,\mathit{rs}_p) =
                  \llbracket p \rrbracket(\mathit{is}, \mathit{rs}) \\
                 &\mathsf{let}\ (\mathit{is}_q,\mathit{rs}_q) =
@@ -146,14 +146,13 @@
 		\dots & \dots \dots \\
 		%Policy Concatnation
 		\llbracket p \cdot q \rrbracket(\mathit{is}, \mathit{rs})
-		&
-                \triangleq &
+                \triangleq\ &
                  \mathsf{let}\ (\mathit{is}',\mathit{rs}') =
                  \llbracket p \rrbracket(\mathit{is}, \mathit{rs}) \\
                  &\llbracket q \rrbracket(\mathit{is}', \mathit{rs}') \\
 		%Policy Kleene Star
 		\llbracket p ^{*} \rrbracket \varphi
-			& \triangleq &
+			\triangleq\ &
 			()?
 			\\
 	\end{align*}
