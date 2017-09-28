@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  28 SEP 2017 12:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  28 SEP 2017 13:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -298,12 +298,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 LaTeX Font Info:    Try loading font information for U+stmry on input line 31.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
-Underfull \hbox (badness 10000) in paragraph at lines 31--63
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 64--66
+Underfull \hbox (badness 10000) in paragraph at lines 31--61
 
  []
 
@@ -324,28 +319,28 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 [2] (./Language.aux) ) 
 Here is how much of TeX's memory you used:
- 3969 strings out of 493014
- 53978 string characters out of 6133351
- 129325 words of memory out of 5000000
- 7427 multiletter control sequences out of 15000+600000
- 10551 words of font info for 40 fonts, out of 8000000 for 9000
+ 3974 strings out of 493014
+ 54032 string characters out of 6133351
+ 132325 words of memory out of 5000000
+ 7430 multiletter control sequences out of 15000+600000
+ 11458 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,16n,43p,298b,222s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,12n,43p,298b,226s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmmi6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmr6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+fonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmmi6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmr6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mss12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 sy10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cms
 y8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti1
 2.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbols/m
 sam10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbo
 ls/msbm10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/stmaryrd/s
 tmary10.pfb>
-Output written on Language.pdf (2 pages, 110193 bytes).
+Output written on Language.pdf (2 pages, 110119 bytes).
 PDF statistics:
  63 PDF objects out of 1000 (max. 8388607)
  45 compressed objects within 1 object stream

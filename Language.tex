@@ -36,25 +36,25 @@
 		Results			& $r$ 	& $::=$ 	& $\{f_{r_{1}} = v_{r_{1}} ,\ \dots\ ,\ f_{r_{k}} = v_{r_{k}}\}$\\
 	\end{tabular}\\
 	%Predicates table
-	\begin{tabular}{l c l l}
-		Predicates 	& $a,b ::=$ & $\mid$ $0$ 			& \textit{Identity}	\\
-					& 			& $\mid$ $1$ 			& \textit{False}	\\
-					&			& $\mid$ $f=n$			& \textit{Test}	\\	
-					& 			& $\mid$ $a + b$ 		& \textit{Sum}		\\
-					& 			& $\mid$ $a \cdot b$ 	& \textit{Product}	\\
-					&			& $\mid$ $\neg \ a$		& \textit{Negation}
+	\begin{tabular}{l c r l l}
+		Predicates 	& $a,b$	 	& $::=$  & $0$ 			& \textit{Identity}	\\
+					& 			& $\mid$ & $1$ 			& \textit{False}	\\
+					&			& $\mid$ & $f=n$			& \textit{Test}	\\	
+					& 			& $\mid$ & $a + b$ 		& \textit{Sum}		\\
+					& 			& $\mid$ & $a \cdot b$ 	& \textit{Product}	\\
+					&			& $\mid$ & $\neg \ a$		& \textit{Negation}
 	\end{tabular}\\
 	%Policies table
-	\begin{tabular}{l c l l}
-		Policies 	& $p,q ::=$ & $\mid$ $a$ 				& \textit{Test}		\\
-					& 			& $\mid$ $act(p)$ 			& \textit{Slice Actions}	\\
-					& 			& $\mid$ $res(p)$ 			& \textit{Slice Results}	\\
-					& 			& $\mid$ $inj_{i}$ 			& \textit{Injection Action}	\\
-					& 			& $\mid$ $inj_{r}$ 			& \textit{Injection Result}	\\
-					&			& $\mid$ $f \leftarrow n$		& \textit{Update}	\\
-					&			& $\mid$ $p + q$			& \textit{Choice}	\\
-					&			& $\mid$ $p \cdot q$		& \textit{Sequential Concatenation}	\\
-					&			& $\mid$ $p ^{*}$			& \textit{Kleene Star}
+	\begin{tabular}{l c r l l}
+		Policies 	& $p,q$ 	& $::=$  & $a$ 				& \textit{Test}		\\
+					& 			& $\mid$ & $act(p)$ 			& \textit{Slice Actions}	\\
+					& 			& $\mid$ & $res(p)$ 			& \textit{Slice Results}	\\
+					& 			& $\mid$ & $inj_{i}$ 			& \textit{Injection Action}	\\
+					& 			& $\mid$ & $inj_{r}$ 			& \textit{Injection Result}	\\
+					&			& $\mid$ & $f \leftarrow n$		& \textit{Update}	\\
+					&			& $\mid$ & $p + q$			& \textit{Choice}	\\
+					&			& $\mid$ & $p \cdot q$		& \textit{Sequential Concatenation}	\\
+					&			& $\mid$ & $p ^{*}$			& \textit{Kleene Star}
 	\end{tabular}\\
 	%Semantics Definitions
 	%$Test \triangleq Other$
