@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  28 SEP 2017 13:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  28 SEP 2017 13:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -200,36 +200,42 @@ Package: dsfont 1995/08/01 v0.1 Double stroke roman fonts
 \f@ncyO@olf=\skip56
 \f@ncyO@orf=\skip57
 )
-(./Language.aux)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/tools/array.sty
+Package: array 2014/10/28 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen118
+\extrarowheight=\dimen119
+\NC@list=\toks22
+\extratabsurround=\skip58
+\backup@length=\skip59
+) (./Language.aux)
 \openout1 = `Language.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
 \AtBeginShipoutBox=\box30
-
 (/usr/local/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count104
-\scratchdimen=\dimen118
+\scratchdimen=\dimen120
 \scratchbox=\box31
 \nofMPsegments=\count105
 \nofMParguments=\count106
-\everyMPshowfont=\toks22
+\everyMPshowfont=\toks23
 \MPscratchCnt=\count107
-\MPscratchDim=\dimen119
+\MPscratchDim=\dimen121
 \MPnumerator=\count108
 \makeMPintoPDFobject=\count109
-\everyMPtoPDFconversion=\toks23
+\everyMPtoPDFconversion=\toks24
 ) (/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2016/05/10 v0.21 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -285,21 +291,31 @@ Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 (/usr/local/texlive/2016/texmf-dist/tex/generic/ifxetex/ifxetex.sty
 Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 ))
-LaTeX Font Info:    Try loading font information for U+msa on input line 31.
+LaTeX Font Info:    Try loading font information for U+msa on input line 32.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 31.
+LaTeX Font Info:    Try loading font information for U+msb on input line 32.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+stmry on input line 31.
+LaTeX Font Info:    Try loading font information for U+stmry on input line 32.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
-Underfull \hbox (badness 10000) in paragraph at lines 31--61
+Underfull \hbox (badness 10000) in paragraph at lines 32--62
 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--83
+
+ []
+
+
+Overfull \hbox (1.0772pt too wide) in paragraph at lines 159--159
+[] 
  []
 
 
@@ -319,13 +335,13 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 [2] (./Language.aux) ) 
 Here is how much of TeX's memory you used:
- 3974 strings out of 493014
- 54032 string characters out of 6133351
- 132325 words of memory out of 5000000
- 7430 multiletter control sequences out of 15000+600000
+ 4017 strings out of 493014
+ 54544 string characters out of 6133351
+ 136014 words of memory out of 5000000
+ 7471 multiletter control sequences out of 15000+600000
  11458 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,12n,43p,298b,226s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,12n,43p,298b,218s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
@@ -340,7 +356,7 @@ y8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti1
 sam10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbo
 ls/msbm10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/stmaryrd/s
 tmary10.pfb>
-Output written on Language.pdf (2 pages, 110119 bytes).
+Output written on Language.pdf (2 pages, 110291 bytes).
 PDF statistics:
  63 PDF objects out of 1000 (max. 8388607)
  45 compressed objects within 1 object stream
