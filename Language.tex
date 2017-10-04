@@ -3,18 +3,18 @@
 %Semantics Due September 28 2017
 
 %Preamble%
-	\documentclass[12pt, letterpaper]{article}
-	\usepackage{pdfpages} %for including PDFs. see Graphicx for more info
-	\usepackage{amsmath} %for \mvert and other relation symbol
-	\usepackage{amssymb} %for semantic delta=
-	\usepackage{stmaryrd} %for semantics [[ and ]]
-	\usepackage{dsfont} %for fancy set letters
-	\usepackage{fancyhdr} %fancy headers
-	\usepackage{array}
-	\let\emptyset\varnothing
-	\pagestyle{fancy}
-	\lhead{Seaghan Sefton}
-	\rhead{Page \thepage}
+    \documentclass[12pt, letterpaper]{article}
+    \usepackage{pdfpages} %for including PDFs. see Graphicx for more info
+    \usepackage{amsmath} %for \mvert and other relation symbol
+    \usepackage{amssymb} %for semantic delta=
+    \usepackage{stmaryrd} %for semantics [[ and ]]
+    \usepackage{dsfont} %for fancy set letters
+    \usepackage{fancyhdr} %fancy headers
+    %\usepackage{array} %Include if {tabular}{>{$}c<{$}} type arrays are required
+    \let\emptyset\varnothing
+    \pagestyle{fancy}
+    \lhead{Seaghan Sefton}
+    \rhead{Page \thepage}
 
 \title{Research Language}
 \author{Seaghan Sefton}
@@ -23,138 +23,146 @@
 \begin{document}
 
 \section*{Syntax}
-	%\paragraph{Predicates}
+    %\paragraph{Predicates}
 
-	%TO DO%
-	%Define a_{s} and r_{s}
+    %TO DO%
+    %Define a_{s} and r_{s}
 
-	%Definitions table
-	\begin{tabular}{l r c l}
-		Action Fields	& $f_{i}$ 	& $::=$		& $f_{a_{1}} \mid \dots \mid f_{a_{k}}$\\
-		Result Fields 	& $f_{r}$ 	& $::=$		& $f_{r_{1}} \mid \dots \mid f_{r_{k}}$\\
-		Fields 	        & $f$ 	        & $::=$         & $f_i \mid f_r$ \\
-		Actions			& $i$ 	& $::=$ 	& $\{f_{a_{1}} = v_{a_{1}} ,\ \dots\ ,\ f_{a_{k}} = v_{a_{k}}\}$\\
-		Results			& $r$ 	& $::=$ 	& $\{f_{r_{1}} = v_{r_{1}} ,\ \dots\ ,\ f_{r_{k}} = v_{r_{k}}\}$\\
-	\end{tabular}\\
-	%Predicates table
-	\begin{tabular}{l c r l l}
-		Predicates 	& $a,b$	 	& $::=$  & $0$ 			& \textit{Identity}	\\
-					& 			& $\mid$ & $1$ 			& \textit{False}	\\
-					&			& $\mid$ & $f=n$			& \textit{Test}	\\	
-					& 			& $\mid$ & $a + b$ 		& \textit{Sum}		\\
-					& 			& $\mid$ & $a \cdot b$ 	& \textit{Product}	\\
-					&			& $\mid$ & $\neg \ a$		& \textit{Negation}
-	\end{tabular}\\
-	%Policies table
-	\begin{tabular}{l c r l l}
-		Policies 	& $p,q$ 	& $::=$  & $a$ 				& \textit{Test}		\\
-					& 			& $\mid$ & $act(p)$ 			& \textit{Slice Actions}	\\
-					& 			& $\mid$ & $res(p)$ 			& \textit{Slice Results}	\\
-					& 			& $\mid$ & $inj_{i}$ 			& \textit{Injection Action}	\\
-					& 			& $\mid$ & $inj_{r}$ 			& \textit{Injection Result}	\\
-					&			& $\mid$ & $f \leftarrow n$		& \textit{Update}	\\
-					&			& $\mid$ & $p + q$			& \textit{Choice}	\\
-					&			& $\mid$ & $p \cdot q$		& \textit{Sequential Concatenation}	\\
-					&			& $\mid$ & $p ^{*}$			& \textit{Kleene Star}
-	\end{tabular}\\
-	%Semantics Definitions
-	%$Test \triangleq Other$
+    %Definitions table
+    \begin{tabular}{l r c l}
+        Action Fields   & $f_{i}$   & $::=$     & $f_{a_{1}} \mid \dots \mid f_{a_{k}}$\\
+        Result Fields   & $f_{r}$   & $::=$     & $f_{r_{1}} \mid \dots \mid f_{r_{k}}$\\
+        Fields          & $f$       & $::=$     & $f_i \mid f_r$ \\
+        Actions         & $i$       & $::=$     & $\{f_{a_{1}} = v_{a_{1}} ,\ \dots\ ,\ f_{a_{k}} = v_{a_{k}}\}$\\
+        Results         & $r$       & $::=$     & $\{f_{r_{1}} = v_{r_{1}} ,\ \dots\ ,\ f_{r_{k}} = v_{r_{k}}\}$\\
+    \end{tabular}\\
+    %Predicates table
+    \begin{tabular}{l c r l l}
+        Predicates  & $a,b$     & $::=$  & $0$          & \textit{Identity} \\
+                    &           & $\mid$ & $1$          & \textit{False}    \\
+                    &           & $\mid$ & $f=n$        & \textit{Test} \\  
+                    &           & $\mid$ & $a + b$      & \textit{Sum}      \\
+                    &           & $\mid$ & $a \cdot b$  & \textit{Product}  \\
+                    &           & $\mid$ & $\neg \ a$   & \textit{Negation}
+    \end{tabular}\\
+    %Policies table
+    \begin{tabular}{l c r l l}
+        Policies    & $p,q$ & $::=$  & $a$              & \textit{Test}     \\
+                    &       & $\mid$ & $act(p)$         & \textit{Slice Actions}    \\
+                    &       & $\mid$ & $res(p)$         & \textit{Slice Results}    \\
+                    &       & $\mid$ & $inj_{i}$        & \textit{Injection Action} \\
+                    &       & $\mid$ & $inj_{r}$        & \textit{Injection Result} \\
+                    &       & $\mid$ & $f \leftarrow n$ & \textit{Update}   \\
+                    &       & $\mid$ & $p + q$          & \textit{Choice}   \\
+                    &       & $\mid$ & $p \cdot q$      & \textit{Sequential Concatenation} \\
+                    &       & $\mid$ & $p ^{*}$         & \textit{Kleene Star}
+    \end{tabular}\\
+    %Semantics Definitions
+    %$Test \triangleq Other$
 \section*{Semantics}
 
-	%\begin{tabular}{>{\small}c}
-	%	test q test
-	%\end{tabular}
-	\begin{align*}
-		\llbracket \cdot \rrbracket\ 
-			:\ \ &
-			P(A)\times P(R) \rightarrow P(A)\times P(R) 
-			\\
-		%Falsity
-		\llbracket 0 \rrbracket(-, -)
-			\triangleq\ &
-			(\emptyset , \emptyset)
-			\\ %or should I use {}?
-		%Identity
-		\llbracket 1 \rrbracket(\mathit{is}, \mathit{rs})
-			\triangleq\ &
-			(\mathit{is}, \mathit{rs})
-			\\
-		%Test
-		\llbracket f=n \rrbracket(\mathit{is}, \mathit{rs})
-				\triangleq\ &
-                (\mathsf{filter}\ (f=n)\ \mathit{is},
-                \mathsf{filter}\ (f=n)\ \mathit{rs}) \\
-                %Sum
-		\llbracket a + b \rrbracket(\mathit{is}, \mathit{rs})
-		\triangleq\ &
-                \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
-                &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
-                \llbracket b \rrbracket(\mathit{is}, \mathit{rs}) \\
-                &(\mathit{is}_a \cup \mathit{is}_b,\mathit{rs}_a \cup \mathit{rs}_b) \\
-    %\end{align*}
-    %\begin{align*}
-                %Product
-		\llbracket a \cdot b \rrbracket(\mathit{is}, \mathit{rs})
-			\triangleq\ &
-                \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
-                &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
-                \llbracket b \rrbracket(\mathit{is}, \mathit{rs}) \\
-                &(\mathit{is}_a \cap \mathit{is}_b,\mathit{rs}_a \cap \mathit{rs}_b) \\
-                %Negation
-		\llbracket \neg a \rrbracket(\mathit{is}, \mathit{rs})
-			\triangleq\ &
-                \mathsf{let}\ (\mathit{is}',\mathit{rs}') = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
-                &(\mathit{is} - \mathit{is}',\mathit{rs} - \mathit{rs}') \\
-		%Action-only Slice
-		\llbracket act(p) \rrbracket(\mathit{is}, \mathit{rs})
-			\triangleq\ &
-			\mathsf{let}\ (\mathit{is}',\mathit{rs}')
-                = \llbracket p\rrbracket(\mathit{is}, \mathit{rs})\ 
-                \mathsf{in}\ (\mathit{is}',\mathit{rs})
-			\\
-		%Result-only Slice
-		\llbracket res(p) \rrbracket(\mathit{is}, \mathit{rs})
-			\triangleq\ &
-		\mathsf{let}\ (\mathit{is}',\mathit{rs}')
-                = \llbracket p\rrbracket(\mathit{is}, \mathit{rs})\ 
-                \mathsf{in}\ (\mathit{is},\mathit{rs}')
-			\\
-		%Injection Action
-		\llbracket inj_{i}(i) \rrbracket(\mathit{is}, \mathit{rs})
-			\triangleq\ &
-			(\{i\} \cup \mathit{is}, \mathit{rs})
-			\\
-		%Injection Result
-		\llbracket inj_{r}(r) \rrbracket(\mathit{is}, \mathit{rs})
-			\triangleq\ &
-			(\mathit{is}, \{r\} \cup \mathit{rs})
-			\\
-		%Modification
-		\llbracket f \leftarrow n \rrbracket(\mathit{is}, \mathit{rs})
-			\triangleq\ &
-                (\mathsf{map}\ (f\leftarrow n)\ \mathit{is},
-                 \mathsf{map}\ (f\leftarrow n)\ \mathit{rs}) \\
-		%Policy Union
-		 \llbracket p + q \rrbracket(\mathit{is}, \mathit{rs})
-                \triangleq\ &
-                 \mathsf{let}\ (\mathit{is}_p,\mathit{rs}_p) =
-                 \llbracket p \rrbracket(\mathit{is}, \mathit{rs}) \\
-                &\mathsf{let}\ (\mathit{is}_q,\mathit{rs}_q) =
-                \llbracket q \rrbracket(\mathit{is}, \mathit{rs}) \\
-                &(\mathit{is}_p \cup \mathit{is}_q,\mathit{rs}_p \cup \mathit{rs}_b) \\
-		%Below need work
-		\dots & \dots \dots \\
-		%Policy Concatnation
-		\llbracket p \cdot q \rrbracket(\mathit{is}, \mathit{rs})
-                \triangleq\ &
-                 \mathsf{let}\ (\mathit{is}',\mathit{rs}') =
-                 \llbracket p \rrbracket(\mathit{is}, \mathit{rs}) \\
-                 &\llbracket q \rrbracket(\mathit{is}', \mathit{rs}') \\
-		%Policy Kleene Star
-		\llbracket p ^{*} \rrbracket \varphi
-			\triangleq\ &
-			()?
-			\\
-	\end{align*}
+    %\begin{tabular}{>{\small}c}
+    %   test q test
+    %\end{tabular}
+    \begin{align*}
+        \llbracket \cdot \rrbracket\ 
+            :\ \ &
+            P(A)\times P(R) \rightarrow P(A)\times P(R) 
+            \\
+        %Falsity
+        \llbracket 0 \rrbracket(-, -)
+            \triangleq\ &
+            (\emptyset , \emptyset)
+            \\ %or should I use {}?
+        %Identity
+        \llbracket 1 \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\mathit{is}, \mathit{rs})
+            \\
+        %Test
+        \llbracket f=n \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\mathsf{filter}\ (f=n)\ \mathit{is},
+             \mathsf{filter}\ (f=n)\ \mathit{rs}) 
+            \\
+        %Sum
+        \llbracket a + b \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
+            &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
+            \llbracket b \rrbracket(\mathit{is}, \mathit{rs}) \\
+            &(\mathit{is}_a \cup \mathit{is}_b,\mathit{rs}_a \cup \mathit{rs}_b) 
+            \\
+        %Product
+        \llbracket a \cdot b \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
+            &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
+            \llbracket b \rrbracket(\mathit{is}, \mathit{rs}) \\
+            &(\mathit{is}_a \cap \mathit{is}_b,\mathit{rs}_a \cap \mathit{rs}_b) 
+            \\
+        %Negation
+        \llbracket \neg a \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}',\mathit{rs}') = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
+            &(\mathit{is} - \mathit{is}',\mathit{rs} - \mathit{rs}') 
+            \\
+        %Action-only Slice
+        \llbracket act(p) \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}',\mathit{rs}')
+            = \llbracket p\rrbracket(\mathit{is}, \mathit{rs})\ 
+            \mathsf{in}\ (\mathit{is}',\mathit{rs}) 
+            \\
+        %Result-only Slice
+        \llbracket res(p) \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}',\mathit{rs}')
+            = \llbracket p\rrbracket(\mathit{is}, \mathit{rs})\ 
+            \mathsf{in}\ (\mathit{is},\mathit{rs}')
+            \\
+        %Injection Action
+        \llbracket inj_{i}(i) \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\{i\} \cup \mathit{is}, \mathit{rs})
+            \\
+        %Injection Result
+        \llbracket inj_{r}(r) \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\mathit{is}, \{r\} \cup \mathit{rs})
+            \\
+        %Modification
+        \llbracket f \leftarrow n \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\mathsf{map}\ (f\leftarrow n)\ \mathit{is},
+             \mathsf{map}\ (f\leftarrow n)\ \mathit{rs})
+            \\
+        %Policy Union
+         \llbracket p + q \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}_p,\mathit{rs}_p) =
+            \llbracket p \rrbracket(\mathit{is}, \mathit{rs}) 
+            \\
+            &\mathsf{let}\ (\mathit{is}_q,\mathit{rs}_q) =
+            \llbracket q \rrbracket(\mathit{is}, \mathit{rs}) 
+            \\
+            &(\mathit{is}_p \cup \mathit{is}_q,\mathit{rs}_p \cup \mathit{rs}_b) 
+            \\
+        %Policy Concatnation
+        \llbracket p \cdot q \rrbracket(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}',\mathit{rs}') =
+            \llbracket p \rrbracket(\mathit{is}, \mathit{rs})
+            \\
+            &\llbracket q \rrbracket(\mathit{is}', \mathit{rs}')
+            \\
+        %Below need work
+        \dots & \dots \dots \\
+        %Policy Kleene Star
+        \llbracket p ^{*} \rrbracket (\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            ()?
+            \\
+    \end{align*}
 
 \end{document}
