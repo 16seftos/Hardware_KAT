@@ -161,7 +161,11 @@
         %Policy Kleene Star
         \llbracket p ^{*} \rrbracket (\mathit{is}, \mathit{rs})
             \triangleq\ &
-            ()?
+            \mathsf{let}\ p^{n} = p_{1} \cdot p_{2} \cdot \ldots \cdot p_{n}
+            \\
+            &\mathsf{let}\ (\mathit{is_{p_{n}}}, \mathit{rs_{p_{n}}}) = \llbracket p^{n} \rrbracket (is, rs)
+            \\
+            &(\bigcup^{\infty}_{n=0} \mathit{is_{p_{n}}}, \bigcup^{\infty}_{n=0} \mathit{rs_{p_{n}}})
             \\
     \end{align*}
 
