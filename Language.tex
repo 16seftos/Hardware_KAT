@@ -22,7 +22,7 @@
 
 \begin{document}
 
-\section*{Syntax}
+\section{Syntax}
     %\paragraph{Predicates}
 
     %TO DO%
@@ -30,10 +30,10 @@
 
     %Definitions table
     \begin{tabular}{l r c l}
-        Action Fields   & $f_{i}$   & $::=$     & $f_{a_{1}} \mid \dots \mid f_{a_{k}}$\\
+        Instruction Fields   & $f_{i}$   & $::=$     & $f_{i_{1}} \mid \dots \mid f_{i_{k}}$\\
         Result Fields   & $f_{r}$   & $::=$     & $f_{r_{1}} \mid \dots \mid f_{r_{k}}$\\
         Fields          & $f$       & $::=$     & $f_i \mid f_r$ \\
-        Actions         & $i$       & $::=$     & $\{f_{a_{1}} = v_{a_{1}} ,\ \dots\ ,\ f_{a_{k}} = v_{a_{k}}\}$\\
+        Instructions         & $i$       & $::=$     & $\{f_{i_{1}} = v_{i_{1}} ,\ \dots\ ,\ f_{a_{k}} = v_{i_{k}}\}$\\
         Results         & $r$       & $::=$     & $\{f_{r_{1}} = v_{r_{1}} ,\ \dots\ ,\ f_{r_{k}} = v_{r_{k}}\}$\\
     \end{tabular}\\
     %Predicates table
@@ -59,7 +59,7 @@
     \end{tabular}\\
     %Semantics Definitions
     %$Test \triangleq Other$
-\section*{Semantics}
+\section{Semantics}
 
     %\begin{tabular}{>{\small}c}
     %   test q test
@@ -168,5 +168,60 @@
             &(\bigcup^{\infty}_{n=0} \mathit{is_{p_{n}}}, \bigcup^{\infty}_{n=0} \mathit{rs_{p_{n}}})
             \\
     \end{align*}
+
+\section{Applications}
+
+\subsection{No Writes To $\mathsf{R}_0$}
+
+\[
+\begin{array}{rcl}
+  \mathit{Instruction\ Fields}\ f_i &::=& \mathsf{R}_{\mathsf{dest}} \\
+  \mathit{Result\ Fields}\ f_r &::=& \mathsf{(*empty*)}\\
+  \mathsf{WritesToZero} &\triangleq& \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \\
+  \mathsf{NoWritesToZero} &\triangleq& \mathit{act}(\neg\mathsf{WritesToZero})
+\end{array}
+\]
+
+Prove that
+\begin{itemize}
+\item  if
+  $\llbracket \mathsf{NoWritesZero} \rrbracket (\mathit{is}, \mathit{rs}) =
+  (\mathit{is}', \mathit{rs}')$
+\item then
+  \begin{enumerate}
+  \item $\mathit{rs} = \mathit{rs'}$ and
+  \item for all $i \in \mathit{is}'$, $i.\mathsf{R}_{\mathsf{dest}} \neq \mathsf{R}_0$.
+  \end{enumerate}
+\end{itemize}
+
+\subsection{Secure Memory Access}
+
+\[
+\begin{array}{rcl}
+  \mathit{Instruction\ Fields}\ f_i &::=& \mathsf{PC} \\
+  \mathit{Result\ Fields}\ f_r &::=& \mathsf{ADDR} \\
+  \mathsf{SecureAddr} &\triangleq& \mathsf{ADDR} = 0 + \mathsf{ADDR} = 1 + \ldots + \mathsf{ADDR} = 100 \\
+  \mathsf{SecureInstr} &\triangleq& \mathsf{PC} = 0 + \mathsf{PC} = 1 + \ldots + \mathsf{PC} = 100 \\
+%  \mathsf{MemInstr} &\triangleq& \mathsf{OPCODE} = \mathsf{read} + \mathsf{OPCODE} = \mathsf{write} \\
+  \mathsf{SecureMemoryAccess} &\triangleq&
+    \mathit{act}(\mathsf{SecureInstr}) +
+    (\mathit{act}(\neg\mathsf{SecureInstr}) \cdot
+     \mathit{res}(\neg\mathsf{SecureAddr}))
+     
+\end{array}
+\]
+
+Prove
+\begin{itemize}
+\item the results of secure instructions are unchanged, and
+\item the results of insecure instructions accessing insecure areas are unchanged.
+  \end{itemize}
+
+\subsection{Lock Bits}
+
+Each instruction is associated with a lock bit.
+Only the monitor can update lock bits.
+Certain operations like writing to a particular part of the address space
+require that the lock bit be set. 
 
 \end{document}
