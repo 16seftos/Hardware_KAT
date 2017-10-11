@@ -1,6 +1,6 @@
 %Seaghan Sefton
 %Research Language Paper
-%Semantics Due September 28 2017
+%Work in Progress
 
 %Preamble%
     \documentclass[12pt, letterpaper]{article}
@@ -23,10 +23,10 @@
 \begin{document}
 
 \section{Syntax}
-    %\paragraph{Predicates}
-
-    %TO DO%
-    %Define a_{s} and r_{s}
+%%%%%%%%%%%%%%%%%%%%%%%
+%%% BEGIN SECTION 1 %%%
+%%% SYNTAX          %%%
+%%%%%%%%%%%%%%%%%%%%%%%
 
     %Definitions table
     \begin{tabular}{l r c l}
@@ -36,6 +36,7 @@
         Instructions         & $i$       & $::=$     & $\{f_{i_{1}} = v_{i_{1}} ,\ \dots\ ,\ f_{a_{k}} = v_{i_{k}}\}$\\
         Results         & $r$       & $::=$     & $\{f_{r_{1}} = v_{r_{1}} ,\ \dots\ ,\ f_{r_{k}} = v_{r_{k}}\}$\\
     \end{tabular}\\
+
     %Predicates table
     \begin{tabular}{l c r l l}
         Predicates  & $a,b$     & $::=$  & $0$          & \textit{Identity} \\
@@ -45,6 +46,7 @@
                     &           & $\mid$ & $a \cdot b$  & \textit{Product}  \\
                     &           & $\mid$ & $\neg \ a$   & \textit{Negation}
     \end{tabular}\\
+
     %Policies table
     \begin{tabular}{l c r l l}
         Policies    & $p,q$ & $::=$  & $a$              & \textit{Test}     \\
@@ -57,14 +59,21 @@
                     &       & $\mid$ & $p \cdot q$      & \textit{Sequential Concatenation} \\
                     &       & $\mid$ & $p ^{*}$         & \textit{Kleene Star}
     \end{tabular}\\
-    %Semantics Definitions
-    %$Test \triangleq Other$
-\section{Semantics}
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%% END OF SECTION 1 %%%
+%%% SYNTAX           %%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 
-    %\begin{tabular}{>{\small}c}
-    %   test q test
-    %\end{tabular}
+
+%Semantics Definitions
+\section{Semantics}
+%%%%%%%%%%%%%%%%%%%%%%%
+%%% BEGIN SECTION 2 %%%
+%%% SEMANTICS       %%%
+%%%%%%%%%%%%%%%%%%%%%%%
+    %Semantics align
     \begin{align*}
+        %
         \llbracket \cdot \rrbracket\ 
             :\ \ &
             P(A)\times P(R) \rightarrow P(A)\times P(R) 
@@ -168,10 +177,21 @@
             &(\bigcup^{\infty}_{n=0} \mathit{is_{p_{n}}}, \bigcup^{\infty}_{n=0} \mathit{rs_{p_{n}}})
             \\
     \end{align*}
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%% END OF SECTION 2 %%%
+%%% SEMANTICS        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Applications}
+%%%%%%%%%%%%%%%%%%%%%%%
+%%% BEGIN SECTION 3 %%%
+%%% APPLICATIONS    %%%
+%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{No Writes To $\mathsf{R}_0$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% BEGIN SUBSECTION 3.1 %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \[
 \begin{array}{rcl}
@@ -209,7 +229,7 @@ Prove that
     (\mathit{is}', \mathit{rs}')
 \end{align}
     Action can then be unraveled semantically using the definition of action slice:
-                %Do I need to define something?
+    %Do I need to define something or do it as I did below?
 \begin{align}
     \llbracket act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0) \rrbracket (\mathit{is}, \mathit{rs}) 
     =
@@ -271,9 +291,15 @@ Prove that
 \end{align}
     The final simplification (16) means that $\mathit{is}'$ is equal to all $\mathit(is)$ \textit{without} all $\mathit(is)$ where $\mathsf{R_{dest}} = \mathsf{R_{0}}$.
     This in equation form is $\mathit{is}' = \mathit{is_{[\mathsf{R_{dest} \neq \mathsf{R_{0}}}]}}$, or all result instructions do not write to $\mathsf{R_{0}}$.  The second theorem has been proven.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% END OF SUBSECTION 3.1 %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \subsection{Secure Memory Access}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% BEGIN SUBSECTION 3.2 %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \[
 \begin{array}{rcl}
@@ -292,15 +318,31 @@ Prove that
 
 Prove
 \begin{itemize}
-\item the results of secure instructions are unchanged, and
-\item the results of insecure instructions accessing insecure areas are unchanged.
-  \end{itemize}
+    \item the results of secure instructions are unchanged, and
+    \item the results of insecure instructions accessing insecure areas are unchanged.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% END OF SUBSECTION 3.2 %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Lock Bits}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% BEGIN SUBSECTION 3.3 %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Each instruction is associated with a lock bit.
 Only the monitor can update lock bits.
 Certain operations like writing to a particular part of the address space
 require that the lock bit be set. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% END OF SUBSECTION 3.3 %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%% END OF SECTION 3 %%%
+%%% APPLICATIONS    %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}
