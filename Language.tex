@@ -193,6 +193,85 @@ Prove that
   \item for all $i \in \mathit{is}'$, $i.\mathsf{R}_{\mathsf{dest}} \neq \mathsf{R}_0$.
   \end{enumerate}
 \end{itemize}
+\paragraph{Proof}
+    Given the above definitions, the following can be unraveled into a syntactically-correct equation.:
+\begin{align}
+    \llbracket \mathsf{NoWritesZero} \rrbracket (\mathit{is}, \mathit{rs}) 
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \llbracket act(\neg \mathsf{WritesToZero}) \rrbracket (\mathit{is}, \mathit{rs}) 
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \llbracket act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0) \rrbracket (\mathit{is}, \mathit{rs}) 
+    &=
+    (\mathit{is}', \mathit{rs}')
+\end{align}
+    Action can then be unraveled semantically using the definition of action slice:
+                %Do I need to define something?
+\begin{align}
+    \llbracket act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0) \rrbracket (\mathit{is}, \mathit{rs}) 
+    =
+    (\mathit{is}', \mathit{rs})
+\end{align}
+    And so by substitution:
+\begin{align}
+    (\mathit{is}', \mathit{rs}')
+    &=
+    (\mathit{is}', \mathit{rs})
+\end{align}
+    And it has been proven that $\mathit{rs} = \mathit{rs'}$.\\
+    Substituting (4) and (5) into (3) gives (6), which can be substituted with (7), the definition of negation, to get (8). 
+\begin{align}
+    \llbracket \neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    &=
+    (\mathit{is}', \mathit{rs})\\
+    \llbracket \neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    &=
+    (\mathit{is}, \mathit{rs}) - \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs})\\ %this is a rule using the definition of negation for the next equation.
+    (\mathit{is}, \mathit{rs}) - \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    &=
+    (\mathit{is}', \mathit{rs})
+\end{align}
+    (8) can be simplified using algebra.
+\begin{align}    
+    - \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    &=
+    (\mathit{is}', \mathit{rs}) - (\mathit{is}, \mathit{rs})
+    \\
+    \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    &=
+    (\mathit{is}, \mathit{rs}) - (\mathit{is}', \mathit{rs})
+\end{align}
+    The definition of a test can be unraveled into a filter result, and $\mathit{rs}$ can be canceled out of (10) for simplicity as rs has no field $\mathsf{R_{dest}}$.  Substitution of (12), the definition of a test and filter, into (11) will give (13).
+\begin{align}
+    \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is})
+    &=
+    (\mathit{is}) - (\mathit{is}')
+    \\
+    \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is})
+    &=
+    (\mathit{is_{[\mathsf{R_{dest}=R0}]}})
+    \\
+    (\mathit{is_{[\mathsf{R_{dest}=R0}]}})
+    &=
+    (\mathit{is}) - (\mathit{is}')
+    \\
+    (\mathit{is_{[\mathsf{R_{dest}=R0}]}}) - (\mathit{is}) 
+    &=
+    \\
+    - (\mathit{is}')
+    &=
+    (\mathit{is_{[\mathsf{R_{dest}=R0}]}}) - (\mathit{is})
+    \\
+    (\mathit{is}')
+    &=
+    (\mathit{is}) - (\mathit{is_{[\mathsf{R_{dest}=R0}]}})
+\end{align}
+    The final simplification (16) means that $\mathit{is}'$ is equal to all $\mathit(is)$ \textit{without} all $\mathit(is)$ where $\mathsf{R_{dest}} = \mathsf{R_{0}}$.
+    This in equation form is $\mathit{is}' = \mathit{is_{[\mathsf{R_{dest} \neq \mathsf{R_{0}}}]}}$, or all result instructions do not write to $\mathsf{R_{0}}$.  The second theorem has been proven.
+
 
 \subsection{Secure Memory Access}
 
