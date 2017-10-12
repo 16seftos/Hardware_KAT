@@ -218,7 +218,8 @@ Prove that
   \end{enumerate}
 \end{itemize}
 \begin{proof}
-\begin{tabular}{rl} \hfill\\
+    \hfill  \\
+  \begin{tabular}{rl}
     \label{step1}$\interp{\mathsf{NoWritesToZero}}
     = \interp{\mathit{act}(\neg \mathsf{WritesToZero})}$
     & Defn.\\
@@ -241,6 +242,7 @@ Prove that
     \label{step7}
     $rs' = rs$ & \ref{step5}    
   \end{tabular}
+  \hfill \\
 \end{proof}
 
     Given the above definitions, the following can be unraveled into a syntactically-correct equation:
