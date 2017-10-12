@@ -455,6 +455,61 @@ Prove
     &=
     (\mathit{is}', \mathit{rs}')
 \end{align}
+    Following the same format, the expression to the left of the union is evaluated first.
+\begin{align}
+    \llbracket \mathit{act}(\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup \ldots
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    (\emptyset, \mathit{rs_{\mathsf{\neg SA}}}) \cup \ldots
+    &=
+    (\mathit{is}', \mathit{rs}')
+\end{align}
+    Lemma \#2 in the previous proof simplifies this easily.\\
+    The expression to the right of the union is now evaluated.
+\begin{align}
+    \ldots \cup % or would + be better?
+    \llbracket \mathit{act}(\neg\mathsf{SI}) \cdot
+     \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \ldots \cup % or would + be better?
+    \llbracket \mathit{act}(\neg\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
+    \llbracket \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \ldots \cup % or would + be better?
+    (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
+    \llbracket \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \ldots \cup % or would + be better?
+    (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
+    (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \ldots \cup % or would + be better?
+    (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+\end{align}
+    Lemma \#1 is used to simplfy the left side of the intersection, and a result-version of Lemma \#1 is used to simplify the right side of the intersection. (10) contains the evaluated intersection.\\
+    The left and right sides of the union can be rejoined and evaluated to determine the exact equivalence of $(\mathit{is}', \mathit{rs}')$:
+\begin{align}
+    (\emptyset, \mathit{rs_{\mathsf{\neg SA}}}) \cup
+    (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+\end{align}
+    In (12), it is shown that the evaluated results are unchanged, and it can additionally be said that none of the instructions have been changed from the initial input as well.  This proves part 2.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
