@@ -325,11 +325,11 @@ Prove
 \end{itemize}
 
 \paragraph{Lemma \#1}
-A filter sliced to actions over a set where the actions satisfy the filter, returns itself.
+    A filter sliced to actions over a set where the actions satisfy the filter, returns itself.
 \[
     \llbracket act(f=\mathsf{A}) \rrbracket (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
 \]
-Let (1) be true, and simplify.
+    Let (1) define $(\mathit{is}', \mathit{rs}')$, and simplify.
 \begin{align}
     \setcounter{equation}{0}
     \llbracket act(f=\mathsf{A}) \rrbracket (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
@@ -338,35 +338,124 @@ Let (1) be true, and simplify.
     \\
     (\llbracket (f=\mathsf{A}) \rrbracket \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
     &= 
-    (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
+    (\mathit{is}', \mathit{rs}')
     \\
     (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
     &= 
-    (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
+    (\mathit{is}', \mathit{rs}')
 \end{align}
-The definition of action slice is used to transform (1) into (2).  (2) to (3) is true because a filter over a set that satisfies the filter is the set itself.
+    The definition of action slice is used to transform (1) into (2).  (2) to (3) is true because a filter over a set that satisfies the filter is the set itself.\\
+\paragraph{Lemma \#2}
+    It follows that the converse would result in no $\mathit{is}$ in the evaluated set:
+\[
+    \llbracket act(\neg f=\mathsf{A}) \rrbracket (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\emptyset, \mathit{rs})
+\]
 
-\paragraph{Proof}
-    The evaluation of $\mathsf{SecureMemoryAccess}$ over some (is,rs) can be unraveled into a syntactically correct equation give the above definitions:
+\paragraph{Proof 3.2.1}
+    The evaluation of $\mathsf{SecureMemoryAccess}$ over some $(\mathit{is},\mathit{rs})$ can be unraveled into a syntactically correct equation given the above definitions.  $\mathsf{SI}$ is short for $\mathsf{SecureInstr}$, $\mathsf{SA}$ is short for $\mathsf{SecureAddr}$, and $\mathsf{SMA}$ is short for $\mathsf{SecureMemoryAccess}$:
 \begin{align}
     \setcounter{equation}{0}
-    \llbracket \mathsf{SecureMemoryAccess} \rrbracket (\mathit{is}, \mathit{rs})
+    \llbracket \mathsf{SMA} \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
     &=
     (\mathit{is}', \mathit{rs}')
     \\
-    \llbracket \mathit{act}(\mathsf{SecureInstr}) +
-    (\mathit{act}(\neg\mathsf{SecureInstr}) \cdot
-     \mathit{res}(\neg\mathsf{SecureAddr})) \rrbracket (\mathit{is}, \mathit{rs})
+    \llbracket \mathit{act}(\mathsf{SI}) +
+    (\mathit{act}(\neg\mathsf{SI}) \cdot
+     \mathit{res}(\neg\mathsf{SA})) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
     &=
     (\mathit{is}', \mathit{rs}')
     \\
-    \llbracket \mathit{act}(\mathsf{SecureInstr}) \rrbracket (\mathit{is}, \mathit{rs}) \cup % or would + be better?
-    \llbracket \mathit{act}(\neg\mathsf{SecureInstr}) \cdot
-     \mathit{res}(\neg\mathsf{SecureAddr}) \rrbracket (\mathit{is}, \mathit{rs})
+    \llbracket \mathit{act}(\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup % or would + be better?
+    \llbracket \mathit{act}(\neg\mathsf{SI}) \cdot
+     \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
     &=
     (\mathit{is}', \mathit{rs}')
-    \\
 \end{align}
+    Beginning with the left side of the union unraveled further, and evaluated over $(\mathit{is}_{[\mathsf{SI}]},\mathit{rs})$, the simplification using Lemma \#1 results in (6):
+\begin{align}
+    \llbracket \mathit{act} (\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup \ldots
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \llbracket \mathit{act} (PC=0\ldots 100) \rrbracket (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup \ldots %should probably use element of insead of = for is_{PC}
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup \ldots 
+    &=
+    (\mathit{is}', \mathit{rs}')
+\end{align}
+    The right side can be evaluated similarly.
+\begin{align}
+    \ldots \cup % or would + be better?
+    \llbracket \mathit{act}(\neg\mathsf{SI}) \cdot
+     \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \ldots \cup % or would + be better?
+    \llbracket \mathit{act}(\neg\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cap
+    \llbracket \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \ldots \cup 
+    (\emptyset, \mathit{rs}) \cap
+    \llbracket \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\ %
+    \ldots \cup 
+    (\emptyset, \mathit{rs}) \cap
+    (\mathit{is_{\mathsf{SI}}}, \llbracket (\neg\mathsf{SA}) \rrbracket \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \ldots \cup 
+    (\emptyset, \mathit{rs}) \cap
+    (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - \llbracket (\mathsf{SA}) \rrbracket \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}') %
+    \\
+    \ldots \cup 
+    (\emptyset, \mathit{rs} - \llbracket (\mathsf{SA}) \rrbracket \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+\end{align}
+    The left side of the intersection can be evaluated to $(\emptyset, \mathit{rs})$ Lemma \#2 from (8) to (9). The right side of the intersection can be evaluated by the definition of negation and result slicing, (9) to (11).  The intersection is then evaluated over both to give (12).  The union can be evaluated as:
+\begin{align}
+    (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup 
+    (\emptyset, \mathit{rs} - \llbracket (\mathsf{SA}) \rrbracket \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    (\mathit{is_{PC=0\ldots100}}, \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+\end{align} 
+    (13) simplifies to (14) because the union of a set and the empty set is the first set, and the expression $\mathit{rs} - \llbracket (\mathsf{SA}) \rrbracket \mathit{rs}$ is by definition a subset of $\mathit{rs}$.  This leaves $\mathit{rs} = \mathit{rs}'$, proving part 1. 
+
+\paragraph{Proof 3.2.2}
+    The evaluation of $\mathsf{SecureMemoryAccess}$ over insecure actions and results is to be proven to not change the results.  This idea can be written to equal some $(\mathit{is}', \mathit{rs}')$, and then simplified in the same way as the beginning of Proof 3.2.1
+\begin{align}
+    \setcounter{equation}{0}
+    \llbracket \mathsf{SMA} \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \llbracket \mathit{act}(\mathsf{SI}) +
+    (\mathit{act}(\neg\mathsf{SI}) \cdot
+     \mathit{res}(\neg\mathsf{SA}))  \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \llbracket \mathit{act}(\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup % or would + be better?
+    \llbracket \mathit{act}(\neg\mathsf{SI}) \cdot
+     \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+    &=
+    (\mathit{is}', \mathit{rs}')
+\end{align}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SUBSECTION 3.2 %%%
