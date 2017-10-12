@@ -215,8 +215,9 @@ Prove that
   \end{enumerate}
 \end{itemize}
 \paragraph{Proof}
-    Given the above definitions, the following can be unraveled into a syntactically-correct equation.:
+    Given the above definitions, the following can be unraveled into a syntactically-correct equation:
 \begin{align}
+    \setcounter{equation}{0}
     \llbracket \mathsf{NoWritesZero} \rrbracket (\mathit{is}, \mathit{rs}) 
     &=
     (\mathit{is}', \mathit{rs}')
@@ -322,6 +323,50 @@ Prove
     \item the results of secure instructions are unchanged, and
     \item the results of insecure instructions accessing insecure areas are unchanged.
 \end{itemize}
+
+\paragraph{Lemma \#1}
+A filter sliced to actions over a set where the actions satisfy the filter, returns itself.
+\[
+    \llbracket act(f=\mathsf{A}) \rrbracket (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
+\]
+Let (1) be true, and simplify.
+\begin{align}
+    \setcounter{equation}{0}
+    \llbracket act(f=\mathsf{A}) \rrbracket (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+    &= 
+    (\mathit{is}', \mathit{rs}')
+    \\
+    (\llbracket (f=\mathsf{A}) \rrbracket \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+    &= 
+    (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
+    \\
+    (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+    &= 
+    (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
+\end{align}
+The definition of action slice is used to transform (1) into (2).  (2) to (3) is true because a filter over a set that satisfies the filter is the set itself.
+
+\paragraph{Proof}
+    The evaluation of $\mathsf{SecureMemoryAccess}$ over some (is,rs) can be unraveled into a syntactically correct equation give the above definitions:
+\begin{align}
+    \setcounter{equation}{0}
+    \llbracket \mathsf{SecureMemoryAccess} \rrbracket (\mathit{is}, \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \llbracket \mathit{act}(\mathsf{SecureInstr}) +
+    (\mathit{act}(\neg\mathsf{SecureInstr}) \cdot
+     \mathit{res}(\neg\mathsf{SecureAddr})) \rrbracket (\mathit{is}, \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+    \llbracket \mathit{act}(\mathsf{SecureInstr}) \rrbracket (\mathit{is}, \mathit{rs}) \cup % or would + be better?
+    \llbracket \mathit{act}(\neg\mathsf{SecureInstr}) \cdot
+     \mathit{res}(\neg\mathsf{SecureAddr}) \rrbracket (\mathit{is}, \mathit{rs})
+    &=
+    (\mathit{is}', \mathit{rs}')
+    \\
+\end{align}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SUBSECTION 3.2 %%%
