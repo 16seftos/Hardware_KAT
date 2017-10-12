@@ -8,6 +8,7 @@
     \usepackage{pdfpages} %for including PDFs. see Graphicx for more info
     \usepackage{amsmath} %for \mvert and other relation symbol
     \usepackage{amssymb} %for semantic delta=
+    \usepackage{amsthm} 
     \usepackage{stmaryrd} %for semantics [[ and ]]
     \usepackage{dsfont} %for fancy set letters
     \usepackage{fancyhdr} %fancy headers
@@ -20,6 +21,8 @@
 \title{Research Language}
 \author{Seaghan Sefton}
 %the above title and author are unecessary
+
+\newcommand\interp[1]{\llbracket #1 \rrbracket}
 
 \begin{document}
 
@@ -214,7 +217,32 @@ Prove that
   \item for all $i \in \mathit{is}'$, $i.\mathsf{R}_{\mathsf{dest}} \neq \mathsf{R}_0$.
   \end{enumerate}
 \end{itemize}
-\paragraph{Proof}
+\begin{proof}
+\begin{tabular}{rl} \hfill\\
+    \label{step1}$\interp{\mathsf{NoWritesToZero}}
+    = \interp{\mathit{act}(\neg \mathsf{WritesToZero})}$
+    & Defn.\\
+    \label{step2}$\interp{\mathit{act}(\neg \mathsf{WritesToZero})}
+    = \interp{act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}$
+    & Defn.\\
+    \label{step3}$\interp{act(\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0))}(\mathit{is},\mathit{rs})
+    = ((\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})).1, \mathit{rs})$
+    & Defn. $\interp{\cdot}$\\    
+    \label{step4}
+    $\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})
+    = (\mathit{is},\mathit{rs}) - \interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})$
+    & Defn. $\interp{\cdot}$\\    
+    \label{step5}
+    $\interp{\mathsf{NoWritesToZero}}(\mathit{is},\mathit{rs})
+    = (\mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1, \mathit{rs})$
+    & \ref{step1,step2,step3,step4}\\
+    \label{step6}
+    $is' = \mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1$ & \ref{step5} \\
+    \label{step7}
+    $rs' = rs$ & \ref{step5}    
+  \end{tabular}
+\end{proof}
+
     Given the above definitions, the following can be unraveled into a syntactically-correct equation:
 \begin{align}
     \setcounter{equation}{0}
