@@ -302,7 +302,6 @@ Prove that
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% BEGIN SUBSECTION 3.2 %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
  \[
  \begin{array}{rcl}
    \mathit{Instruction\ Fields}\ f_i &::=& \mathsf{PC} \\
@@ -511,7 +510,6 @@ Prove that
  \end{align}
      In (12), it is shown that the evaluated results are unchanged, and it can additionally be said that none of the instructions have been changed from the initial input as well.  This proves part 2.
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SUBSECTION 3.2 %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -525,10 +523,32 @@ Each instruction is associated with a lock bit.
 Only the monitor can update lock bits.
 Certain operations like writing to a particular part of the address space
 require that the lock bit be set. 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SUBSECTION 3.3 %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\[
+\begin{array}{rcl}
+  \mathit{Instruction\ Fields}\ f_i &::=& \mathsf{Lock_{Instr}}, \mathsf{IC}\\
+  \mathsf{IC} &::=& \mathsf{MEM_{READ}}\ |\ \mathsf{MEM_{WRITE}}\ |\ \cdots \\
+  \mathit{Result\ Fields}\ f_r &::=& \mathsf{Lock_{MemAddr}}\\
+  \mathsf{LockedInstr} &\triangleq& \mathsf{Lock_{Instr}} = \mathsf{TRUE} \\
+  \mathsf{LockedMem} &\triangleq& \mathsf{Lock_{MemAddr}} = \mathsf{TRUE} \\
+  \mathsf{Read} &\triangleq& \mathsf{IC} = \mathsf{MEM_{READ}}\\
+  \mathsf{Write} &\triangleq& \mathsf{IC} = \mathsf{MEM_{WRITE}}\\
+  %Rule
+  \mathsf{LockSecure} &\triangleq& 
+    act(\mathsf{LockedInstr})\cdot res(\mathsf{LockedMem})\\
+    &&+
+    act(\mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem}) \cdot \mathsf{inj_{MEM-LOCK}} \\
+  \mathsf{LockInsecure} &\triangleq&
+    act(\neg \mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem})\\
+  \mathsf{Locked} &\triangleq& \mathsf{LockSecure} + \mathsf{LockInsecure}
+\end{array}
+\]\\
+$\mathsf{Locked}$ is defined in english as "Any locked instruction can access anything, but it must lock it if it's not locked.  Any unlocked instruction can only access unlocked memory."\\
+It would be interesting to prove if this is equal to the locked instruction accessing ANYTHING, and then ALWAYS setting it to locked.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SECTION 3 %%%
