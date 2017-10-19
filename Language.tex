@@ -220,29 +220,60 @@ Prove that
 \begin{proof}
     \hfill  \\
   \begin{tabular}{rl}
-    \label{step1}$\interp{\mathsf{NoWritesToZero}}
+    %\label{step1}
+    $\interp{\mathsf{NoWritesToZero}}
     = \interp{\mathit{act}(\neg \mathsf{WritesToZero})}$
     & Defn.\\
-    \label{step2}$\interp{\mathit{act}(\neg \mathsf{WritesToZero})}
+    %\label{step2}
+    $\interp{\mathit{act}(\neg \mathsf{WritesToZero})}
     = \interp{act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}$
     & Defn.\\
-    \label{step3}$\interp{act(\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0))}(\mathit{is},\mathit{rs})
+    %\label{step3}
+    $\interp{act(\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0))}(\mathit{is},\mathit{rs})
     = ((\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})).1, \mathit{rs})$
     & Defn. $\interp{\cdot}$\\    
-    \label{step4}
+    %\label{step4}
     $\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})
     = (\mathit{is},\mathit{rs}) - \interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})$
     & Defn. $\interp{\cdot}$\\    
-    \label{step5}
+    %\label{step5}
     $\interp{\mathsf{NoWritesToZero}}(\mathit{is},\mathit{rs})
     = (\mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1, \mathit{rs})$
     & \ref{step1,step2,step3,step4}\\
-    \label{step6}
+    %\label{step6}
     $is' = \mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1$ & \ref{step5} \\
-    \label{step7}
-    $rs' = rs$ & \ref{step5}    
+    %\label{step7}
+    $rs' = rs$ & \ref{step5}
   \end{tabular}
   \hfill \\
+  \begin{alignat}{2}
+    \label{step1}
+    \interp{\mathsf{NoWritesToZero}}
+    &= \interp{\mathit{act}(\neg \mathsf{WritesToZero})}
+    &&\quad \text{Defn.}\\
+    \label{step2}
+    \interp{\mathit{act}(\neg \mathsf{WritesToZero})}
+    &= \interp{act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}
+    &&\quad \text{Defn.}\\
+    \label{step3}
+    \interp{act(\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0))}(\mathit{is},\mathit{rs})
+    &= ((\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})).1, \mathit{rs})
+    &&\quad \text{Defn.}\ \interp{\cdot}\\    
+    \label{step4}
+    \interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})
+    &= (\mathit{is},\mathit{rs}) - \interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})
+    &&\quad \text{Defn.}\ \interp{\cdot}\\    
+    \label{step5}
+    \interp{\mathsf{NoWritesToZero}}(\mathit{is},\mathit{rs})
+    &= (\mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1, \mathit{rs})
+    &&\quad \ref{step1},\ref{step2},\ref{step3},\ref{step4}\\
+    \label{step6}
+    is' &= \mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1
+    &&\quad \ref{step5} \\
+    \label{step7}
+    rs' &= rs 
+    &&\quad \ref{step5}
+  \end{alignat}
 \end{proof}
 
     Given the above definitions, the following can be unraveled into a syntactically-correct equation:
