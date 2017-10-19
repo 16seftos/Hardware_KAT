@@ -412,23 +412,23 @@
      \begin{alignat}{2}
          \setcounter{equation}{0}
          \label{3.2.L.2:step1}
-         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         \interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
          &= 
          (\mathit{is}', \mathit{rs}')
          &&\quad \text{Defn.}
          \\
          \label{3.2.L.2:step2}
-         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         \interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
          &= 
-         (\interp{ (f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         (\interp{ (\neg f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
          &&\quad \text{Defn.}\ \interp{act}\\
          \label{3.2.L.2:step3}
-         (\interp{ (f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         (\interp{ (\neg f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
          &=
          (\emptyset, \mathit{rs})
          &&\quad \text{Defn.}\ \interp{\mathsf{filter}}\\
          \label{3.2.L.2:step4}
-         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         \interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
          &=
          (\emptyset, \mathit{rs})
          &&\quad \ref{3.2.L.2:step1},\ \ref{3.2.L.2:step2},\ \ref{3.2.L.2:step3}\\
