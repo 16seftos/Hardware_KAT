@@ -78,105 +78,105 @@
     %Semantics align
     \begin{align*}
         %
-        \llbracket \cdot \rrbracket\ 
+        \interp{ \cdot }\ 
             :\ \ &
             P(A)\times P(R) \rightarrow P(A)\times P(R) 
             \\
         %Falsity
-        \llbracket 0 \rrbracket(-, -)
+        \interp{ 0 }(-, -)
             \triangleq\ &
             (\emptyset , \emptyset)
             \\ %or should I use {}?
         %Identity
-        \llbracket 1 \rrbracket(\mathit{is}, \mathit{rs})
+        \interp{ 1 }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             (\mathit{is}, \mathit{rs})
             \\
         %Test
-        \llbracket f=n \rrbracket(\mathit{is}, \mathit{rs})
+        \interp{ f=n }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             (\mathsf{filter}\ (f=n)\ \mathit{is},
              \mathsf{filter}\ (f=n)\ \mathit{rs}) 
             \\
         %Sum
-        \llbracket a + b \rrbracket(\mathit{is}, \mathit{rs})
+        \interp{ a + b }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
+            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \interp{ a }(\mathit{is}, \mathit{rs}) \\
             &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
-            \llbracket b \rrbracket(\mathit{is}, \mathit{rs}) \\
+            \interp{ b }(\mathit{is}, \mathit{rs}) \\
             &(\mathit{is}_a \cup \mathit{is}_b,\mathit{rs}_a \cup \mathit{rs}_b) 
             \\
         %Product
-        \llbracket a \cdot b \rrbracket(\mathit{is}, \mathit{rs})
+        \interp { a \cdot b }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
+            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \interp { a }(\mathit{is}, \mathit{rs}) \\
             &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
-            \llbracket b \rrbracket(\mathit{is}, \mathit{rs}) \\
+            \interp { b }(\mathit{is}, \mathit{rs}) \\
             &(\mathit{is}_a \cap \mathit{is}_b,\mathit{rs}_a \cap \mathit{rs}_b) 
             \\
         %Negation
-        \llbracket \neg a \rrbracket(\mathit{is}, \mathit{rs})
+        \interp { \neg a }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ (\mathit{is}',\mathit{rs}') = \llbracket a \rrbracket(\mathit{is}, \mathit{rs}) \\
+            \mathsf{let}\ (\mathit{is}',\mathit{rs}') = \interp { a }(\mathit{is}, \mathit{rs}) \\
             &(\mathit{is} - \mathit{is}',\mathit{rs} - \mathit{rs}') 
             \\
         %Action-only Slice
-        \llbracket act(p) \rrbracket(\mathit{is}, \mathit{rs})
+        \interp { act(p) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             \mathsf{let}\ (\mathit{is}',\mathit{rs}')
-            = \llbracket p\rrbracket(\mathit{is}, \mathit{rs})\ 
+            = \interp { p}(\mathit{is}, \mathit{rs})\ 
             \mathsf{in}\ (\mathit{is}',\mathit{rs}) 
             \\
         %Result-only Slice
-        \llbracket res(p) \rrbracket(\mathit{is}, \mathit{rs})
+        \interp { res(p) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             \mathsf{let}\ (\mathit{is}',\mathit{rs}')
-            = \llbracket p\rrbracket(\mathit{is}, \mathit{rs})\ 
+            = \interp { p}(\mathit{is}, \mathit{rs})\ 
             \mathsf{in}\ (\mathit{is},\mathit{rs}')
             \\
         %Injection Action
-        \llbracket inj_{i}(i) \rrbracket(\mathit{is}, \mathit{rs})
+        \interp { inj_{i}(i) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             (\{i\} \cup \mathit{is}, \mathit{rs})
             \\
         %Injection Result
-        \llbracket inj_{r}(r) \rrbracket(\mathit{is}, \mathit{rs})
+        \interp { inj_{r}(r) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             (\mathit{is}, \{r\} \cup \mathit{rs})
             \\
         %Modification
-        \llbracket f \leftarrow n \rrbracket(\mathit{is}, \mathit{rs})
+        \interp { f \leftarrow n }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             (\mathsf{map}\ (f\leftarrow n)\ \mathit{is},
              \mathsf{map}\ (f\leftarrow n)\ \mathit{rs})
             \\
         %Policy Union
-         \llbracket p + q \rrbracket(\mathit{is}, \mathit{rs})
+         \interp { p + q }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             \mathsf{let}\ (\mathit{is}_p,\mathit{rs}_p) =
-            \llbracket p \rrbracket(\mathit{is}, \mathit{rs}) 
+            \interp { p }(\mathit{is}, \mathit{rs}) 
             \\
             &\mathsf{let}\ (\mathit{is}_q,\mathit{rs}_q) =
-            \llbracket q \rrbracket(\mathit{is}, \mathit{rs}) 
+            \interp { q }(\mathit{is}, \mathit{rs}) 
             \\
             &(\mathit{is}_p \cup \mathit{is}_q,\mathit{rs}_p \cup \mathit{rs}_b) 
             \\
         %Policy Concatnation
-        \llbracket p \cdot q \rrbracket(\mathit{is}, \mathit{rs})
+        \interp { p \cdot q }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             \mathsf{let}\ (\mathit{is}',\mathit{rs}') =
-            \llbracket p \rrbracket(\mathit{is}, \mathit{rs})
+            \interp { p }(\mathit{is}, \mathit{rs})
             \\
-            &\llbracket q \rrbracket(\mathit{is}', \mathit{rs}')
+            &\interp { q }(\mathit{is}', \mathit{rs}')
             \\
         %Below need work
         \dots & \dots \dots \\
         %Policy Kleene Star
-        \llbracket p ^{*} \rrbracket (\mathit{is}, \mathit{rs})
+        \interp { p ^{*} } (\mathit{is}, \mathit{rs})
             \triangleq\ &
             \mathsf{let}\ p^{n} = p_{1} \cdot p_{2} \cdot \ldots \cdot p_{n}
             \\
-            &\mathsf{let}\ (\mathit{is_{p_{n}}}, \mathit{rs_{p_{n}}}) = \llbracket p^{n} \rrbracket (is, rs)
+            &\mathsf{let}\ (\mathit{is_{p_{n}}}, \mathit{rs_{p_{n}}}) = \interp { p^{n} } (is, rs)
             \\
             &(\bigcup^{\infty}_{n=0} \mathit{is_{p_{n}}}, \bigcup^{\infty}_{n=0} \mathit{rs_{p_{n}}})
             \\
@@ -209,7 +209,7 @@
 Prove that
 \begin{itemize}
 \item  if
-  $\llbracket \mathsf{NoWritesZero} \rrbracket (\mathit{is}, \mathit{rs}) =
+  $\interp{ \mathsf{NoWritesZero} } (\mathit{is}, \mathit{rs}) =
   (\mathit{is}', \mathit{rs}')$
 \item then
   \begin{enumerate}
@@ -248,22 +248,22 @@ Prove that
     Given the above definitions, the following can be unraveled into a syntactically-correct equation:
 \begin{align}
     \setcounter{equation}{0}
-    \llbracket \mathsf{NoWritesZero} \rrbracket (\mathit{is}, \mathit{rs}) 
+    \interp{ \mathsf{NoWritesZero} } (\mathit{is}, \mathit{rs}) 
     &=
     (\mathit{is}', \mathit{rs}')
     \\
-    \llbracket act(\neg \mathsf{WritesToZero}) \rrbracket (\mathit{is}, \mathit{rs}) 
+    \interp{ act(\neg \mathsf{WritesToZero}) } (\mathit{is}, \mathit{rs}) 
     &=
     (\mathit{is}', \mathit{rs}')
     \\
-    \llbracket act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0) \rrbracket (\mathit{is}, \mathit{rs}) 
+    \interp{ act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0) } (\mathit{is}, \mathit{rs}) 
     &=
     (\mathit{is}', \mathit{rs}')
 \end{align}
     Action can then be unraveled semantically using the definition of action slice:
     %Do I need to define something or do it as I did below?
 \begin{align}
-    \llbracket act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0) \rrbracket (\mathit{is}, \mathit{rs}) 
+    \interp{ act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0) } (\mathit{is}, \mathit{rs}) 
     =
     (\mathit{is}', \mathit{rs})
 \end{align}
@@ -276,33 +276,33 @@ Prove that
     And it has been proven that $\mathit{rs} = \mathit{rs'}$.\\
     Substituting (4) and (5) into (3) gives (6), which can be substituted with (7), the definition of negation, to get (8). 
 \begin{align}
-    \llbracket \neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    \interp{ \neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is}, \mathit{rs}) 
     &=
     (\mathit{is}', \mathit{rs})\\
-    \llbracket \neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    \interp{ \neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is}, \mathit{rs}) 
     &=
-    (\mathit{is}, \mathit{rs}) - \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs})\\ %this is a rule using the definition of negation for the next equation.
-    (\mathit{is}, \mathit{rs}) - \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    (\mathit{is}, \mathit{rs}) - \interp{ \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is}, \mathit{rs})\\ %this is a rule using the definition of negation for the next equation.
+    (\mathit{is}, \mathit{rs}) - \interp{ \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is}, \mathit{rs}) 
     &=
     (\mathit{is}', \mathit{rs})
 \end{align}
     (8) can be simplified using algebra.
 \begin{align}    
-    - \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    - \interp{ \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is}, \mathit{rs}) 
     &=
     (\mathit{is}', \mathit{rs}) - (\mathit{is}, \mathit{rs})
     \\
-    \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is}, \mathit{rs}) 
+    \interp{ \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is}, \mathit{rs}) 
     &=
     (\mathit{is}, \mathit{rs}) - (\mathit{is}', \mathit{rs})
 \end{align}
     The definition of a test can be unraveled into a filter result, and $\mathit{rs}$ can be canceled out of (10) for simplicity as rs has no field $\mathsf{R_{dest}}$.  Substitution of (12), the definition of a test and filter, into (11) will give (13).
 \begin{align}
-    \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is})
+    \interp{ \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is})
     &=
     (\mathit{is}) - (\mathit{is}')
     \\
-    \llbracket \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \rrbracket (\mathit{is})
+    \interp{ \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is})
     &=
     (\mathit{is_{[\mathsf{R_{dest}=R0}]}})
     \\
@@ -356,16 +356,16 @@ Prove that
  \paragraph{Lemma \#1}
      A filter sliced to actions over a set where the actions satisfy the filter, returns itself.
  \[
-     \llbracket act(f=\mathsf{A}) \rrbracket (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
+     \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
  \]
      Let (1) define $(\mathit{is}', \mathit{rs}')$, and simplify.
  \begin{align}
      \setcounter{equation}{0}
-     \llbracket act(f=\mathsf{A}) \rrbracket (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+     \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
      &= 
      (\mathit{is}', \mathit{rs}')
      \\
-     (\llbracket (f=\mathsf{A}) \rrbracket \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+     \interp{ (f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
      &= 
      (\mathit{is}', \mathit{rs}')
      \\
@@ -377,36 +377,36 @@ Prove that
  \paragraph{Lemma \#2}
      It follows that the converse would result in no $\mathit{is}$ in the evaluated set:
  \[
-     \llbracket act(\neg f=\mathsf{A}) \rrbracket (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\emptyset, \mathit{rs})
+     \interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\emptyset, \mathit{rs})
  \]
 
  \paragraph{Proof 3.2.1}
      The evaluation of $\mathsf{SecureMemoryAccess}$ over some $(\mathit{is},\mathit{rs})$ can be unraveled into a syntactically correct equation given the above definitions.  $\mathsf{SI}$ is short for $\mathsf{SecureInstr}$, $\mathsf{SA}$ is short for $\mathsf{SecureAddr}$, and $\mathsf{SMA}$ is short for $\mathsf{SecureMemoryAccess}$:
  \begin{align}
      \setcounter{equation}{0}
-     \llbracket \mathsf{SMA} \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
-     \llbracket \mathit{act}(\mathsf{SI}) +
+     \interp{ \mathit{act}(\mathsf{SI}) +
      (\mathit{act}(\neg\mathsf{SI}) \cdot
-      \mathit{res}(\neg\mathsf{SA})) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+      \mathit{res}(\neg\mathsf{SA})) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
-     \llbracket \mathit{act}(\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup % or would + be better?
-     \llbracket \mathit{act}(\neg\mathsf{SI}) \cdot
-      \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup % or would + be better?
+     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
      Beginning with the left side of the union unraveled further, and evaluated over $(\mathit{is}_{[\mathsf{SI}]},\mathit{rs})$, the simplification using Lemma \#1 results in (6):
  \begin{align}
-     \llbracket \mathit{act} (\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup \ldots
+     \interp{ \mathit{act} (\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup \ldots
      &=
      (\mathit{is}', \mathit{rs}')
      \\
-     \llbracket \mathit{act} (PC=0\ldots 100) \rrbracket (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup \ldots %should probably use element of insead of = for is_{PC}
+     \interp{ \mathit{act} (PC=0\ldots 100) } (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup \ldots %should probably use element of insead of = for is_{PC}
      &=
      (\mathit{is}', \mathit{rs}')
      \\
@@ -417,44 +417,44 @@ Prove that
      The right side can be evaluated similarly.
  \begin{align}
      \ldots \cup % or would + be better?
-     \llbracket \mathit{act}(\neg\mathsf{SI}) \cdot
-      \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
      \ldots \cup % or would + be better?
-     \llbracket \mathit{act}(\neg\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cap
-     \llbracket \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     \interp{ \mathit{act}(\neg\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cap
+     \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
      \ldots \cup 
      (\emptyset, \mathit{rs}) \cap
-     \llbracket \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
      \\ %
      \ldots \cup 
      (\emptyset, \mathit{rs}) \cap
-     (\mathit{is_{\mathsf{SI}}}, \llbracket (\neg\mathsf{SA}) \rrbracket \mathit{rs})
+     (\mathit{is_{\mathsf{SI}}}, \interp{ (\neg\mathsf{SA}) } \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
      \ldots \cup 
      (\emptyset, \mathit{rs}) \cap
-     (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - \llbracket (\mathsf{SA}) \rrbracket \mathit{rs})
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}') %
      \\
      \ldots \cup 
-     (\emptyset, \mathit{rs} - \llbracket (\mathsf{SA}) \rrbracket \mathit{rs})
+     (\emptyset, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
      The left side of the intersection can be evaluated to $(\emptyset, \mathit{rs})$ Lemma \#2 from (8) to (9). The right side of the intersection can be evaluated by the definition of negation and result slicing, (9) to (11).  The intersection is then evaluated over both to give (12).  The union can be evaluated as:
  \begin{align}
      (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup 
-     (\emptyset, \mathit{rs} - \llbracket (\mathsf{SA}) \rrbracket \mathit{rs})
+     (\emptyset, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
@@ -462,31 +462,31 @@ Prove that
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align} 
-     (13) simplifies to (14) because the union of a set and the empty set is the first set, and the expression $\mathit{rs} - \llbracket (\mathsf{SA}) \rrbracket \mathit{rs}$ is by definition a subset of $\mathit{rs}$.  This leaves $\mathit{rs} = \mathit{rs}'$, proving part 1. 
+     (13) simplifies to (14) because the union of a set and the empty set is the first set, and the expression $\mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs}$ is by definition a subset of $\mathit{rs}$.  This leaves $\mathit{rs} = \mathit{rs}'$, proving part 1. 
 
  \paragraph{Proof 3.2.2}
      The evaluation of $\mathsf{SecureMemoryAccess}$ over insecure actions and results is to be proven to not change the results.  This idea can be written to equal some $(\mathit{is}', \mathit{rs}')$, and then simplified in the same way as the beginning of Proof 3.2.1
  \begin{align}
      \setcounter{equation}{0}
-     \llbracket \mathsf{SMA} \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
-     \llbracket \mathit{act}(\mathsf{SI}) +
+     \interp{ \mathit{act}(\mathsf{SI}) +
      (\mathit{act}(\neg\mathsf{SI}) \cdot
-      \mathit{res}(\neg\mathsf{SA}))  \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+      \mathit{res}(\neg\mathsf{SA}))  } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
-     \llbracket \mathit{act}(\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup % or would + be better?
-     \llbracket \mathit{act}(\neg\mathsf{SI}) \cdot
-      \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup % or would + be better?
+     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
      Following the same format, the expression to the left of the union is evaluated first.
  \begin{align}
-     \llbracket \mathit{act}(\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup \ldots
+     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup \ldots
      &=
      (\mathit{is}', \mathit{rs}')
      \\
@@ -498,20 +498,20 @@ Prove that
      The expression to the right of the union is now evaluated.
  \begin{align}
      \ldots \cup % or would + be better?
-     \llbracket \mathit{act}(\neg\mathsf{SI}) \cdot
-      \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
      \ldots \cup % or would + be better?
-     \llbracket \mathit{act}(\neg\mathsf{SI}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
-     \llbracket \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     \interp{ \mathit{act}(\neg\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
+     \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
      \ldots \cup % or would + be better?
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
-     \llbracket \mathit{res}(\neg\mathsf{SA}) \rrbracket (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
