@@ -218,33 +218,37 @@ Prove that
   \end{enumerate}
 \end{itemize}
 \begin{proof}
-    \hfill  \\
-  \begin{tabular}{rl}
-    %\label{step1}
-    $\interp{\mathsf{NoWritesToZero}}
-    = \interp{\mathit{act}(\neg \mathsf{WritesToZero})}$
-    & Defn.\\
-    %\label{step2}
-    $\interp{\mathit{act}(\neg \mathsf{WritesToZero})}
-    = \interp{act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}$
-    & Defn.\\
-    %\label{step3}
-    $\interp{act(\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0))}(\mathit{is},\mathit{rs})
-    = ((\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})).1, \mathit{rs})$
-    & Defn. $\interp{\cdot}$\\    
-    %\label{step4}
-    $\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})
-    = (\mathit{is},\mathit{rs}) - \interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})$
-    & Defn. $\interp{\cdot}$\\    
-    %\label{step5}
-    $\interp{\mathsf{NoWritesToZero}}(\mathit{is},\mathit{rs})
-    = (\mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1, \mathit{rs})$
-    & \ref{step1,step2,step3,step4}\\
-    %\label{step6}
-    $is' = \mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1$ & \ref{step5} \\
-    %\label{step7}
-    $rs' = rs$ & \ref{step5}
-  \end{tabular}
+%    \hfill  \\
+%  \begin{tabular}{rl}
+%    %\label{step1}
+%    $\interp{\mathsf{NoWritesToZero}}
+%    = \interp{\mathit{act}(\neg \mathsf{WritesToZero})}$
+%    & Defn.\\
+%    %\label{step2}
+%    $\interp{\mathit{act}(\neg \mathsf{WritesToZero})}
+%    = \interp{act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}$
+%    & Defn.\\
+%    %\label{step3}
+%    $\interp{act(\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0))}(\mathit{is},\mathit{rs})
+%    = ((\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})).1, \mathit{rs})$
+%    & Defn. $\interp{\cdot}$\\    
+%    %\label{step4}
+%    $\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is},\mathit{rs})
+%    = (\mathit{is},\mathit{rs}) - \interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})$
+%    & Defn. $\interp{\cdot}$\\    
+%    %\label{step5}
+%    $\interp{\mathsf{NoWritesToZero}}(\mathit{is},\mathit{rs})
+%    = (\mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1, \mathit{rs})$
+%    & \ref{step1,step2,step3,step4}\\
+%    %\label{step6}
+%    $is' = \mathit{is} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is},\mathit{rs})).1$ & \ref{step5} \\
+%    %\label{step7}
+%    $rs' = rs$ & \ref{step5}
+%  \end{tabular}
+
+%Reference https://tex.stackexchange.com/questions/33585/change-font-size-of-an-align-environment
+%Allows the proof to be smaller without changing the entire paper font size.  Paper can be reduced in size in the future but the proofs can remain smaller for width reasons.
+{\small
   \hfill \\
   \begin{alignat}{2}
     \label{step1}
@@ -274,9 +278,12 @@ Prove that
     rs' &= rs 
     &&\quad \ref{step5}
   \end{alignat}
+}%
 \end{proof}
 
     Given the above definitions, the following can be unraveled into a syntactically-correct equation:
+\par\nobreak
+{\small
 \begin{align}
     \setcounter{equation}{0}
     \interp{ \mathsf{NoWritesZero} } (\mathit{is}, \mathit{rs}) 
@@ -291,21 +298,30 @@ Prove that
     &=
     (\mathit{is}', \mathit{rs}')
 \end{align}
+}
     Action can then be unraveled semantically using the definition of action slice:
     %Do I need to define something or do it as I did below?
+\par\nobreak
+{\small
 \begin{align}
     \interp{ act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0) } (\mathit{is}, \mathit{rs}) 
     =
     (\mathit{is}', \mathit{rs})
 \end{align}
+}
     And so by substitution:
+\par\nobreak
+{\small
 \begin{align}
     (\mathit{is}', \mathit{rs}')
     &=
     (\mathit{is}', \mathit{rs})
 \end{align}
+}
     And it has been proven that $\mathit{rs} = \mathit{rs'}$.\\
     Substituting (4) and (5) into (3) gives (6), which can be substituted with (7), the definition of negation, to get (8). 
+\par\nobreak
+{\small
 \begin{align}
     \interp{ \neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is}, \mathit{rs}) 
     &=
@@ -317,7 +333,10 @@ Prove that
     &=
     (\mathit{is}', \mathit{rs})
 \end{align}
+}
     (8) can be simplified using algebra.
+\par\nobreak
+{\small
 \begin{align}    
     - \interp{ \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is}, \mathit{rs}) 
     &=
@@ -327,7 +346,10 @@ Prove that
     &=
     (\mathit{is}, \mathit{rs}) - (\mathit{is}', \mathit{rs})
 \end{align}
+}
     The definition of a test can be unraveled into a filter result, and $\mathit{rs}$ can be canceled out of (10) for simplicity as rs has no field $\mathsf{R_{dest}}$.  Substitution of (12), the definition of a test and filter, into (11) will give (13).
+\par\nobreak
+{\small
 \begin{align}
     \interp{ \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 } (\mathit{is})
     &=
@@ -352,6 +374,7 @@ Prove that
     &=
     (\mathit{is}) - (\mathit{is_{[\mathsf{R_{dest}=R0}]}})
 \end{align}
+}
     The final simplification (16) means that $\mathit{is}'$ is equal to all $\mathit(is)$ \textit{without} all $\mathit(is)$ where $\mathsf{R_{dest}} = \mathsf{R_{0}}$.
     This in equation form is $\mathit{is}' = \mathit{is_{[\mathsf{R_{dest} \neq \mathsf{R_{0}}}]}}$, or all result instructions do not write to $\mathsf{R_{0}}$.  The second theorem has been proven.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -390,6 +413,8 @@ Prove that
      \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
  \]
      Let (1) define $(\mathit{is}', \mathit{rs}')$, and simplify.
+ \par\nobreak
+ {\small
  \begin{align}
      \setcounter{equation}{0}
      \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
@@ -404,6 +429,7 @@ Prove that
      &= 
      (\mathit{is}', \mathit{rs}')
  \end{align}
+ }
      The definition of action slice is used to transform (1) into (2).  (2) to (3) is true because a filter over a set that satisfies the filter is the set itself.\\
  \paragraph{Lemma \#2}
      It follows that the converse would result in no $\mathit{is}$ in the evaluated set:
@@ -413,6 +439,8 @@ Prove that
 
  \paragraph{Proof 3.2.1}
      The evaluation of $\mathsf{SecureMemoryAccess}$ over some $(\mathit{is},\mathit{rs})$ can be unraveled into a syntactically correct equation given the above definitions.  $\mathsf{SI}$ is short for $\mathsf{SecureInstr}$, $\mathsf{SA}$ is short for $\mathsf{SecureAddr}$, and $\mathsf{SMA}$ is short for $\mathsf{SecureMemoryAccess}$:
+ \par\nobreak
+ {\small
  \begin{align}
      \setcounter{equation}{0}
      \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
@@ -431,7 +459,10 @@ Prove that
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
+ }
      Beginning with the left side of the union unraveled further, and evaluated over $(\mathit{is}_{[\mathsf{SI}]},\mathit{rs})$, the simplification using Lemma \#1 results in (6):
+ \par\nobreak
+ {\small
  \begin{align}
      \interp{ \mathit{act} (\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup \ldots
      &=
@@ -445,7 +476,10 @@ Prove that
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
+ }
      The right side can be evaluated similarly.
+ \par\nobreak
+ {\small
  \begin{align}
      \ldots \cup % or would + be better?
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
@@ -482,7 +516,10 @@ Prove that
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
+ }
      The left side of the intersection can be evaluated to $(\emptyset, \mathit{rs})$ Lemma \#2 from (8) to (9). The right side of the intersection can be evaluated by the definition of negation and result slicing, (9) to (11).  The intersection is then evaluated over both to give (12).  The union can be evaluated as:
+ \par\nobreak
+ {\small
  \begin{align}
      (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup 
      (\emptyset, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
@@ -492,11 +529,14 @@ Prove that
      (\mathit{is_{PC=0\ldots100}}, \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
- \end{align} 
+ \end{align}
+ } 
      (13) simplifies to (14) because the union of a set and the empty set is the first set, and the expression $\mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs}$ is by definition a subset of $\mathit{rs}$.  This leaves $\mathit{rs} = \mathit{rs}'$, proving part 1. 
 
  \paragraph{Proof 3.2.2}
      The evaluation of $\mathsf{SecureMemoryAccess}$ over insecure actions and results is to be proven to not change the results.  This idea can be written to equal some $(\mathit{is}', \mathit{rs}')$, and then simplified in the same way as the beginning of Proof 3.2.1
+ \par\nobreak
+ {\small
  \begin{align}
      \setcounter{equation}{0}
      \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
@@ -515,7 +555,10 @@ Prove that
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
+ }
      Following the same format, the expression to the left of the union is evaluated first.
+ \par\nobreak
+ {\small
  \begin{align}
      \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup \ldots
      &=
@@ -525,8 +568,11 @@ Prove that
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
+ }
      Lemma \#2 in the previous proof simplifies this easily.\\
      The expression to the right of the union is now evaluated.
+ \par\nobreak
+ {\small
  \begin{align}
      \ldots \cup % or would + be better?
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
@@ -557,8 +603,11 @@ Prove that
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
+ }
      Lemma \#1 is used to simplfy the left side of the intersection, and a result-version of Lemma \#1 is used to simplify the right side of the intersection. (10) contains the evaluated intersection.\\
      The left and right sides of the union can be rejoined and evaluated to determine the exact equivalence of $(\mathit{is}', \mathit{rs}')$:
+ \par\nobreak
+ {\small
  \begin{align}
      (\emptyset, \mathit{rs_{\mathsf{\neg SA}}}) \cup
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
@@ -569,6 +618,7 @@ Prove that
      &=
      (\mathit{is}', \mathit{rs}')
  \end{align}
+ }
      In (12), it is shown that the evaluated results are unchanged, and it can additionally be said that none of the instructions have been changed from the initial input as well.  This proves part 2.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
