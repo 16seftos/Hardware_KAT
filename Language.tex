@@ -75,6 +75,7 @@
 %%% BEGIN SECTION 2 %%%
 %%% SEMANTICS       %%%
 %%%%%%%%%%%%%%%%%%%%%%%
+ %{\fontsize{12pt}{14pt}\selectfont
     %Semantics align
     \begin{align*}
         %
@@ -169,8 +170,6 @@
             \\
             &\interp { q }(\mathit{is}', \mathit{rs}')
             \\
-        %Below need work
-        \dots & \dots \dots \\
         %Policy Kleene Star
         \interp { p ^{*} } (\mathit{is}, \mathit{rs})
             \triangleq\ &
@@ -179,8 +178,34 @@
             &\mathsf{let}\ (\mathit{is_{p_{n}}}, \mathit{rs_{p_{n}}}) = \interp { p^{n} } (is, rs)
             \\
             &(\bigcup^{\infty}_{n=0} \mathit{is_{p_{n}}}, \bigcup^{\infty}_{n=0} \mathit{rs_{p_{n}}})
-            \\
+            \\  
+        %Below may need work
+        \dots & \dots \dots \\
     \end{align*}
+    %This is required because it will overflow the page otherwise.
+    \begin{align*}
+        \mathsf{let}\ ls \in\ & is\cup rs\\
+        %Defn. of Filter
+        \interp{\mathsf{filter}(f=n)}(ls)
+            \triangleq\ &
+            \mathsf{let}\ \mathit{ls[f_j]} = \mathit{v_j}\\
+            &ls' \in \{ls\ |\ ls[f_j] == n\}\\
+            %Or this: ls[f_j] == n\\ ?
+            %Or this: ls' \in \{ls\ \mathsf{if}\ ls[f_j] == n\}\\
+             % meaning "if ls[f_j] == n" instead of "where"
+          %A filter that takes a set of instructions and results returns the set of only instructions and results that satisfy some condition f=n the filter is given
+          % '|' is used to mean "where"
+          % e.g. ls' \in \{ls\ |\ ls[f_j] == n\} means "All ls' in the set of ls where the field f_j value v_j of ls is equal to n"
+        %Defn. of Map
+        \interp{\mathsf{map}}
+            \triangleq\ &
+            \mathsf{let}\ \mathit{ls[f_j]} = \mathit{v_j}\\
+            &ls'\ |\ ls[f_j] = n
+          %A map that takes a set of instruction and results returns a new set of instructions and results where the field(s) f are updated to some value n given as f \leftarrow n
+          % ls{f_j} = n is used to mean "assign n to f_j".
+          % should it be specified that n is only assigned to relevant fields? Probably.
+    \end{align*}
+ %}
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SECTION 2 %%%
 %%% SEMANTICS        %%%
