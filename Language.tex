@@ -186,10 +186,8 @@
     \begin{align*}
         \mathsf{let}\ ls \in\ & is\cup rs\\
         %Defn. of Filter
-        \interp{\mathsf{filter}(f=n)}(ls)
-            \triangleq\ &
-            \mathsf{let}\ \mathit{ls[f_j]} = \mathit{v_j}\\
-            &ls' \in \{ls\ |\ ls[f_j] == n\}\\
+        \interp{\mathsf{filter}(f=n)}(is)
+            \triangleq\ & \{i \in is\ |\ i_f = n\}\\
             %Or this: ls[f_j] == n\\ ?
             %Or this: ls' \in \{ls\ \mathsf{if}\ ls[f_j] == n\}\\
              % meaning "if ls[f_j] == n" instead of "where"
@@ -197,10 +195,9 @@
           % '|' is used to mean "where"
           % e.g. ls' \in \{ls\ |\ ls[f_j] == n\} means "All ls' in the set of ls where the field f_j value v_j of ls is equal to n"
         %Defn. of Map
-        \interp{\mathsf{map}}
-            \triangleq\ &
-            \mathsf{let}\ \mathit{ls[f_j]} = \mathit{v_j}\\
-            &ls'\ |\ ls[f_j] = n
+        \interp{\mathsf{map}\ g}(is)
+        \triangleq\ &
+        \{ g(i)\ |\ i\in is \} \\
           %A map that takes a set of instruction and results returns a new set of instructions and results where the field(s) f are updated to some value n given as f \leftarrow n
           % ls{f_j} = n is used to mean "assign n to f_j".
           % should it be specified that n is only assigned to relevant fields? Probably.
