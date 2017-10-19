@@ -697,18 +697,18 @@ require that the lock bit be set.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \[
 \begin{array}{rcl}
-  \mathit{Instruction\ Fields}\ f_i &::=& \mathsf{Lock_{Instr}}, \mathsf{IC}\\
-  \mathsf{IC} &::=& \mathsf{MEM_{READ}}\ |\ \mathsf{MEM_{WRITE}}\ |\ \cdots \\
+  \mathit{Instruction\ Fields}\ f_i &::=& \mathsf{Lock_{Instr}}, \mathsf{OP}\\
+  \mathsf{OP} &::=& \mathsf{MEM_{READ}}\ |\ \mathsf{MEM_{WRITE}}\ |\ \cdots \\
   \mathit{Result\ Fields}\ f_r &::=& \mathsf{Lock_{MemAddr}}\\
   \mathsf{LockedInstr} &\triangleq& \mathsf{Lock_{Instr}} = \mathsf{TRUE} \\
   \mathsf{LockedMem} &\triangleq& \mathsf{Lock_{MemAddr}} = \mathsf{TRUE} \\
-  \mathsf{Read} &\triangleq& \mathsf{IC} = \mathsf{MEM_{READ}}\\
-  \mathsf{Write} &\triangleq& \mathsf{IC} = \mathsf{MEM_{WRITE}}\\
+  \mathsf{Read} &\triangleq& \mathsf{OP} = \mathsf{MEM_{READ}}\\
+  \mathsf{Write} &\triangleq& \mathsf{OP} = \mathsf{MEM_{WRITE}}\\
   %Rule
   \mathsf{LockSecure} &\triangleq& 
     act(\mathsf{LockedInstr})\cdot res(\mathsf{LockedMem})\\
     &&+
-    act(\mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem}) \cdot \mathsf{inj_{MEM-LOCK}} \\
+    act(\mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem}) \cdot \mathit{inj_{\mathsf{MEM-LOCK}}} \\
   \mathsf{LockInsecure} &\triangleq&
     act(\neg \mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem})\\
   \mathsf{Locked} &\triangleq& \mathsf{LockSecure} + \mathsf{LockInsecure}
