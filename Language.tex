@@ -450,7 +450,7 @@
      \]
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
- \begin{align}
+ \begin{alignat}{2}
      \setcounter{equation}{0}
      \label{3.2.1:step1}
      \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
@@ -475,7 +475,7 @@
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
       \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &&\quad \text{Defn.},\ \ref{3.2.1:step2}
- \end{align}
+ \end{alignat}
  }%
      This proof will be broken into two parts for spacial simplicity.  The left side of the union will be evaluated, then the right, and finally both will be combined.
  \par\nobreak
@@ -580,32 +580,41 @@
  \end{proof}
 
  \paragraph{Proof 3.2.2}
-     The evaluation of $\mathsf{SecureMemoryAccess}$ over insecure actions and results is to be proven to not change the results.  This idea can be written to equal some $(\mathit{is}', \mathit{rs}')$, and then simplified in the same way as the beginning of Proof 3.2.1
+     The evaluation of $\mathsf{SecureMemoryAccess}$ over insecure actions and results does not change the results.  This idea can be written to equal some $(\mathit{is}', \mathit{rs}')$, and then simplified in the same way as the beginning of Proof 3.2.1
+
+ \begin{proof}
+ if
+     \[
+     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     =
+     (\mathit{is}', \mathit{rs}')
+     \]
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
- \begin{align}
+ \begin{alignat}{2}
      \setcounter{equation}{0}
+     \label{3.2.2:step1}
      \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
-     (\mathit{is}', \mathit{rs}')
-     \\
      \interp{ \mathit{act}(\mathsf{SI}) +
      (\mathit{act}(\neg\mathsf{SI}) \cdot
       \mathit{res}(\neg\mathsf{SA}))  } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
-     &=
-     (\mathit{is}', \mathit{rs}')
+     &&\quad \text{Defn.}\ \mathsf{SMA}
      \\
-     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup % or would + be better?
+     \label{3.2.2:step2}
+     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     &=
+     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \\
+     &\quad \cup % or would + be better?
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
       \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
-     &=
-     (\mathit{is}', \mathit{rs}')
- \end{align}
+     &&\quad \text{Defn.}\ \interp{+},\ \ref{3.2.2:step1}
+ \end{alignat}
  }%
      Following the same format, the expression to the left of the union is evaluated first.
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
- \begin{align}
+ \begin{alignat}{2}
      \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup \ldots
      &=
      (\mathit{is}', \mathit{rs}')
@@ -613,13 +622,13 @@
      (\emptyset, \mathit{rs_{\mathsf{\neg SA}}}) \cup \ldots
      &=
      (\mathit{is}', \mathit{rs}')
- \end{align}
+ \end{alignat}
  }%
      Lemma \#2 in the previous proof simplifies this easily.\\
      The expression to the right of the union is now evaluated.
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
- \begin{align}
+ \begin{alignat}{2}
        % or would + be better?
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
       \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
@@ -648,13 +657,13 @@
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
- \end{align}
+ \end{alignat}
  }%
      Lemma \#1 is used to simplfy the left side of the intersection, and a result-version of Lemma \#1 is used to simplify the right side of the intersection. (10) contains the evaluated intersection.\\
      The left and right sides of the union can be rejoined and evaluated to determine the exact equivalence of $(\mathit{is}', \mathit{rs}')$:
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
- \begin{align}
+ \begin{alignat}{2}
      (\emptyset, \mathit{rs_{\mathsf{\neg SA}}}) \cup
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
@@ -663,9 +672,10 @@
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
- \end{align}
+ \end{alignat}
  }%
      In (12), it is shown that the evaluated results are unchanged, and it can additionally be said that none of the instructions have been changed from the initial input as well.  This proves part 2.
+  \end{proof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SUBSECTION 3.2 %%%
