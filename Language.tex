@@ -307,7 +307,7 @@
      rs' &= rs 
      &&\quad \ref{3.1.1:step5} \\
      %Add, by deconstruction of (is,rs) pair?
-     \label{3.1.1:step8}
+     \label{3.1.1:qed}
      %& \mathsf{Q.E.D.}
      &\qedhere
     &&\quad \ref{3.1.1:step7}
@@ -394,7 +394,7 @@
          &=
          (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
          &&\quad \ref{3.2.L.1:step1},\ \ref{3.2.L.1:step2},\ \ref{3.2.L.1:step3}\\
-         \label{3.2.L.1:QED}
+         \label{3.2.L.1:qed}
          &\qedhere
          &&\quad \ref{3.2.L.1:step4}
      \end{alignat}
@@ -432,7 +432,7 @@
          &=
          (\emptyset, \mathit{rs})
          &&\quad \ref{3.2.L.2:step1},\ \ref{3.2.L.2:step2},\ \ref{3.2.L.2:step3}\\
-         \label{3.2.L.2:QED}
+         \label{3.2.L.2:qed}
          &\qedhere
          &&\quad \ref{3.2.L.2:step4}
      \end{alignat}
@@ -441,6 +441,7 @@
 
  \paragraph{Proof 3.2.1}
      The evaluation of $\mathsf{SecureMemoryAccess}$ over some $(\mathit{is},\mathit{rs})$ can be unraveled given the above definitions.  $\mathsf{SI}$ is short for $\mathsf{SecureInstr}$, $\mathsf{SA}$ is short for $\mathsf{SecureAddr}$, and $\mathsf{SMA}$ is short for $\mathsf{SecureMemoryAccess}$:\\
+ \begin{proof}
      if
      \[
      \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
@@ -454,114 +455,129 @@
      \label{3.2.1:step1}
      \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
-     (\mathit{is}', \mathit{rs}')
-     \\
      \interp{ \mathit{act}(\mathsf{SI}) +
      (\mathit{act}(\neg\mathsf{SI}) \cdot
       \mathit{res}(\neg\mathsf{SA})) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
-     &=
-     (\mathit{is}', \mathit{rs}')
+     &&\quad \text{Defn.}\ \mathsf{SMA}
      \\
+     \label{3.2.1:step2}
+     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &=
      \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup % or would + be better?
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
       \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
-     &=
+     &&\quad \text{Defn.}\ \interp{+}
+     \\
+     \label{3.2.1:step3}
      (\mathit{is}', \mathit{rs}')
+     &=
+     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup % or would + be better?
+     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &&\quad \text{Defn.},\ \ref{3.2.1:step2}
  \end{align}
  }%
-% \par\nobreak
-% {\fontsize{10pt}{12pt}\selectfont
-% \begin{align}
-%     \setcounter{equation}{0}
-%     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
-%     &=
-%     (\mathit{is}', \mathit{rs}')
-%     \\
-%     \interp{ \mathit{act}(\mathsf{SI}) +
-%     (\mathit{act}(\neg\mathsf{SI}) \cdot
-%      \mathit{res}(\neg\mathsf{SA})) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
-%     &=
-%     (\mathit{is}', \mathit{rs}')
-%     \\
-%     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup % or would + be better?
-%     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
-%      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
-%     &=
-%     (\mathit{is}', \mathit{rs}')
-% \end{align}
-% }%
-     Beginning with the left side of the union unraveled further, and evaluated over $(\mathit{is}_{[\mathsf{SI}]},\mathit{rs})$, the simplification using Lemma \#1 results in (6):
+     This proof will be broken into two parts for spacial simplicity.  The left side of the union will be evaluated, then the right, and finally both will be combined.
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
- \begin{align}
-     \interp{ \mathit{act} (\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup \ldots
+ \begin{alignat}{2}
+     \label{3.2.1:step4}
+     \interp{ \mathit{act} (\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})  
      &=
-     (\mathit{is}', \mathit{rs}')
-     \\
-     \interp{ \mathit{act} (PC=0\ldots 100) } (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup \ldots %should probably use element of insead of = for is_{PC}
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs})   %should probably use element of insead of = for is_{PC}
+     &&\quad \text{Lemma \#1}\\
+     \label{3.2.1:step5}
+     \interp{ \mathit{act} (\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})  
      &=
-     (\mathit{is}', \mathit{rs}')
-     \\
-     (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup \ldots 
-     &=
-     (\mathit{is}', \mathit{rs}')
- \end{align}
+     (\mathit{is_{PC=0\ldots 100}}, \mathit{rs})
+     &&\quad \text{Defn.}\ \mathsf{SI},\ \ref{3.2.1:step4}
+ \end{alignat}
  }%
      The right side can be evaluated similarly.
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
- \begin{align}
-     \ldots \cup % or would + be better?
+ \begin{alignat}{2}
+     \label{3.2.1:step6}
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
       \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
-     (\mathit{is}', \mathit{rs}')
+     \interp{ \mathit{act}(\neg\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})\\ %%Err
+     &\quad \cap
+     \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &&\quad \text{Defn.}\ \interp{\cdot}
+     \\ %ERR: bug with numbering lines that shouldn't be numbered
+     \label{3.2.1:step8}
+     \interp{ \mathit{act}(\neg\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &=
+     (\emptyset, \mathit{rs})
+     &&\quad \text{Lemma \#2}
      \\
-     \ldots \cup % or would + be better?
-     \interp{ \mathit{act}(\neg\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cap
+     \label{3.2.1:step9}
      \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
-     (\mathit{is}', \mathit{rs}')
+     (\mathit{is_{\mathsf{SI}}}, \interp{ (\neg\mathsf{SA}) } \mathit{rs})
+     &&\quad \text{Defn.}\ \interp{\mathit{res}}
      \\
-     \ldots \cup 
-     (\emptyset, \mathit{rs}) \cap
-     \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
-     &=
-     (\mathit{is}', \mathit{rs}')
-     \\ %
-     \ldots \cup 
-     (\emptyset, \mathit{rs}) \cap
+     \label{3.2.1:step10}
      (\mathit{is_{\mathsf{SI}}}, \interp{ (\neg\mathsf{SA}) } \mathit{rs})
      &=
-     (\mathit{is}', \mathit{rs}')
-     \\
-     \ldots \cup 
-     (\emptyset, \mathit{rs}) \cap
      (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
-     &=
-     (\mathit{is}', \mathit{rs}') %
+     &&\quad \text{Defn.}\ \interp{\mathsf{filter}}
      \\
-     \ldots \cup 
-     (\emptyset, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
+     \label{3.2.1:step11}
+     \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
-     (\mathit{is}', \mathit{rs}')
- \end{align}
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
+     &&\quad \ref{3.2.1:step9},\ \ref{3.2.1:step10}
+     \\
+     \label{3.2.1:step12}
+     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &=
+     (\emptyset, \mathit{rs})
+     \\
+     &\quad \cap
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
+     &&\quad \ref{3.2.1:step6},\ \ref{3.2.1:step8},\ \ref{3.2.1:step11}
+     \\
+     \label{3.2.1:step14}
+     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &=
+     (\emptyset, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
+     &&\quad \text{Defn.}\ \cap
+ \end{alignat}
  }%
-     The left side of the intersection can be evaluated to $(\emptyset, \mathit{rs})$ Lemma \#2 from (8) to (9). The right side of the intersection can be evaluated by the definition of negation and result slicing, (9) to (11).  The intersection is then evaluated over both to give (12).  The union can be evaluated as:
+     The union can be evaluated as:
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
- \begin{align}
-     (\mathit{is_{PC=0\ldots100}}, \mathit{rs}) \cup 
+ \begin{alignat}{2}
+     \label{3.2.1:step15}
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup 
      (\emptyset, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
      &=
-     (\mathit{is}', \mathit{rs}')
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &&\quad \text{Defn.}\ \cup
      \\
-     (\mathit{is_{PC=0\ldots100}}, \mathit{rs})
-     &=
+     \label{3.2.1:step16}
      (\mathit{is}', \mathit{rs}')
- \end{align}
+     &=
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &&\quad \ref{3.2.1:step3},\ \ref{3.2.1:step5},\ \ref{3.2.1:step14},\ \ref{3.2.1:step15}
+     \\
+     \label{3.2.1:step17}
+     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &=
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     &&\quad \text{Defn.},\ \ref{3.2.1:step16}
+     \\
+     \label{3.2.1:qed}
+     &\quad \qedhere
+     &&\quad \ref{3.2.1:step17}
+ \end{alignat}
  }% 
-     (13) simplifies to (14) because the union of a set and the empty set is the first set, and the expression $\mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs}$ is by definition a subset of $\mathit{rs}$.  This leaves $\mathit{rs} = \mathit{rs}'$, proving part 1. 
+     It has been shown that the results of the interpretation have been unchanged and therefore the proof need not continue further.
+ \end{proof}
 
  \paragraph{Proof 3.2.2}
      The evaluation of $\mathsf{SecureMemoryAccess}$ over insecure actions and results is to be proven to not change the results.  This idea can be written to equal some $(\mathit{is}', \mathit{rs}')$, and then simplified in the same way as the beginning of Proof 3.2.1
@@ -604,31 +620,31 @@
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
  \begin{align}
-     \ldots \cup % or would + be better?
+       % or would + be better?
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
       \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
-     \ldots \cup % or would + be better?
+       % or would + be better?
      \interp{ \mathit{act}(\neg\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
      \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
-     \ldots \cup % or would + be better?
+       % or would + be better?
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
      \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
-     \ldots \cup % or would + be better?
+       % or would + be better?
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
      \\
-     \ldots \cup % or would + be better?
+       % or would + be better?
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
      (\mathit{is}', \mathit{rs}')
