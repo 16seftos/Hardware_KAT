@@ -367,37 +367,91 @@
  \[
      \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
  \]
-     Let (1) define $(\mathit{is}', \mathit{rs}')$, and simplify.
- \par\nobreak
- {\fontsize{10pt}{12pt}\selectfont
- \begin{align}
-     \setcounter{equation}{0}
-     \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
-     &= 
-     (\mathit{is}', \mathit{rs}')
-     \\
-     \interp{ (f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
-     &= 
-     (\mathit{is}', \mathit{rs}')
-     \\
-     (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
-     &= 
-     (\mathit{is}', \mathit{rs}')
- \end{align}
- }%
-     The definition of action slice is used to transform (1) into (2).  (2) to (3) is true because a filter over a set that satisfies the filter is the set itself.\\
+ \begin{proof}
+     It suffices to prove that the result is unchanged when the policy is interpreted over the given set.
+     \par\nobreak
+     {\fontsize{10pt}{12pt}\selectfont
+     \begin{alignat}{2}
+         \setcounter{equation}{0}
+         \label{3.2.L.1:step1}
+         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &= 
+         (\mathit{is}', \mathit{rs}')
+         &&\quad \text{Defn.}
+         \\
+         \label{3.2.L.1:step2}
+         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &= 
+         (\interp{ (f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &&\quad \text{Defn.}\ \interp{act}\\
+         \label{3.2.L.1:step3}
+         (\interp{ (f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &=
+         (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &&\quad \text{Defn.}\ \interp{\mathsf{filter}}\\
+         \label{3.2.L.1:step4}
+         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &=
+         (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &&\quad \ref{3.2.L.1:step1},\ \ref{3.2.L.1:step2},\ \ref{3.2.L.1:step3}\\
+         \label{3.2.L.1:QED}
+         &\qedhere
+         &&\quad \ref{3.2.L.1:step4}
+     \end{alignat}
+     }%
+ \end{proof}
  \paragraph{Lemma \#2}
      It follows that the converse would result in no $\mathit{is}$ in the evaluated set:
  \[
      \interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\emptyset, \mathit{rs})
  \]
+ \begin{proof}
+     It suffices to prove that the result has no $\mathit{is}$ when the policy is interpreted over the given set.
+     \par\nobreak
+     {\fontsize{10pt}{12pt}\selectfont
+     \begin{alignat}{2}
+         \setcounter{equation}{0}
+         \label{3.2.L.2:step1}
+         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &= 
+         (\mathit{is}', \mathit{rs}')
+         &&\quad \text{Defn.}
+         \\
+         \label{3.2.L.2:step2}
+         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &= 
+         (\interp{ (f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &&\quad \text{Defn.}\ \interp{act}\\
+         \label{3.2.L.2:step3}
+         (\interp{ (f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &=
+         (\emptyset, \mathit{rs})
+         &&\quad \text{Defn.}\ \interp{\mathsf{filter}}\\
+         \label{3.2.L.2:step4}
+         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         &=
+         (\emptyset, \mathit{rs})
+         &&\quad \ref{3.2.L.2:step1},\ \ref{3.2.L.2:step2},\ \ref{3.2.L.2:step3}\\
+         \label{3.2.L.2:QED}
+         &\qedhere
+         &&\quad \ref{3.2.L.2:step4}
+     \end{alignat}
+     }%
+ \end{proof}
 
  \paragraph{Proof 3.2.1}
-     The evaluation of $\mathsf{SecureMemoryAccess}$ over some $(\mathit{is},\mathit{rs})$ can be unraveled into a syntactically correct equation given the above definitions.  $\mathsf{SI}$ is short for $\mathsf{SecureInstr}$, $\mathsf{SA}$ is short for $\mathsf{SecureAddr}$, and $\mathsf{SMA}$ is short for $\mathsf{SecureMemoryAccess}$:
+     The evaluation of $\mathsf{SecureMemoryAccess}$ over some $(\mathit{is},\mathit{rs})$ can be unraveled given the above definitions.  $\mathsf{SI}$ is short for $\mathsf{SecureInstr}$, $\mathsf{SA}$ is short for $\mathsf{SecureAddr}$, and $\mathsf{SMA}$ is short for $\mathsf{SecureMemoryAccess}$:\\
+     if
+     \[
+     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     =
+     (\mathit{is}', \mathit{rs}')
+     \]
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
  \begin{align}
      \setcounter{equation}{0}
+     \label{3.2.1:step1}
      \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
      (\mathit{is}', \mathit{rs}')
@@ -415,6 +469,27 @@
      (\mathit{is}', \mathit{rs}')
  \end{align}
  }%
+% \par\nobreak
+% {\fontsize{10pt}{12pt}\selectfont
+% \begin{align}
+%     \setcounter{equation}{0}
+%     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+%     &=
+%     (\mathit{is}', \mathit{rs}')
+%     \\
+%     \interp{ \mathit{act}(\mathsf{SI}) +
+%     (\mathit{act}(\neg\mathsf{SI}) \cdot
+%      \mathit{res}(\neg\mathsf{SA})) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+%     &=
+%     (\mathit{is}', \mathit{rs}')
+%     \\
+%     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup % or would + be better?
+%     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+%      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+%     &=
+%     (\mathit{is}', \mathit{rs}')
+% \end{align}
+% }%
      Beginning with the left side of the union unraveled further, and evaluated over $(\mathit{is}_{[\mathsf{SI}]},\mathit{rs})$, the simplification using Lemma \#1 results in (6):
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
