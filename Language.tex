@@ -184,23 +184,22 @@
     \end{align*}
     %This is required because it will overflow the page otherwise.
     \begin{align*}
-        \mathsf{let}\ ls \in\ & is\cup rs\\
+        \mathsf{let}\ l \in\ & is\cup rs\\
         %Defn. of Filter
-        \interp{\mathsf{filter}(f=n)}(is)
-            \triangleq\ & \{i \in is\ |\ i_f = n\}\\
-            %Or this: ls[f_j] == n\\ ?
-            %Or this: ls' \in \{ls\ \mathsf{if}\ ls[f_j] == n\}\\
-             % meaning "if ls[f_j] == n" instead of "where"
-          %A filter that takes a set of instructions and results returns the set of only instructions and results that satisfy some condition f=n the filter is given
-          % '|' is used to mean "where"
-          % e.g. ls' \in \{ls\ |\ ls[f_j] == n\} means "All ls' in the set of ls where the field f_j value v_j of ls is equal to n"
+        %\interp{\mathsf{filter}(f=n)}(is)
+        %    \triangleq\ & \{i \in is\ |\ i_f = n\}\\
+        %not sure which is better, also it could be defined discretely over is and rs but that is repetitive.
+        \interp{\mathsf{filter}(f=n)}(ls)
+            \triangleq\ & \{l \in ls\ |\ l_f = n\}\\
+        \interp{\mathsf{filter}\ f}(ls)
+            \triangleq\ & \{l \in ls\ |\ f(l) = \mathsf{true}\}\\
         %Defn. of Map
-        \interp{\mathsf{map}\ g}(is)
-        \triangleq\ &
-        \{ g(i)\ |\ i\in is \} \\
-          %A map that takes a set of instruction and results returns a new set of instructions and results where the field(s) f are updated to some value n given as f \leftarrow n
-          % ls{f_j} = n is used to mean "assign n to f_j".
-          % should it be specified that n is only assigned to relevant fields? Probably.
+        %\interp{\mathsf{map}\ g}(is)
+        %    \triangleq\ &
+        %    \{ g(i)\ |\ i\in is \} \\
+        \interp{\mathsf{map}\ g}(ls)
+            \triangleq\ &
+            \{ g(l)\ |\ l\in ls \} \\
     \end{align*}
  %}
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -226,7 +225,7 @@
    \mathsf{WritesToZero} &\triangleq& \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0 \\
    \mathsf{NoWritesToZero} &\triangleq& \mathit{act}(\neg\mathsf{WritesToZero})
  \end{array}
- \]
+ \]%equation brackets unecessary?
  
  Prove that
  \begin{itemize}
@@ -346,7 +345,7 @@
  \paragraph{Lemma \#1}
      A filter sliced to actions over a set where the actions satisfy the filter, returns itself.
  \[
-     \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\mathit{is_{[\mathsf{A}]}}, \mathit{rs})
+     \interp{ act(f=\mathsf{A}) } (\mathit{is}_{\mathsf{A}}, \mathit{rs}) = (\mathit{is_{\mathsf{A}}}, \mathit{rs})
  \]
  \begin{proof}
      It suffices to prove that the result is unchanged when the policy is interpreted over the given set.
@@ -355,37 +354,32 @@
      \begin{alignat}{2}
          \setcounter{equation}{0}
          %\label{3.2.L.1:step1}
-         %\interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         %\interp{ act(f=\mathsf{A}) } (\mathit{is}_{\mathsf{A}}, \mathit{rs})
          %&= 
          %(\mathit{is}', \mathit{rs}')
          %&&\quad \text{Defn.}
          %\\
          \label{3.2.L.1:step2}
-         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{\mathsf{A}}, \mathit{rs})
          &= 
-         (\interp{ (f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         ((\interp{ (f=\mathsf{A}) } (\mathit{is}_{\mathsf{A}}, \mathit{rs})).1, \mathit{rs})
          &&\quad \text{Defn.}\ \interp{\cdot}\\
          \label{3.2.L.1:step3}
-         %(\interp{ (f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         %(\interp{ (f=\mathsf{A}) } \mathit{is}_{\mathsf{A}}, \mathit{rs})
          &=
-         (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         (\mathit{is}_{\mathsf{A}}, \mathit{rs})
          &&\quad \text{Defn.}\ \interp{\mathsf{filter}}\\
-         \label{3.2.L.1:step4}
-         \interp{ act(f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
-         &=
-         (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
-         &&\quad \ref{3.2.L.1:step2},\ \ref{3.2.L.1:step3}\\
          \label{3.2.L.1:qed}
          &\qedhere
-         &&\quad \ref{3.2.L.1:step4}
+         &&\quad \ref{3.2.L.1:step2},\ \ref{3.2.L.1:step3}
      \end{alignat}
      }%
  \end{proof}
  \paragraph{Lemma \#2}
      It follows that the converse would result in no $\mathit{is}$ in the evaluated set:
  \[
-     \interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs}) = (\emptyset, \mathit{rs})
- \]
+     \interp{ act(\neg (f=\mathsf{A})) } (\mathit{is}_{\mathsf{A}}, \mathit{rs}) = (\emptyset, \mathit{rs})
+ \] %extra parentheses added to separate \neg and f=A, may be unecessary if \neg is defined to bind less strongly than a condition/filter.
  \begin{proof}
      It suffices to prove that the result has no $\mathit{is}$ when the policy is interpreted over the given set.
      \par\nobreak
@@ -393,29 +387,34 @@
      \begin{alignat}{2}
          \setcounter{equation}{0}
          %\label{3.2.L.2:step1}
-         %\interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         %\interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{\mathsf{A}}, \mathit{rs})
          %&= 
          %(\mathit{is}', \mathit{rs}')
          %&&\quad \text{Defn.}
          %\\
          \label{3.2.L.2:step2}
-         \interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         \interp{ act(\neg (f=\mathsf{A})) } (\mathit{is}_{\mathsf{A}}, \mathit{rs})
          &= 
-         (\interp{ (\neg f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         (\interp{ (\neg (f=\mathsf{A})) } \mathit{is}_{\mathsf{A}}, \mathit{rs})
          &&\quad \text{Defn.}\ \interp{\cdot}\\
          \label{3.2.L.2:step3}
-         %(\interp{ (\neg f=\mathsf{A}) } \mathit{is}_{[\mathsf{A}]}, \mathit{rs})
+         %(\interp{ (\neg f=\mathsf{A}) } \mathit{is}_{\mathsf{A}}, \mathit{rs})
+         &=
+         (\mathit{is}_{\mathsf{A}} - (\interp{ (f=\mathsf{A}) } (\mathit{is}_{\mathsf{A}}, \mathit{rs})).1, \mathit{rs})
+         &&\quad \text{Defn.}\ \interp{\mathsf{filter}}\\
+         \label{3.2.L.2:step4}
+         %(\interp{ (\neg f=\mathsf{A}) } \mathit{is}_{\mathsf{A}}, \mathit{rs})
+         &=
+         (\mathit{is}_{\mathsf{A}} - \mathit{is}_{\mathsf{A}}, \mathit{rs})
+         &&\quad \text{Defn.}\ \interp{\mathsf{filter}}\\
+         \label{3.2.L.2:step5}
+         %(\interp{ (\neg f=\mathsf{A}) } \mathit{is}_{\mathsf{A}}, \mathit{rs})
          &=
          (\emptyset, \mathit{rs})
          &&\quad \text{Defn.}\ \interp{\mathsf{filter}}\\
-         \label{3.2.L.2:step4}
-         \interp{ act(\neg f=\mathsf{A}) } (\mathit{is}_{[\mathsf{A}]}, \mathit{rs})
-         &=
-         (\emptyset, \mathit{rs})
-         &&\quad \ref{3.2.L.2:step2},\ \ref{3.2.L.2:step3}\\
          \label{3.2.L.2:qed}
          &\qedhere
-         &&\quad \ref{3.2.L.2:step4}
+         &&\quad \ref{3.2.L.2:step2},\ \ref{3.2.L.2:step5}
      \end{alignat}
      }%
  \end{proof}
@@ -442,7 +441,7 @@
      &&\quad \text{Defn.}\ \mathsf{SMA}
      \\
      \label{3.2.1:step2}
-     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     %\interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
      \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup % or would + be better?
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
@@ -498,13 +497,13 @@
      \label{3.2.1:step8}
      \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
-     (\mathit{is_{\mathsf{SI}}}, \interp{ (\neg\mathsf{SA}) } \mathit{rs})
+     (\mathit{is_{\mathsf{SI}}}, (\interp{ (\neg\mathsf{SA}) } (\mathit{is}, \mathit{rs})).2)
      &&\quad \text{Defn.}\ \interp{\cdot}
      \\
      \label{3.2.1:step9}
      %(\mathit{is_{\mathsf{SI}}}, \interp{ (\neg\mathsf{SA}) } \mathit{rs})
      &=
-     (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - (\interp{ (\mathsf{SA}) } (\mathit{is}, \mathit{rs})).2)
      &&\quad \text{Defn.}\ \interp{\mathsf{filter}}
      \\
      %\label{3.2.1:step10}
@@ -521,14 +520,14 @@
      \\
      \nonumber
      &\quad \cap
-     (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
+     (\mathit{is_{\mathsf{SI}}}, \mathit{rs} - (\interp{ (\mathsf{SA}) } (\mathit{is}, \mathit{rs})).2)
      &&\quad \ref{3.2.1:step6},\ \ref{3.2.1:step7},\ \ref{3.2.1:step9}
      \\
      \label{3.2.1:step11}
-     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
-      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
+     %\interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+     % \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &=
-     (\emptyset, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
+     (\emptyset, \mathit{rs} - (\interp{ (\mathsf{SA}) } (\mathit{is}, \mathit{rs})).2)
      &&\quad \text{Defn.}\ \cap
  \end{alignat}
  }%
@@ -538,7 +537,7 @@
  \begin{alignat}{2}
      \label{3.2.1:step12}
      (\mathit{is_{\mathsf{SI}}}, \mathit{rs}) \cup 
-     (\emptyset, \mathit{rs} - \interp{ (\mathsf{SA}) } \mathit{rs})
+     (\emptyset, \mathit{rs} - (\interp{ (\mathsf{SA}) } (\mathit{is}, \mathit{rs})).2)
      &=
      (\mathit{is_{\mathsf{SI}}}, \mathit{rs})
      &&\quad \text{Defn.}\ \cup
