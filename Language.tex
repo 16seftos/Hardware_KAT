@@ -555,7 +555,7 @@
      &&\quad \text{Defn.},\ \ref{3.2.1:step13}
      \\
      \label{3.2.1:qed}
-     &\quad \qedhere
+     &\qedhere
      &&\quad \ref{3.2.1:step14}
  \end{alignat}
  }% 
@@ -599,13 +599,11 @@
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
  \begin{alignat}{2}
-     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cup \ldots
+     \label{3.2.2:step3}
+     \interp{ \mathit{act}(\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
-     (\mathit{is}', \mathit{rs}')
-     \\
-     (\emptyset, \mathit{rs_{\mathsf{\neg SA}}}) \cup \ldots
-     &=
-     (\mathit{is}', \mathit{rs}')
+     (\emptyset, \mathit{rs_{\mathsf{\neg SA}}})
+     &&\quad \text{Lemma \#2}
  \end{alignat}
  }%
      Lemma \#2 in the previous proof simplifies this easily.\\
@@ -614,33 +612,40 @@
  {\fontsize{10pt}{12pt}\selectfont
  \begin{alignat}{2}
        % or would + be better?
+     \label{3.2.2:step4}
      \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
       \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
-     (\mathit{is}', \mathit{rs}')
+     \interp{ \mathit{act}(\neg\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})\\ \nonumber
+     &\quad \cap
+     \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     &&\quad \text{Defn.} \interp{\cdot}
      \\
-       % or would + be better?
-     \interp{ \mathit{act}(\neg\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
+     \label{3.2.2:step5}
+     \interp{ \mathit{act}(\neg\mathsf{SI}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     &=
+     (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     &&\quad \text{Lemma \#1}
+     \\
+     \label{3.2.2:step6}
      \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &=
-     (\mathit{is}', \mathit{rs}')
-     \\
-       % or would + be better?
-     (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
-     \interp{ \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
-     &=
-     (\mathit{is}', \mathit{rs}')
-     \\
-       % or would + be better?
-     (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}}) \cap
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
-     &=
-     (\mathit{is}', \mathit{rs}')
+     &&\quad \text{Lemma \#1*} %note that this is really lemma 1 for results, not actions
      \\
-       % or would + be better?
+     \label{3.2.2:step7}
+     \interp{ \mathit{act}(\neg\mathsf{SI}) \cdot
+      \mathit{res}(\neg\mathsf{SA}) } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     &=
+     (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})\\ \nonumber
+     &\quad \cap
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     &&\quad \ref{3.2.2:step4},\ \ref{3.2.2:step5},\ \ref{3.2.2:step6}
+     \\
+     \label{3.2.2:step8}
      &=
      (\mathit{is}', \mathit{rs}')
+     &&\quad \text{Defn.}\ \cap,\ \ref{3.2.2:step7}
  \end{alignat}
  }%
      Lemma \#1 is used to simplfy the left side of the intersection, and a result-version of Lemma \#1 is used to simplify the right side of the intersection. (10) contains the evaluated intersection.\\
@@ -648,14 +653,20 @@
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
  \begin{alignat}{2}
+     \label{3.2.2:step9}
+     \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     &=
      (\emptyset, \mathit{rs_{\mathsf{\neg SA}}}) \cup
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
-     &=
-     (\mathit{is}', \mathit{rs}')
+     &&\quad \ref{3.2.2:step2},\ \ref{3.2.2:step3},\ \ref{3.2.2:step8}
      \\
-     (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     \label{3.2.2:step10}
      &=
-     (\mathit{is}', \mathit{rs}')
+     (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
+     &&\quad \text{Defn.}\ \cup,\ \ref{3.2.2:step9}
+     \\
+     &\qedhere
+     &&\quad \ref{3.2.2:step10}
  \end{alignat}
  }%
      In (12), it is shown that the evaluated results are unchanged, and it can additionally be said that none of the instructions have been changed from the initial input as well.  This proves part 2.
