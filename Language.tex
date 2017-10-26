@@ -705,7 +705,6 @@
       act(\neg \mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem})\\
    \mathsf{Locked} &\triangleq& \mathsf{LockSecure} + \mathsf{LockInsecure}
  \end{array}
- 
  \]\\
  $\mathsf{Locked}$ is defined in english as "Any locked instruction can access anything, but it must lock it if it's not locked.  Any unlocked instruction can only access unlocked memory."\\
  It would be interesting to prove if this is equal to the locked instruction accessing ANYTHING, and then ALWAYS setting it to locked.
