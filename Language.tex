@@ -566,13 +566,13 @@
      The evaluation of $\mathsf{SecureMemoryAccess}$ over insecure actions and results does not change the results.  This idea can be written to equal some $(\mathit{is}', \mathit{rs}')$, and then simplified in the same way as the beginning of Proof 3.2.1
 
  \begin{proof}
- if
+ It suffices to prove that:
      \[
      \interp{ \mathsf{SMA} } (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      =
-     (\mathit{is}', \mathit{rs}')
+     (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      \]
- \par\nobreak
+ %\par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
  \begin{alignat}{2}
      \setcounter{equation}{0}
@@ -648,7 +648,7 @@
      &&\quad \text{Defn.}\ \cap,\ \ref{3.2.2:step7}
  \end{alignat}
  }%
-     Lemma \#1 is used to simplfy the left side of the intersection, and a result-version of Lemma \#1 is used to simplify the right side of the intersection. (10) contains the evaluated intersection.\\
+     Lemma \#1 is used to simplfy the left side of the intersection, and in (\ref{3.2.2:step6}) a result-version of Lemma \#1 is used to simplify the right side of the intersection. (\ref{3.2.2:step8}) contains the evaluated intersection.\\
      The left and right sides of the union can be rejoined and evaluated to determine the exact equivalence of $(\mathit{is}', \mathit{rs}')$:
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
@@ -665,11 +665,12 @@
      (\mathit{is_{\mathsf{\neg SI}}}, \mathit{rs_{\mathsf{\neg SA}}})
      &&\quad \text{Defn.}\ \cup,\ \ref{3.2.2:step9}
      \\
+     \label{3.2.2:qed}
      &\qedhere
      &&\quad \ref{3.2.2:step10}
  \end{alignat}
  }%
-     In (12), it is shown that the evaluated results are unchanged, and it can additionally be said that none of the instructions have been changed from the initial input as well.  This proves part 2.
+     In (\ref{3.2.2:qed}), it is shown that the evaluated results are unchanged, and it can additionally be said that none of the instructions have been changed from the initial input as well.  This proves part 2.
   \end{proof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -680,37 +681,38 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% BEGIN SUBSECTION 3.3 %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ Each instruction is associated with a lock bit.
+ Only the monitor can update lock bits.
+ Certain operations like writing to a particular part of the address space
+ require that the lock bit be set. 
 
-Each instruction is associated with a lock bit.
-Only the monitor can update lock bits.
-Certain operations like writing to a particular part of the address space
-require that the lock bit be set. 
-
+ \[
+ \begin{array}{rcl}
+   \mathit{Instruction\ Fields}\ f_i &::=& \mathsf{Lock_{Instr}}, \mathsf{OP}\\
+   \mathsf{OP} &::=& \mathsf{MEM_{READ}}\ |\ \mathsf{MEM_{WRITE}}\ |\ \cdots \\
+   \mathit{Result\ Fields}\ f_r &::=& \mathsf{Lock_{MemAddr}}\\
+   \mathsf{LockedInstr} &\triangleq& \mathsf{Lock_{Instr}} = \mathsf{TRUE} \\
+   \mathsf{LockedMem} &\triangleq& \mathsf{Lock_{MemAddr}} = \mathsf{TRUE} \\
+   \mathsf{Read} &\triangleq& \mathsf{OP} = \mathsf{MEM_{READ}}\\
+   \mathsf{Write} &\triangleq& \mathsf{OP} = \mathsf{MEM_{WRITE}}\\
+   \mathsf{MemLock} &\triangleq& \mathsf{Lock_{MemAddr}} \leftarrow \mathsf{TRUE}\\ 
+   %Rule
+   \mathsf{LockSecure} &\triangleq& 
+     act(\mathsf{LockedInstr})\cdot res(\mathsf{LockedMem})\\
+     &&+
+     act(\mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem}) \cdot \mathit{inj_{\mathsf{MemLock}}} \\
+   \mathsf{LockInsecure} &\triangleq&
+      act(\neg \mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem})\\
+   \mathsf{Locked} &\triangleq& \mathsf{LockSecure} + \mathsf{LockInsecure}
+ \end{array}
+ 
+ \]\\
+ $\mathsf{Locked}$ is defined in english as "Any locked instruction can access anything, but it must lock it if it's not locked.  Any unlocked instruction can only access unlocked memory."\\
+ It would be interesting to prove if this is equal to the locked instruction accessing ANYTHING, and then ALWAYS setting it to locked.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SUBSECTION 3.3 %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\[
-\begin{array}{rcl}
-  \mathit{Instruction\ Fields}\ f_i &::=& \mathsf{Lock_{Instr}}, \mathsf{OP}\\
-  \mathsf{OP} &::=& \mathsf{MEM_{READ}}\ |\ \mathsf{MEM_{WRITE}}\ |\ \cdots \\
-  \mathit{Result\ Fields}\ f_r &::=& \mathsf{Lock_{MemAddr}}\\
-  \mathsf{LockedInstr} &\triangleq& \mathsf{Lock_{Instr}} = \mathsf{TRUE} \\
-  \mathsf{LockedMem} &\triangleq& \mathsf{Lock_{MemAddr}} = \mathsf{TRUE} \\
-  \mathsf{Read} &\triangleq& \mathsf{OP} = \mathsf{MEM_{READ}}\\
-  \mathsf{Write} &\triangleq& \mathsf{OP} = \mathsf{MEM_{WRITE}}\\
-  %Rule
-  \mathsf{LockSecure} &\triangleq& 
-    act(\mathsf{LockedInstr})\cdot res(\mathsf{LockedMem})\\
-    &&+
-    act(\mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem}) \cdot \mathit{inj_{\mathsf{MEM-LOCK}}} \\
-  \mathsf{LockInsecure} &\triangleq&
-    act(\neg \mathsf{LockedInstr})\cdot res(\neg \mathsf{LockedMem})\\
-  \mathsf{Locked} &\triangleq& \mathsf{LockSecure} + \mathsf{LockInsecure}
-\end{array}
-\]\\
-$\mathsf{Locked}$ is defined in english as "Any locked instruction can access anything, but it must lock it if it's not locked.  Any unlocked instruction can only access unlocked memory."\\
-It would be interesting to prove if this is equal to the locked instruction accessing ANYTHING, and then ALWAYS setting it to locked.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SECTION 3 %%%
