@@ -178,9 +178,7 @@
             &\mathsf{let}\ (\mathit{is_{p_{n}}}, \mathit{rs_{p_{n}}}) = \interp { p^{n} } (is, rs)
             \\
             &(\bigcup^{\infty}_{n=0} \mathit{is_{p_{n}}}, \bigcup^{\infty}_{n=0} \mathit{rs_{p_{n}}})
-            \\  
-        %Below may need work
-        \dots & \dots \dots \\
+            \\ 
     \end{align*}
     %This is required because it will overflow the page otherwise.
     \begin{align*}
@@ -189,8 +187,8 @@
         %\interp{\mathsf{filter}(f=n)}(is)
         %    \triangleq\ & \{i \in is\ |\ i_f = n\}\\
         %not sure which is better, also it could be defined discretely over is and rs but that is repetitive.
-        \interp{\mathsf{filter}(f=n)}(ls)
-            \triangleq\ & \{l \in ls\ |\ l_f = n\}\\
+        %\interp{\mathsf{filter}(f=n)}(ls)
+        %    \triangleq\ & \{l \in ls\ |\ l_f = n\}\\
         \interp{\mathsf{filter}\ f}(ls)
             \triangleq\ & \{l \in ls\ |\ f(l) = \mathsf{true}\}\\
         %Defn. of Map
@@ -374,6 +372,33 @@
          &&\quad \ref{3.2.L.1:step2},\ \ref{3.2.L.1:step3}
      \end{alignat}
      }%
+    \end{proof}
+     \paragraph{*} Note that the same process can be applied to results.
+    \begin{proof}
+     {\fontsize{10pt}{12pt}\selectfont
+     \begin{alignat}{2}
+         \setcounter{equation}{0}
+         %\label{3.2.L.1:step1}
+         %\interp{ act(f=\mathsf{A}) } (\mathit{is}_{\mathsf{A}}, \mathit{rs})
+         %&= 
+         %(\mathit{is}', \mathit{rs}')
+         %&&\quad \text{Defn.}
+         %\\
+         \label{3.2.L.1*:step2}
+         \interp{ res(f=\mathsf{A}) } (\mathit{is}, \mathit{rs}_{\mathsf{A}})
+         &= 
+         ((\interp{ (f=\mathsf{A}) } (\mathit{is}, \mathit{rs}_{\mathsf{A}})).2, \mathit{rs})
+         &&\quad \text{Defn.}\ \interp{\cdot}\\
+         \label{3.2.L.1*:step3}
+         %(\interp{ (f=\mathsf{A}) } \mathit{is}_{\mathsf{A}}, \mathit{rs})
+         &=
+         (\mathit{is}_{\mathsf{A}}, \mathit{rs})
+         &&\quad \text{Defn.}\ \interp{\mathsf{filter}}\\
+         \label{3.2.L.1*:qed}
+         &\qedhere
+         &&\quad \ref{3.2.L.1:step2},\ \ref{3.2.L.1:step3}
+     \end{alignat}
+     }
  \end{proof}
  \paragraph{Lemma \#2}
      It follows that the converse would result in no $\mathit{is}$ in the evaluated set:
@@ -648,7 +673,7 @@
      &&\quad \text{Defn.}\ \cap,\ \ref{3.2.2:step7}
  \end{alignat}
  }%
-     Lemma \#1 is used to simplfy the left side of the intersection, and in (\ref{3.2.2:step6}) a result-version of Lemma \#1 is used to simplify the right side of the intersection. (\ref{3.2.2:step8}) contains the evaluated intersection.\\
+     Lemma \#1 is used to simplfy the left side of the intersection, and in (\ref{3.2.2:step6}) a result-version of Lemma \#1, Lemma \#1*, is used to simplify the right side of the intersection. (\ref{3.2.2:step8}) contains the evaluated intersection.\\
      The left and right sides of the union can be rejoined and evaluated to determine the exact equivalence of $(\mathit{is}', \mathit{rs}')$:
  \par\nobreak
  {\fontsize{10pt}{12pt}\selectfont
