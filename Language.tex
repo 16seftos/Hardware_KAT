@@ -743,4 +743,184 @@
 %%% APPLICATIONS    %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% BEGIN SECTION 4     %%%
+%%% SYNTAX INTERMEDIATE %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    %Definitions table
+    \begin{tabular}{l r c l}
+        Instruction Fields   & $f_{i}$   & $::=$     & $f_{i_{1}} \mid \dots \mid f_{i_{k}}$\\
+        Result Fields   & $f_{r}$   & $::=$     & $f_{r_{1}} \mid \dots \mid f_{r_{k}}$\\
+        Fields          & $f$       & $::=$     & $f_i \mid f_r$ \\
+        Instructions         & $i$       & $::=$     & $\{f_{i_{1}} = v_{i_{1}} ,\ \dots\ ,\ f_{i_{k}} = v_{i_{k}}\}$\\
+        Results         & $r$       & $::=$     & $\{f_{r_{1}} = v_{r_{1}} ,\ \dots\ ,\ f_{r_{k}} = v_{r_{k}}\}$\\
+    \end{tabular}\\
+
+    %Predicates table
+    \begin{tabular}{l c r l l}
+        Predicates  & $a,b$     & $::=$  & $0$          & \textit{False} \\
+                    &           & $\mid$ & $1$          & \textit{Identity}    \\
+                    &           & $\mid$ & $f=n$        & \textit{Test} \\  
+                    &           & $\mid$ & $a + b$      & \textit{Sum}      \\
+                    &           & $\mid$ & $a \cdot b$  & \textit{Product}  \\
+                    &           & $\mid$ & $\neg \ a$   & \textit{Negation}
+    \end{tabular}\\
+
+    %Policies table
+    \begin{tabular}{l c r l l}
+        Policies    & $p,q$ & $::=$  & $a$              & \textit{Test}     \\
+                    &       & $\mid$ & $act(p)$         & \textit{Slice Actions}    \\
+                    &       & $\mid$ & $res(p)$         & \textit{Slice Results}    \\
+                    &       & $\mid$ & $inj_{i}$        & \textit{Injection Action} \\
+                    &       & $\mid$ & $inj_{r}$        & \textit{Injection Result} \\
+                    &       & $\mid$ & $f \leftarrow n$ & \textit{Update}   \\
+                    &       & $\mid$ & $p + q$          & \textit{Choice}   \\
+                    &       & $\mid$ & $p \cdot q$      & \textit{Sequential Concatenation} \\
+                    &       & $\mid$ & $p ^{*}$         & \textit{Kleene Star}
+    \end{tabular}\\
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%% END OF SECTION 1 %%%
+%%% SYNTAX           %%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%Semantics Definitions
+\section{Semantics}
+%%%%%%%%%%%%%%%%%%%%%%%
+%%% BEGIN SECTION 2 %%%
+%%% SEMANTICS       %%%
+%%%%%%%%%%%%%%%%%%%%%%%
+ %{\fontsize{12pt}{14pt}\selectfont
+    %Semantics align
+    \begin{align*}
+        %
+        \interp{ \cdot }\ 
+            :\ \ &
+            P(A)\times P(R) \rightarrow P(A)\times P(R) 
+            \\
+        %Falsity
+        \interp{ 0 }(-, -)
+            \triangleq\ &
+            (\emptyset , \emptyset)
+            \\ %or should I use {}?
+        %Identity
+        \interp{ 1 }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\mathit{is}, \mathit{rs})
+            \\
+        %Test
+        \interp{ f=n }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\mathsf{filter}\ (f=n)\ \mathit{is},
+             \mathsf{filter}\ (f=n)\ \mathit{rs}) 
+            \\
+        %Sum
+        \interp{ a + b }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \interp{ a }(\mathit{is}, \mathit{rs}) \\
+            &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
+            \interp{ b }(\mathit{is}, \mathit{rs}) \\
+            &(\mathit{is}_a \cup \mathit{is}_b,\mathit{rs}_a \cup \mathit{rs}_b) 
+            \\
+        %Product
+        \interp { a \cdot b }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \interp { a }(\mathit{is}, \mathit{rs}) \\
+            &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
+            \interp { b }(\mathit{is}, \mathit{rs}) \\
+            &(\mathit{is}_a \cap \mathit{is}_b,\mathit{rs}_a \cap \mathit{rs}_b) 
+            \\
+        %Negation
+        \interp { \neg a }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}',\mathit{rs}') = \interp { a }(\mathit{is}, \mathit{rs}) \\
+            &(\mathit{is} - \mathit{is}',\mathit{rs} - \mathit{rs}') 
+            \\
+        %Action-only Slice
+        \interp { act(p) }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}',\mathit{rs}')
+            = \interp { p}(\mathit{is}, \mathit{rs})\ 
+            \mathsf{in}\ (\mathit{is}',\mathit{rs}) 
+            \\
+        %Result-only Slice
+        \interp { res(p) }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}',\mathit{rs}')
+            = \interp { p}(\mathit{is}, \mathit{rs})\ 
+            \mathsf{in}\ (\mathit{is},\mathit{rs}')
+            \\
+        %Injection Action
+        \interp { inj_{i}(i) }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\{i\} \cup \mathit{is}, \mathit{rs})
+            \\
+        %Injection Result
+        \interp { inj_{r}(r) }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\mathit{is}, \{r\} \cup \mathit{rs})
+            \\
+        %Modification
+        \interp { f \leftarrow n }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            (\mathsf{map}\ (f\leftarrow n)\ \mathit{is},
+             \mathsf{map}\ (f\leftarrow n)\ \mathit{rs})
+            \\
+        %Policy Union
+         \interp { p + q }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}_p,\mathit{rs}_p) =
+            \interp { p }(\mathit{is}, \mathit{rs}) 
+            \\
+            &\mathsf{let}\ (\mathit{is}_q,\mathit{rs}_q) =
+            \interp { q }(\mathit{is}, \mathit{rs}) 
+            \\
+            &(\mathit{is}_p \cup \mathit{is}_q,\mathit{rs}_p \cup \mathit{rs}_b) 
+            \\
+        %Policy Concatnation
+        \interp { p \cdot q }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ (\mathit{is}',\mathit{rs}') =
+            \interp { p }(\mathit{is}, \mathit{rs})
+            \\
+            &\interp { q }(\mathit{is}', \mathit{rs}')
+            \\
+        %Policy Kleene Star
+        \interp { p ^{*} } (\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \mathsf{let}\ p^{n} = p_{1} \cdot p_{2} \cdot \ldots \cdot p_{n}
+            \\
+            &\mathsf{let}\ (\mathit{is_{p_{n}}}, \mathit{rs_{p_{n}}}) = \interp { p^{n} } (is, rs)
+            \\
+            &(\bigcup^{\infty}_{n=0} \mathit{is_{p_{n}}}, \bigcup^{\infty}_{n=0} \mathit{rs_{p_{n}}})
+            \\ 
+    \end{align*}
+    %This is required because it will overflow the page otherwise.
+    \begin{align*}
+        \mathsf{let}\ l \in\ & is\cup rs\\
+        %Defn. of Filter
+        %\interp{\mathsf{filter}(f=n)}(is)
+        %    \triangleq\ & \{i \in is\ |\ i_f = n\}\\
+        %not sure which is better, also it could be defined discretely over is and rs but that is repetitive.
+        %\interp{\mathsf{filter}(f=n)}(ls)
+        %    \triangleq\ & \{l \in ls\ |\ l_f = n\}\\
+        \interp{\mathsf{filter}\ f}(ls)
+            \triangleq\ & \{l \in ls\ |\ f(l) = \mathsf{true}\}\\
+        %Defn. of Map
+        %\interp{\mathsf{map}\ g}(is)
+        %    \triangleq\ &
+        %    \{ g(i)\ |\ i\in is \} \\
+        \interp{\mathsf{map}\ g}(ls)
+            \triangleq\ &
+            \{ g(l)\ |\ l\in ls \} \\
+    \end{align*}
+ %}
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%% END OF SECTION 2 %%%
+%%% SEMANTICS        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
 \end{document}
