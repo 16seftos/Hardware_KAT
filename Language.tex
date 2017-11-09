@@ -767,13 +767,13 @@
 
     %Predicates table
     \begin{tabular}{l c r l l}
-        Predicates  & $a,b$     & $::=$  & $0$          & \textit{False}        \\
-                    &           & $\mid$ & $1$          & \textit{Identity}     \\
-                    &           & $\mid$ & $L | V <r> n$& \textit{Range}        \\  
-                    &           & $\mid$ & $L | V <b> n$& \textit{BitOp}        \\  
-                    &           & $\mid$ & $T \in n$    & \textit{Instr Element}\\  
-                    &           & $\mid$ & $B <r> n$    & \textit{Branch Range} \\  
-                    &           & $\mid$ & $M <r> n$    & \textit{PreMEM Range} \\ 
+        Predicates  & $a,b$  & $::=$  & $0$             & \textit{False}        \\
+                    &        & $\mid$ & $1$             & \textit{Identity}     \\
+                    &        & $\mid$ & $L | V <r> n$   & \textit{Range}        \\  
+                    &        & $\mid$ & $L | V <b> n$   & \textit{BitOp}        \\  
+                    &        & $\mid$ & $T \in n$       & \textit{Instr Element}\\  
+                    &        & $\mid$ & $B <r> n$       & \textit{Branch Range} \\  
+                    &        & $\mid$ & $M <r> n$       & \textit{PreMEM Range} \\
                     %
                     &           & $\mid$ & $a + b$      & \textit{Sum}          \\
                     &           & $\mid$ & $a \cdot b$  & \textit{Product}      \\
@@ -783,9 +783,9 @@
     %Policies table
     \begin{tabular}{l c r l l}
         Policies    & $p,q$ & $::=$  & $a$              & \textit{Test}             \\
-                    &       & $\mid$ & $inj_{i}$        & \textit{Injection Action} \\
-                    &       & $\mid$ & $inj_{r}$        & \textit{Injection Result} \\
-                    &       & $\mid$ & $\mathsf{PAUSE\{Is\}}$ & \textit{Calculate other}    \\
+                    &       & $\mid$ & $\mathsf{OUT}\{V\}$ & \textit{Bind Output}   \\ 
+                    &       & $\mid$ & $\mathsf{PAUSE\{Is\}}$ & \textit{Pause}      \\
+                    %to calculate other data
                     &       & $\mid$ & $p + q$          & \textit{NonDeterministic Choice}   \\ % uses nondeterministic FST
                     &       & $\mid$ & $p \cdot q$      & \textit{Sequential Concatenation} \\ % uses stack
                     &       & $\mid$ & $p ^{*}$         & \textit{Kleene Star} % uses stack
