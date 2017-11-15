@@ -8,10 +8,11 @@
     \usepackage{pdfpages} %for including PDFs. see Graphicx for more info
     \usepackage{amsmath} %for \mvert and other relation symbol
     \usepackage{amssymb} %for semantic delta=
-    \usepackage{amsthm} 
+    \usepackage{amsthm} %for \begin{proof} and related sections
     \usepackage{stmaryrd} %for semantics [[ and ]]
     \usepackage{dsfont} %for fancy set letters
     \usepackage{fancyhdr} %fancy headers
+    \usepackage{color} %for things that need attention
     %\usepackage{array} %Include if {tabular}{>{$}c<{$}} type arrays are required
     \let\emptyset\varnothing
     \pagestyle{fancy}
@@ -81,108 +82,112 @@
         %
         \interp{ \cdot }\ 
             :\ \ &
-            P(A)\times P(R) \rightarrow P(A)\times P(R) 
+            \mathbf{Stream}(I)\times \mathbf{Stream}(R) \rightarrow \\
+            & P(\mathbf{Stream}(I))\times P(\mathbf{Stream}(R)) 
             \\
         %Falsity
         \interp{ 0 }(-, -)
             \triangleq\ &
             (\emptyset , \emptyset)
-            \\ %or should I use {}?
+            \\ %or null-stream?
         %Identity
-        \interp{ 1 }(\mathit{is}, \mathit{rs})
+        \interp{ 1 }(S)
             \triangleq\ &
-            (\mathit{is}, \mathit{rs})
+            S
             \\
         %Test
-        \interp{ f=n }(\mathit{is}, \mathit{rs})
+        \interp{ f=n }(S)
             \triangleq\ &
-            (\mathsf{filter}\ (f=n)\ \mathit{is},
-             \mathsf{filter}\ (f=n)\ \mathit{rs}) 
+            (\mathsf{filter}\ (f=n)\ S.1,\
+             \mathsf{filter}\ (f=n)\ S.2) 
             \\
         %Sum
-        \interp{ a + b }(\mathit{is}, \mathit{rs})
-            \triangleq\ &
-            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \interp{ a }(\mathit{is}, \mathit{rs}) \\
-            &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
-            \interp{ b }(\mathit{is}, \mathit{rs}) \\
-            &(\mathit{is}_a \cup \mathit{is}_b,\mathit{rs}_a \cup \mathit{rs}_b) 
+        \interp{ a + b }(S)
+             \triangleq\ &
+             \mathsf{let}\ S_a = \interp{ a }(S) \\
+            &\mathsf{let}\ S_b = \interp{ b }(S) \\
+            &(S_a.1 \cup S_b.1,\ S_a.2 \cup S_b.2) 
             \\
+            & \textcolor{orange}{ or\ \ S_a \cup S_b ?}\\
+            & \textcolor{red}{ or\ \ \interp{a\cup b}(S) ?}\\ % probably the best option?
         %Product
-        \interp { a \cdot b }(\mathit{is}, \mathit{rs})
-            \triangleq\ &
-            \mathsf{let}\ (\mathit{is}_a,\mathit{rs}_a) = \interp { a }(\mathit{is}, \mathit{rs}) \\
-            &\mathsf{let}\ (\mathit{is}_b,\mathit{rs}_b) =
-            \interp { b }(\mathit{is}, \mathit{rs}) \\
-            &(\mathit{is}_a \cap \mathit{is}_b,\mathit{rs}_a \cap \mathit{rs}_b) 
+        \interp { a \cdot b }(S)
+             \triangleq\ &
+             \mathsf{let}\ S_a = \interp { a }(S) \\
+            &\mathsf{let}\ S_b = \interp { b }(S) \\
+            & S_a \cap S_b
             \\
         %Negation
         \interp { \neg a }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ (\mathit{is}',\mathit{rs}') = \interp { a }(\mathit{is}, \mathit{rs}) \\
-            &(\mathit{is} - \mathit{is}',\mathit{rs} - \mathit{rs}') 
+            \mathsf{let}\ S' = \interp {a}(S) \\
+            &S-S' 
             \\
         %Action-only Slice
-        \interp { act(p) }(\mathit{is}, \mathit{rs})
+        \interp { act(p) }(S)
             \triangleq\ &
-            \mathsf{let}\ (\mathit{is}',\mathit{rs}')
-            = \interp { p}(\mathit{is}, \mathit{rs})\ 
-            \mathsf{in}\ (\mathit{is}',\mathit{rs}) 
+            \mathsf{let}\ S' = \interp {p}(S)\
+            \mathsf{in}\ (S'.1,\ S.2) 
             \\
         %Result-only Slice
-        \interp { res(p) }(\mathit{is}, \mathit{rs})
+        \interp { res(p) }(S)
             \triangleq\ &
-            \mathsf{let}\ (\mathit{is}',\mathit{rs}')
-            = \interp { p}(\mathit{is}, \mathit{rs})\ 
-            \mathsf{in}\ (\mathit{is},\mathit{rs}')
+            \mathsf{let}\ S'
+            = \interp {p}(S)\ 
+            \mathsf{in}\ (S.1,\ S'.2)
             \\
         %Injection Action
-        \interp { inj_{i}(i) }(\mathit{is}, \mathit{rs})
+        \interp { inj_{i}(i) }(S)
             \triangleq\ &
-            (\{i\} \cup \mathit{is}, \mathit{rs})
+            (i :: S.1,\  S.2)
             \\
         %Injection Result
-        \interp { inj_{r}(r) }(\mathit{is}, \mathit{rs})
+        \interp { inj_{r}(r) }(S)
             \triangleq\ &
-            (\mathit{is}, \{r\} \cup \mathit{rs})
+            (S.1,\ r::S.2)
             \\
         %Modification
-        \interp { f \leftarrow n }(\mathit{is}, \mathit{rs})
+        \interp { f \leftarrow n }(S)
             \triangleq\ &
-            (\mathsf{map}\ (f\leftarrow n)\ \mathit{is},
-             \mathsf{map}\ (f\leftarrow n)\ \mathit{rs})
-            \\
+            (\mathsf{map}\ (f\leftarrow n)\ S.1,\
+             \mathsf{map}\ (f\leftarrow n)\ S.2)
+            \\ % could use editing?
         %Policy Union
-         \interp { p + q }(\mathit{is}, \mathit{rs})
+         \interp { p + q }(S)
             \triangleq\ &
-            \mathsf{let}\ (\mathit{is}_p,\mathit{rs}_p) =
-            \interp { p }(\mathit{is}, \mathit{rs}) 
+            \mathsf{let}\ S_p =
+            \interp { p }(S) 
             \\
-            &\mathsf{let}\ (\mathit{is}_q,\mathit{rs}_q) =
-            \interp { q }(\mathit{is}, \mathit{rs}) 
+            &\mathsf{let}\ S_q =
+            \interp { q }(S) 
             \\
-            &(\mathit{is}_p \cup \mathit{is}_q,\mathit{rs}_p \cup \mathit{rs}_b) 
+            &(S_p.1 \cup S_q.1,\ S_p.2 \cup S_q.2) 
             \\
+            & \textcolor{red}{ or\ \ S_p \cup S_q ?}\\%better option?
         %Policy Concatnation
-        \interp { p \cdot q }(\mathit{is}, \mathit{rs})
+        \interp { p \cdot q }(S)
             \triangleq\ &
-            \mathsf{let}\ (\mathit{is}',\mathit{rs}') =
-            \interp { p }(\mathit{is}, \mathit{rs})
-            \\
-            &\interp { q }(\mathit{is}', \mathit{rs}')
-            \\
+            \interp{q}(\interp{p}(S))\\
+            %\mathsf{let}\ S' =
+            %\interp { p }(S)
+            %\\
+            %&\interp { q }(S')
+            %\\
+            %&\textcolor{red}{or}\\
         %Policy Kleene Star
-        \interp { p ^{*} } (\mathit{is}, \mathit{rs})
+        \interp { p ^{*} } (S)
             \triangleq\ &
             \mathsf{let}\ p^{n} = p_{1} \cdot p_{2} \cdot \ldots \cdot p_{n}
             \\
-            &\mathsf{let}\ (\mathit{is_{p_{n}}}, \mathit{rs_{p_{n}}}) = \interp { p^{n} } (is, rs)
+            &\mathsf{let}\ S_{p_{n}} = \interp { p^{n} } (S)
             \\
-            &(\bigcup^{\infty}_{n=0} \mathit{is_{p_{n}}}, \bigcup^{\infty}_{n=0} \mathit{rs_{p_{n}}})
-            \\ 
+            &\bigcup^{\infty}_{n=0} S_{p_{n}}
+            \\
+            & \textcolor{red}{\text{is this relevant in streams?}}\\
     \end{align*}
     %This is required because it will overflow the page otherwise.
     \begin{align*}
-        \mathsf{let}\ l \in\ & is\cup rs\\
+        \mathsf{let}\ l \in\ & S\\
         %Defn. of Filter
         %\interp{\mathsf{filter}(f=n)}(is)
         %    \triangleq\ & \{i \in is\ |\ i_f = n\}\\
@@ -197,7 +202,7 @@
         %    \{ g(i)\ |\ i\in is \} \\
         \interp{\mathsf{map}\ g}(ls)
             \triangleq\ &
-            \{ g(l)\ |\ l\in ls \} \\
+            \{ g(l)\ |\ l\in ls \} 
     \end{align*}
  %}
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -205,7 +210,8 @@
 %%% SEMANTICS        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Applications}
+\textcolor{red}{\section{Applications}
+Probably needs to be re-written.}
 %%%%%%%%%%%%%%%%%%%%%%%
 %%% BEGIN SECTION 3 %%%
 %%% APPLICATIONS    %%%
@@ -764,6 +770,7 @@
         Bitwise Op    & $<b>$   & $::=$     & $\mathsf{AND\ |\ OR\ |\ XOR\ |\ NOT}$\\
         Range Op      & $<r>$   & $::=$     & $\mathsf{<\ |\ \le\ |\ =\ |\ \ge\ |\ >\ |\ \not=}$\\
     \end{tabular}\\
+    \\
 
     %Predicates table
     \begin{tabular}{l c r l l}
