@@ -795,8 +795,8 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
          %Falsity
          \mathbf{C}[0]\ 
              =\ &
-             let\ i\_bog = new\ buf\\
-             &\quad\ \ r\_bog = new\ buf\\
+             let\ i\_bog = \text{new buf}\\
+             &\quad\ \ r\_bog = \text{new buf}\\
              &in\ write(i_{out}, i\_bog)\\
              &\quad  write(r_{out}, r\_bog)\\
          %Identity
@@ -824,7 +824,66 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
          %Slice to Action
          \mathbf{C}[act(p)]\ 
              =\ &
-             ?
+             let\ r\_bog_i = \text{new buf}\\
+             &\quad\ \ r\_bog_o = \text{new buf}\\
+             &in\ ep = \mathbf{C}_{(i_{in}, i_{out}, r\_bog_i, r\_bog_o)}[p]\\
+             &ep\ write(r_{out}, read(r_{in}))
+             %or
+             % let r = read(r_in)
+             % in write(r_out, r)
+             \\
+    \end{align*}
+    \begin{align*}
+         %Slice to Result
+         \mathbf{C}[res(p)]\ 
+             =\ &
+             let\ i\_bog_i = \text{new buf}\\
+             &\quad\ \ i\_bog_o = \text{new buf}\\
+             &in\ ep = \mathbf{C}_{(i\_bog_i, i\_bog_o), r_{in}, r_{out}}[p]\\
+             &ep\ write(i_{out}, read(i_{in}))
+             %or
+             % let r = read(r_in)
+             % in write(r_out, r)
+             \\
+         %Inject Instruction
+         \mathbf{C}[inj_iV]\ 
+             =\ &
+             write(i_{out}, V)
+             \\
+         %Inject Result
+         \mathbf{C}[inj_rV]\ 
+             =\ &
+             write(r_{out}, V)
+             \\
+         %Assignment
+         \mathbf{C}[f \leftarrow n]\ 
+             =\ &
+             let\ i' = f(read(i_{in}))\\
+             &\quad\ \ r' = f(read(r_{in}))\\
+             &in\ write(i_{out}, i')\\
+             &\quad \ write(r_{out}, r')
+             \\
+         %Policy Nondeterministic Choice
+         \mathbf{C}[p + q]\ 
+             =\ &
+             let\ e_p = \mathbf{C}[q]\\
+             &\quad\ \ e_q = \mathbf{C}[q]\\
+             &in\ e_p||e_q
+             \\
+         %Policy Sequence
+         \mathbf{C}[p \cdot q]\ 
+             =\ &
+             let\ i_{mid} = \text{new buf}\\
+             &\quad\ \ r_{mid} = \text{new buf}\\
+             &\quad\ \ e_p = \mathbf{C}_{(i_{in}, i_{mid}, r_{in}, r_{mid})}[q]\\
+             &\quad\ \ e_q = \mathbf{C}_{(i_{in}, i_{mid}, r_{in}, r_{mid})}[q]\\
+             &in\ e_p\text{\textcolor{red}{which op?}}e_q
+             \\
+         %Star
+         \mathbf{C}[p ^{*}]\ 
+             =\ &
+             forever(\mathbf{C}[P])\\
+             &\text{\textcolor{red}{probably?  N/A?}}
              \\
      \end{align*}
  }
