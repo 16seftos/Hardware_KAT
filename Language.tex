@@ -121,14 +121,14 @@
         %Negation
         \interp { \neg a }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ \{S'\} = \interp {a}(S) \\
-            &\{S\}-\{S'\} 
+            \mathsf{let}\ (S_i, S_r) = \interp {a}(\mathit{is}, \mathit{rs}) \\
+            &\mathsf{in}\ (\{\mathit{is}\} - S_i, \{\mathit{rs}\} - S_r)
             \\
         %Action-only Slice
-        \interp { act(p) }(S)
+        \interp { act(p) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ \{S'\} = \interp {p}(S)\
-            \mathsf{in}\ (\{S'\}.1,\ \{S\}.2) 
+            \mathsf{let}\ (S_i,S_r) = \interp {p}(\mathit{is}, \mathit{rs})\
+            \mathsf{in}\ (S_i, \{\mathit{rs}\})
             \\
         %Result-only Slice
         \interp { res(p) }(S)
@@ -137,9 +137,9 @@
             \mathsf{in}\ (\{S\}.1,\ \{S'\}.2)
             \\
         %Injection Action
-        \interp { inj_{i}(i) }(S)
+        \interp { inj_{i}(i) }(is, rs)
             \triangleq\ &
-            (i ; \{S\}.1,\  \{S\}.2)
+            (\{i : is\}, \{rs\}) 
             %or ::?  ; is sequential
             \\
         %Injection Result
@@ -154,22 +154,19 @@
              \mathsf{map}\ (f\leftarrow n)\ \{S\}.2)
             \\ % could use editing?
         %Policy Union
-         \interp { p + q }(S)
-            \triangleq\ &
-            \mathsf{let}\ \{S_p\} =
-            \interp { p }(S) 
-            \\
-            &\mathsf{let}\ \{S_q\} =
-            \interp { q }(S) 
-            \\
-            &(\{S_p\}.1 \cup \{S_q\}.1,\ \{S_p\}.2 \cup \{S_q\}.2) 
-            \\
+         \interp { p + q }(\mathit{is}, \mathit{rs})
+         \triangleq\ &
+         \interp { p }(\mathit{is}, \mathit{rs})\cup
+         \interp { q }(\mathit{is}, \mathit{rs}) \\
+         &\mathsf{where}\ (S_i^1, S_r^1)\cup (S_i^2, S_r^2)\triangleq
+                   (S_i^1\cup S_i^2, S_r^1\cup S_r^2)\\
             %A union of the streams gives a nondeterministic machine.
         %Policy Concatnation
-        \interp { p \cdot q }(S)
+        \interp { p \cdot q }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ \{S_p\} = \interp{p}(S)\\
-            &\mathsf{map}\ (q)\ \{S_p\}\\
+            \mathsf{let}\ (S_i, S_r) = \interp{p}(is, rs)\\
+            &\mathsf{in}\ \bigcup \{\interp{q}(\mathit{is}',\mathit{rs}')\ |\
+                       \mathit{is}'\in S_i, \mathit{rs'}\in S_r\}\\
             %\mathsf{let}\ S' =
             %\interp { p }(S)
             %\\
