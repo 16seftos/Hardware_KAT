@@ -93,81 +93,83 @@
         %Identity
         \interp{ 1 }(S)
             \triangleq\ &
-            S
+            \{S\}
             \\
         %Test
         \interp{ f=n }(S)
             \triangleq\ &
-            (\mathsf{filter}\ (f=n)\ S.1,\
-             \mathsf{filter}\ (f=n)\ S.2) 
+            (\mathsf{filter}\ (f=n)\ \{S\}.1,\
+             \mathsf{filter}\ (f=n)\ \{S\}.2) 
             \\
         %Sum
         \interp{ a + b }(S)
              \triangleq\ &
-             \mathsf{let}\ S_a = \interp{ a }(S) \\
-            &\mathsf{let}\ S_b = \interp{ b }(S) \\
-            &(S_a.1 \cup S_b.1,\ S_a.2 \cup S_b.2)
+             \mathsf{let}\ \{S_a\} = \interp{ a }(S) \\
+            &\mathsf{let}\ \{S_b\} = \interp{ b }(S) \\
+            &(\{S_a\}.1 \cup \{S_b\}.1,\ \{S_a\}.2 \cup \{S_b\}.2)
+            %I think that singleton set format is unecessary here
             \\
             %Must be Sa.1 <op> Sb.1 because Sa <op> Sb implies all can change each other.
         %Product
         \interp { a \cdot b }(S)
              \triangleq\ &
-             \mathsf{let}\ S_a = \interp { a }(S) \\
-            &\mathsf{let}\ S_b = \interp { b }(S) \\
-            &(S_a.1 \cap S_b.1,\ S_a.2 \cap S_b.2)
+             \mathsf{let}\ \{S_a\} = \interp { a }(S) \\
+            &\mathsf{let}\ \{S_b\} = \interp { b }(S) \\
+            &(\{S_a\}.1 \cap \{S_b\}.1,\ \{S_a\}.2 \cap \{S_b\}.2)
             \\
             %Must be Sa.1 <op> Sb.1 because Sa <op> Sb implies all can change each other.
         %Negation
         \interp { \neg a }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ S' = \interp {a}(S) \\
-            &S-S' 
+            \mathsf{let}\ \{S'\} = \interp {a}(S) \\
+            &\{S\}-\{S'\} 
             \\
         %Action-only Slice
         \interp { act(p) }(S)
             \triangleq\ &
-            \mathsf{let}\ S' = \interp {p}(S)\
-            \mathsf{in}\ (S'.1,\ S.2) 
+            \mathsf{let}\ \{S'\} = \interp {p}(S)\
+            \mathsf{in}\ (\{S'\}.1,\ \{S\}.2) 
             \\
         %Result-only Slice
         \interp { res(p) }(S)
             \triangleq\ &
-            \mathsf{let}\ S'
-            = \interp {p}(S)\ 
-            \mathsf{in}\ (S.1,\ S'.2)
+            \mathsf{let}\ \{S'\} = \interp {p}(S)\ 
+            \mathsf{in}\ (\{S\}.1,\ \{S'\}.2)
             \\
         %Injection Action
         \interp { inj_{i}(i) }(S)
             \triangleq\ &
-            (i :: S.1,\  S.2)
+            (i ; \{S\}.1,\  \{S\}.2)
+            %or ::?  ; is sequential
             \\
         %Injection Result
         \interp { inj_{r}(r) }(S)
             \triangleq\ &
-            (S.1,\ r::S.2)
+            (\{S\}.1,\ r ; \{S\}.2)
             \\
         %Modification
         \interp { f \leftarrow n }(S)
             \triangleq\ &
-            (\mathsf{map}\ (f\leftarrow n)\ S.1,\
-             \mathsf{map}\ (f\leftarrow n)\ S.2)
+            (\mathsf{map}\ (f\leftarrow n)\ \{S\}.1,\
+             \mathsf{map}\ (f\leftarrow n)\ \{S\}.2)
             \\ % could use editing?
         %Policy Union
          \interp { p + q }(S)
             \triangleq\ &
-            \mathsf{let}\ S_p =
+            \mathsf{let}\ \{S_p\} =
             \interp { p }(S) 
             \\
-            &\mathsf{let}\ S_q =
+            &\mathsf{let}\ \{S_q\} =
             \interp { q }(S) 
             \\
-            &(S_p.1 \cup S_q.1,\ S_p.2 \cup S_q.2) 
+            &(\{S_p\}.1 \cup \{S_q\}.1,\ \{S_p\}.2 \cup \{S_q\}.2) 
             \\
             %A union of the streams gives a nondeterministic machine.
         %Policy Concatnation
         \interp { p \cdot q }(S)
             \triangleq\ &
-            \interp{q}(\interp{p}(S))\\
+            \mathsf{let}\ \{S_p\} = \interp{p}(S)\\
+            &\mathsf{map}\ (q)\ \{S_p\}\\
             %\mathsf{let}\ S' =
             %\interp { p }(S)
             %\\
@@ -179,9 +181,9 @@
             \triangleq\ &
             \mathsf{let}\ p^{n} = p_{1} \cdot p_{2} \cdot \ldots \cdot p_{n}
             \\
-            &\mathsf{let}\ S_{p_{n}} = \interp { p^{n} } (S)
+            &\mathsf{let}\ \{S_{p_{n}}\} = \interp { p^{n} } (S)
             \\
-            &(\bigcup^{\infty}_{n=0} S_{p_{n}}.1,\bigcup^{\infty}_{n=0} S_{p_{n}}.2)
+            &(\bigcup^{\infty}_{n=0} \{S_{p_{n}}\}.1,\bigcup^{\infty}_{n=0} \{S_{p_{n}}\}.2)
             \\
             & \textcolor{red}{\text{is this relevant in streams?}}\\
     \end{align*}
@@ -726,18 +728,19 @@ Probably needs to be re-written.}
 
     %Definitions table
     \begin{tabular}{l r c l}
-        Values        & $V$     & $::=$     & $\mathsf{INSTR\ |\ RES}$
+        Values        & $v$     & $::=$     & $\mathsf{INSTR\ |\ RES}$\\
+        Registers     & $b$     & $::=$     & $\mathsf{reg}$
     \end{tabular}\\
 
     %Predicates table
     \begin{tabular}{l c r l l}
        Expressions  & $e$    & $::=$  & $read(b)$       & \textit{Read Reg}        \\
-                    &        & $\mid$ & $write(b,c)$    & \textit{Write C to Reg}     \\
+                    &        & $\mid$ & $write(b,v)$    & \textit{Write C to Reg}     \\
                     &        & $\mid$ & $let\ x = e_1\ in\ e_2$ & \textit{Assignment}        \\  
                     &        & $\mid$ & $e_1\ ||\ e_2$    & \textit{Expression Union}        \\  
                     &        & $\mid$ & $forever\ e$    & \textit{Hardwire}\\  
                     &        & $\mid$ & $f(e_1)$        & \textit{Apply Function} \\  
-                    &        & $\mid$ & $if\ V = n\ then\ e_1$            & \textit{Conditional} \\
+                    &        & $\mid$ & $if\ v = n\ then\ e_1$            & \textit{Conditional} \\
                     %
                     &        & $\mid$ & $e_1\ \&\&\ e_2$            & \textit{Product (AND)}\\
                     &        & $\mid$ & $e_1 :: e_2$            & \textit{Concatination}
