@@ -162,23 +162,18 @@
         \interp { p \cdot q }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             \mathsf{let}\ (S_i, S_r) = \interp{p}(is, rs)\\
-            &\mathsf{in}\ \bigcup \{\interp{q}(\mathit{is}',\mathit{rs}')\ |\ \mathit{is}'\in S_i, \mathit{rs'}\in S_r\}\\
-            %\mathsf{let}\ S' =
-            %\interp { p }(S)
-            %\\
-            %&\interp { q }(S')
-            %\\
-    \end{align*}
-    %This is required because it will overflow the page otherwise.
-    \begin{align*}
-        \mathsf{let}\ l \in\ & S\\
+            &\mathsf{in}\ \bigcup \{\interp{q}(\mathit{is}',\mathit{rs}')\ |\ \mathit{is}'\in S_i, \mathit{rs'}\in S_r\}
+            \\
+            \\
+    %\end{align*}
+    %\begin{align*}
         %Defn. of Filter
-        \interp{\mathsf{filter}\ f}(ls)
-            \triangleq\ & \{l \in ls\ |\ f(l) = \mathsf{true}\}\\
+        \interp{\mathsf{filter}\ f}(S)
+            \triangleq\ & \{l \in S\ |\ f(l) = \mathsf{true}\}\\
         %Defn. of Map
-        \interp{\mathsf{map}\ g}(ls)
+        \interp{\mathsf{map}\ g}(S)
             \triangleq\ &
-            \{ g(l)\ |\ l\in ls \} 
+            \{ g(l)\ |\ l\in S \} 
     \end{align*}
  %}
 %%%%%%%%%%%%%%%%%%%%%%%%
