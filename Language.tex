@@ -91,33 +91,30 @@
             (\emptyset , \emptyset)
             \\ %or null-stream?
         %Identity
-        \interp{ 1 }(S)
+        \interp{ 1 }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \{S\}
+            (\{\mathit{is}\},\{\mathit{rs}\})
             \\
         %Test
-        \interp{ f=n }(S)
+        \interp{ f=n }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            (\mathsf{filter}\ (f=n)\ \{S\}.1,\
-             \mathsf{filter}\ (f=n)\ \{S\}.2) 
+            (\mathsf{filter}\ (f=n)\ \{\mathit{is}\},\
+             \mathsf{filter}\ (f=n)\ \{\mathit{rs}\}) 
             \\
         %Sum
-        \interp{ a + b }(S)
-             \triangleq\ &
-             \mathsf{let}\ \{S_a\} = \interp{ a }(S) \\
-            &\mathsf{let}\ \{S_b\} = \interp{ b }(S) \\
-            &(\{S_a\}.1 \cup \{S_b\}.1,\ \{S_a\}.2 \cup \{S_b\}.2)
-            %I think that singleton set format is unecessary here
-            \\
-            %Must be Sa.1 <op> Sb.1 because Sa <op> Sb implies all can change each other.
+        \interp{ a + b }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \interp { a }(\mathit{is}, \mathit{rs})\cup
+            \interp { b }(\mathit{is}, \mathit{rs}) \\
+            &\mathsf{where}\ (S_i^1, S_r^1)\cup (S_i^2, S_r^2)\triangleq
+                (S_i^1\cup S_i^2, S_r^1\cup S_r^2)\\
         %Product
-        \interp { a \cdot b }(S)
-             \triangleq\ &
-             \mathsf{let}\ \{S_a\} = \interp { a }(S) \\
-            &\mathsf{let}\ \{S_b\} = \interp { b }(S) \\
-            &(\{S_a\}.1 \cap \{S_b\}.1,\ \{S_a\}.2 \cap \{S_b\}.2)
-            \\
-            %Must be Sa.1 <op> Sb.1 because Sa <op> Sb implies all can change each other.
+        \interp { a \cdot b }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \interp { a }(\mathit{is}, \mathit{rs})\cap
+            \interp { b }(\mathit{is}, \mathit{rs}) \\
+            &\mathsf{where}\ (S_i^1, S_r^1)\cap (S_i^2, S_r^2)\triangleq
+                (S_i^1\cap S_i^2, S_r^1\cap S_r^2)\\
         %Negation
         \interp { \neg a }(\mathit{is}, \mathit{rs})
             \triangleq\ &
@@ -127,62 +124,50 @@
         %Action-only Slice
         \interp { act(p) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ (S_i,S_r) = \interp {p}(\mathit{is}, \mathit{rs})\
+            \mathsf{let}\ (S_i,S_r) = \interp {p}(\mathit{is}, \mathit{rs})
             \mathsf{in}\ (S_i, \{\mathit{rs}\})
             \\
         %Result-only Slice
-        \interp { res(p) }(S)
+        \interp { res(p) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ \{S'\} = \interp {p}(S)\ 
-            \mathsf{in}\ (\{S\}.1,\ \{S'\}.2)
+            \mathsf{let}\ (S_i,S_r) = \interp {p}(\mathit{is}, \mathit{rs})
+            \mathsf{in}\ (\{\mathit{is}\}, S_r)
             \\
         %Injection Action
-        \interp { inj_{i}(i) }(is, rs)
+        \interp { inj_{i}(i) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            (\{i : is\}, \{rs\}) 
+            (\{\mathit{i : is}\}, \{\mathit{rs}\}) 
             %or ::?  ; is sequential
             \\
         %Injection Result
-        \interp { inj_{r}(r) }(S)
+        \interp { inj_{r}(r) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            (\{S\}.1,\ r ; \{S\}.2)
+            (\{\mathit{is}\},\{ \mathit{r : rs}\})
             \\
         %Modification
-        \interp { f \leftarrow n }(S)
+        \interp { f \leftarrow n }(is, rs)
             \triangleq\ &
-            (\mathsf{map}\ (f\leftarrow n)\ \{S\}.1,\
-             \mathsf{map}\ (f\leftarrow n)\ \{S\}.2)
+            (\mathsf{map}\ (f\leftarrow n)\ \{is\},\
+             \mathsf{map}\ (f\leftarrow n)\ \{rs\})
             \\ % could use editing?
         %Policy Union
-         \interp { p + q }(\mathit{is}, \mathit{rs})
-         \triangleq\ &
-         \interp { p }(\mathit{is}, \mathit{rs})\cup
-         \interp { q }(\mathit{is}, \mathit{rs}) \\
-         &\mathsf{where}\ (S_i^1, S_r^1)\cup (S_i^2, S_r^2)\triangleq
-                   (S_i^1\cup S_i^2, S_r^1\cup S_r^2)\\
+        \interp { p + q }(\mathit{is}, \mathit{rs})
+            \triangleq\ &
+            \interp { p }(\mathit{is}, \mathit{rs})\cup
+            \interp { q }(\mathit{is}, \mathit{rs}) \\
+            &\mathsf{where}\ (S_i^1, S_r^1)\cup (S_i^2, S_r^2)\triangleq
+                (S_i^1\cup S_i^2, S_r^1\cup S_r^2)\\
             %A union of the streams gives a nondeterministic machine.
         %Policy Concatnation
         \interp { p \cdot q }(\mathit{is}, \mathit{rs})
             \triangleq\ &
             \mathsf{let}\ (S_i, S_r) = \interp{p}(is, rs)\\
-            &\mathsf{in}\ \bigcup \{\interp{q}(\mathit{is}',\mathit{rs}')\ |\
-                       \mathit{is}'\in S_i, \mathit{rs'}\in S_r\}\\
+            &\mathsf{in}\ \bigcup \{\interp{q}(\mathit{is}',\mathit{rs}')\ |\ \mathit{is}'\in S_i, \mathit{rs'}\in S_r\}\\
             %\mathsf{let}\ S' =
             %\interp { p }(S)
             %\\
             %&\interp { q }(S')
             %\\
-            %&\textcolor{red}{or}\\
-        %Policy Kleene Star
-        \interp { p ^{*} } (S)
-            \triangleq\ &
-            \mathsf{let}\ p^{n} = p_{1} \cdot p_{2} \cdot \ldots \cdot p_{n}
-            \\
-            &\mathsf{let}\ \{S_{p_{n}}\} = \interp { p^{n} } (S)
-            \\
-            &(\bigcup^{\infty}_{n=0} \{S_{p_{n}}\}.1,\bigcup^{\infty}_{n=0} \{S_{p_{n}}\}.2)
-            \\
-            & \textcolor{red}{\text{is this relevant in streams?}}\\
     \end{align*}
     %This is required because it will overflow the page otherwise.
     \begin{align*}
