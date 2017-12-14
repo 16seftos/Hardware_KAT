@@ -225,7 +225,6 @@
      &= \interp{\mathit{act}(\neg \mathsf{WritesToZero})}
      &&\quad \text{Defn.}\\
      \label{3.1.1:step2}
-     %\interp{\mathit{act}(\neg \mathsf{WritesToZero})}
      &= \interp{act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}
      &&\quad \text{Defn.}\\
      \label{3.1.1:step3}
@@ -243,11 +242,9 @@
      \label{3.1.1:step6}
      \mathit{S_i}' &= \mathit{\{is\}} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(is))
      &&\quad \ref{3.1.1:step5} \\
-     %Add, by deconstruction of (is,rs) pair?
      \label{3.1.1:step7}
      \mathit{S_r}' &= \mathit{\{rs\}}
      &&\quad \ref{3.1.1:step5} \\
-     %Add, by deconstruction of (is,rs) pair?
      \label{3.1.1:qed}
      %& \mathsf{Q.E.D.}
      &\qedhere
@@ -711,15 +708,14 @@ Note, proofs after this area are unverified with the most recent setup of the la
     %Predicates table
     \begin{tabular}{l c r l l}
        Expressions  & $e$    & $::=$  & $read(b)$       & \textit{Read Reg}        \\
-                    &        & $\mid$ & $write(b,v)$    & \textit{Write C to Reg}     \\
+                    &        & $\mid$ & $write(b,v)$    & \textit{Write Value to Reg}     \\
                     &        & $\mid$ & $let\ x = e_1\ in\ e_2$ & \textit{Assignment}        \\  
-                    &        & $\mid$ & $e_1\ ||\ e_2$    & \textit{Expression Union}        \\  
-                    &        & $\mid$ & $forever\ e$    & \textit{Hardwire}\\  
+                    &        & $\mid$ & $e_1\ ||\ e_2$    & \textit{Expression Union}        \\
                     &        & $\mid$ & $f(e_1)$        & \textit{Apply Function} \\  
-                    &        & $\mid$ & $if\ v = n\ then\ e_1$            & \textit{Conditional} \\
+                    &        & $\mid$ & $if\ v = n\ then\ e_1\ else\ e_2$            & \textit{Conditional} \\
                     %
                     &        & $\mid$ & $e_1\ \&\&\ e_2$            & \textit{Product (AND)}\\
-                    &        & $\mid$ & $e_1 :: e_2$            & \textit{Concatination}
+                    &        & $\mid$ & $e_1 ; e_2$            & \textit{Concatination}
     \end{tabular}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SECTION 4             %%%
@@ -749,7 +745,16 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
              =\ &
              write(i_{out}, read(i_{in}))\\
              &write(r_{out}, read(r_{in}))
-             \\ %or should I use {}?
+             \\
+         %Filter
+         \mathbf{C}[f = n]\
+            =\
+            &if\ i_{in}=n\ then\\
+            &\quad write(i_{out}, read(i_{in}))\\
+            &else\ \mathbf{C}_{(i_{in}, i_{out}, -, -})[0]\\
+            &if\ r_{in}=n\ then\\
+            &\quad write(r_{out}, read(r_{in}))\\
+            &else\ \mathbf{C}_{(-, -, r_{in}, r_{out}})[0]\\
          %Predicate Addition
          \mathbf{C}[a + b]\ 
              =\ &
@@ -760,22 +765,24 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
     \begin{align*}
          %Predicate Product
          \mathbf{C}[a \cdot b]\ 
-             =\ &
-             let\ e_a = \mathbf{C}[a]\\
-             &\quad\ \ e_b = \mathbf{C}[b]\\
-             &in\ e_a\ \&\&\ e_b\\
+            =\ &
+            let\ e_a = \mathbf{C}[a]\\
+            &\quad\ \ e_b = \mathbf{C}[b]\\
+            &in\ e_a\ \&\&\ e_b\\
          %Predicate Negation
          \mathbf{C}[\neg a]\ 
-             =\ &
-             ?
-             \\%Still unsure
+            =\ 
+            &if\ \neg a\ then\\
+            &\quad write(i_{out}, read(i_{in}))\\
+            &\quad write(r_{out}, read(r_{in}))\\
+            &else\ \mathbf{C}[0]\\
          %Slice to Action
          \mathbf{C}[act(p)]\ 
              =\ &
              let\ r\_bog_i = \text{new buf}\\
              &\quad\ \ r\_bog_o = \text{new buf}\\
-             &in\ ep = \mathbf{C}_{(i_{in}, i_{out}, r\_bog_i, r\_bog_o)}[p]\\
-             &ep\ write(r_{out}, read(r_{in}))
+             &in\ e_p = \mathbf{C}_{(i_{in}, i_{out}, r\_bog_i, r\_bog_o)}[p]\\
+             &e_p\ ||\ write(r_{out}, read(r_{in}))
              %or
              % let r = read(r_in)
              % in write(r_out, r)
@@ -785,8 +792,8 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
              =\ &
              let\ i\_bog_i = \text{new buf}\\
              &\quad\ \ i\_bog_o = \text{new buf}\\
-             &in\ ep = \mathbf{C}_{(i\_bog_i, i\_bog_o), r_{in}, r_{out}}[p]\\
-             &ep\ write(i_{out}, read(i_{in}))
+             &in\ e_p = \mathbf{C}_{(i\_bog_i, i\_bog_o), r_{in}, r_{out}}[p]\\
+             &e_p\ ||\ write(i_{out}, read(i_{in}))
              %or
              % let r = read(r_in)
              % in write(r_out, r)
@@ -814,30 +821,18 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
              =\ &
              let\ e_p = \mathbf{C}[q]\\
              &\quad\ \ e_q = \mathbf{C}[q]\\
-             &in\ e_p||e_q
+             &in\ e_p\ ||\ e_q
              \\
          %Policy Sequence
          \mathbf{C}[p \cdot q]\ 
              =\ &
              let\ i_{mid} = \text{new buf}\\
              &\quad\ \ r_{mid} = \text{new buf}\\
-             &\quad\ \ e_p = \mathbf{C}_{(i_{in}, i_{mid}, r_{in}, r_{mid})}[q]\\
+             &\quad\ \ e_p = \mathbf{C}_{(i_{in}, i_{mid}, r_{in}, r_{mid})}[p]\\
              &\quad\ \ e_q = \mathbf{C}_{(i_{mid}, i_{out}, r_{mid}, r_{out})}[q]\\
-             &in\ e_p :: e_q
-             \\
-         %Star
-         \mathbf{C}[p ^{*}]\ 
-             =\ &
-             forever(\mathbf{C}[p])\\
-             %&\text{\textcolor{red}{probably?  N/A?}}
-             %\\
-         %Filter
-         \mathbf{C}[f = n]\
-            =\
-            &if\ i_{in}=n\ then\\
-            &\quad write(i_{out}, read(i_{in}))\\
-            &if\ r_{in}=n\ then\\
-            &\quad write(r_{out}, read(r_{in}))
+             &in\ e_p\ ;\ e_q
+         %Define filter
+         %Define map
      \end{align*}
  }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
