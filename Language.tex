@@ -61,8 +61,7 @@
                     &       & $\mid$ & $inj_{r}$        & \textit{Injection Result} \\
                     &       & $\mid$ & $f \leftarrow n$ & \textit{Update}   \\
                     &       & $\mid$ & $p + q$          & \textit{Choice}   \\
-                    &       & $\mid$ & $p \cdot q$      & \textit{Sequential Concatenation} \\
-                    &       & $\mid$ & $p ^{*}$         & \textit{Kleene Star}
+                    &       & $\mid$ & $p \cdot q$      & \textit{Sequential Concatenation}
     \end{tabular}\\
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SECTION 1 %%%
@@ -124,13 +123,13 @@
         %Action-only Slice
         \interp { act(p) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ (S_i,S_r) = \interp {p}(\mathit{is}, \mathit{rs})
+            \mathsf{let}\ (S_i,S_r) = \interp {p}(\mathit{is}, \mathit{rs})\ 
             \mathsf{in}\ (S_i, \{\mathit{rs}\})
             \\
         %Result-only Slice
         \interp { res(p) }(\mathit{is}, \mathit{rs})
             \triangleq\ &
-            \mathsf{let}\ (S_i,S_r) = \interp {p}(\mathit{is}, \mathit{rs})
+            \mathsf{let}\ (S_i,S_r) = \interp {p}(\mathit{is}, \mathit{rs})\ 
             \mathsf{in}\ (\{\mathit{is}\}, S_r)
             \\
         %Injection Action
