@@ -696,9 +696,6 @@ Note, proofs after this area are unverified with the most recent setup of the la
 %%% SYNTAX INTERMEDIATE %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    Basic Description:\\
-    The 2-stream model from above can be compiled into a system that is more like hardware as shown below.  Instead of dealing with streams directly, this deals with individual "instructions" a processor may use.  Less abstract than above, but harder to use and almost impossible to prove the equality of two policies in this language.\\
-
     %Definitions table
     \begin{tabular}{l r c l}
         Values        & $v$     & $::=$     & $\mathsf{INSTR\ |\ RES}$\\
@@ -707,16 +704,27 @@ Note, proofs after this area are unverified with the most recent setup of the la
 
     %Predicates table
     \begin{tabular}{l c r l l}
-       Expressions  & $e$    & $::=$  & $read(b)$       & \textit{Read Reg}        \\
-                    &        & $\mid$ & $write(b,v)$    & \textit{Write Value to Reg}     \\
-                    &        & $\mid$ & $let\ x = e_1\ in\ e_2$ & \textit{Assignment}        \\  
-                    &        & $\mid$ & $e_1\ ||\ e_2$    & \textit{Expression Union}        \\
-                    &        & $\mid$ & $f(e_1)$        & \textit{Apply Function} \\  
-                    &        & $\mid$ & $if\ v = n\ then\ e_1\ else\ e_2$            & \textit{Conditional} \\
-                    %
-                    &        & $\mid$ & $e_1\ \&\&\ e_2$            & \textit{Product (AND)}\\
-                    &        & $\mid$ & $e_1 ; e_2$            & \textit{Concatination}
-    \end{tabular}\\
+       Expressions  & $e$    & $::=$  & $read(b)$       
+                             & \textit{Read Reg}\\
+                    &        & $\mid$ & $write(b,v)$    
+                             & \textit{Write Value to Reg}\\
+                    &        & $\mid$ & $let\ x = e_1\ in\ e_2$ 
+                             & \textit{Assignment}\\  
+                    &        & $\mid$ & $DeMux(b_i, b_1, b_2)$  
+                             & \textit{DeMux (Copy)}\\
+                    &        & $\mid$ & $Mux(b_1, b_2, b_o)$ 
+                             & \textit{Mux (Combine)}\\
+                    &        & $\mid$ & $e_1\ ||\ e_2$ 
+                             & \textit{Parallel}\\
+                    &        & $\mid$ & $f(e_1)$        
+                             & \textit{Apply Function} \\  
+                    &        & $\mid$ & $if\ v = n\ then\ e_1\ else\ e_2$
+                             & \textit{Conditional} \\
+                    &        & $\mid$ & $e_1\ \&\&\ e_2$ 
+                             & \textit{Product (AND)}\\
+                    &        & $\mid$ & $e_1 ; e_2$
+                             & \textit{Concatination}
+    \end{tabular}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SECTION 4             %%%
 %%% SYNTAX INTERMEDIATE          %%%
@@ -732,6 +740,13 @@ Note, proofs after this area are unverified with the most recent setup of the la
 Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out})}$ if unspecified.
  {\fontsize{12pt}{14pt}\selectfont
     %Semantics align
+     %\begin{align*}
+     %    DeMux(iin, b1, b2)\
+     %        =\ &
+     %        let\ x=read(iin)\\
+     %        & in (write(b1, x);write(b2, x))\\
+     %        &in\ e_a\ ||\ e_b\\
+     %\end{align*}
      \begin{align*}
          %Falsity
          \mathbf{C}[0]\ 
@@ -758,9 +773,11 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
          %Predicate Addition
          \mathbf{C}[a + b]\ 
              =\ &
-             let\ e_a = \mathbf{C}[a]\\
-             &\quad\ \ e_b = \mathbf{C}[b]\\
-             &in\ e_a\ ||\ e_b\\
+             let\ e_{aii}, e_{ari}, e_{bii}, e_{bri} = \text{new buf}\\
+                &DeMux(i_{in}, e_{aii}, e_{bii}); DeMux(r_{in}, e_{ari}, e_{bri})\\
+             &let\ e_a = \mathbf{C}_{(e_{aii},e_{aio},e_{ari},e_{aro})}[a]\\
+             &\quad\ \ e_b = \mathbf{C}_{(e_{bii},e_{bio},e_{bri},e_{bro})}[b]\\
+             &in\ Mux(e_a\ \ e_b, (i_{out},r_{out}))\\
     \end{align*}
     \begin{align*}
          %Predicate Product
@@ -794,9 +811,6 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
              &\quad\ \ i\_bog_o = \text{new buf}\\
              &in\ e_p = \mathbf{C}_{(i\_bog_i, i\_bog_o), r_{in}, r_{out}}[p]\\
              &e_p\ ||\ write(i_{out}, read(i_{in}))
-             %or
-             % let r = read(r_in)
-             % in write(r_out, r)
              \\
          %Inject Instruction
          \mathbf{C}[inj_iV]\ 
@@ -821,7 +835,7 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
              =\ &
              let\ e_p = \mathbf{C}[q]\\
              &\quad\ \ e_q = \mathbf{C}[q]\\
-             &in\ e_p\ ||\ e_q
+             &in\ Mux(e_p, e_q, (i_{out},r_{out}))
              \\
          %Policy Sequence
          \mathbf{C}[p \cdot q]\ 
