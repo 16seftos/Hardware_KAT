@@ -180,8 +180,7 @@
 %%% SEMANTICS        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-\textcolor{red}{\section{Applications}
-Probably needs to be re-written.}
+\section{Applications}
 %%%%%%%%%%%%%%%%%%%%%%%
 %%% BEGIN SECTION 3 %%%
 %%% APPLICATIONS    %%%
@@ -204,12 +203,12 @@ Probably needs to be re-written.}
  Prove that
  \begin{itemize}
  \item  if
-   $\interp{ \mathsf{NoWritesZero} } (S) =
-   S'$
+   $\interp{ \mathsf{NoWritesZero} } (\mathit{is}, \mathit{rs}) =
+   (\mathit{S_i}',\mathit{S_r}')$
  \item then
    \begin{enumerate}
-   \item $\mathit{S}.2 = \mathit{S'}.2$ and
-   \item for all $i \in \mathit{S'}.1$, $i.\mathsf{R}_{\mathsf{dest}} \neq \mathsf{R}_0$.
+   \item $\mathit{\{rs\}} = \mathit{S_r'}$ and
+   \item for all $i \in \mathit{S_i'}$, $i.\mathsf{R}_{\mathsf{dest}} \neq \mathsf{R}_0$.
    \end{enumerate}
  \end{itemize}
  \begin{proof}
@@ -230,23 +229,23 @@ Probably needs to be re-written.}
      &= \interp{act(\neg \mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}
      &&\quad \text{Defn.}\\
      \label{3.1.1:step3}
-     \interp{act(\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0))}(S)
-     &= ((\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(S).1, S.2)
+     \interp{act(\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0))}(\mathit{is}, \mathit{rs})
+     &= ((\interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(is), \mathit{\{rs\}})
      &&\quad \text{Defn.}\ \interp{\cdot}\\    
      \label{3.1.1:step4}
-     \interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(S)
-     &= (S) - \interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(S)
+     \interp{\neg(\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0)}(\mathit{is}, \mathit{rs})
+     &= (\mathit{\{is\}}, \mathit{\{rs\}}) - \interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is}, \mathit{rs})
      &&\quad \text{Defn.}\ \interp{\cdot}\\    
      \label{3.1.1:step5}
-     \interp{\mathsf{NoWritesToZero}}(S)
-     &= (\mathit{S}.1 - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(S)).1, S.2)
+     \interp{\mathsf{NoWritesToZero}}(\mathit{is}, \mathit{rs})
+     &= (\mathit{\{is\}} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(\mathit{is}, \mathit{rs})).1, \mathit{\{rs\}})
      &&\quad \ref{3.1.1:step2},\ \ref{3.1.1:step3},\ \ref{3.1.1:step4}\\
      \label{3.1.1:step6}
-     S'.1 &= S.1 - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(S)).1
+     \mathit{S_i}' &= \mathit{\{is\}} - (\interp{\mathsf{R}_{\mathsf{dest}} = \mathsf{R}_0}(is))
      &&\quad \ref{3.1.1:step5} \\
      %Add, by deconstruction of (is,rs) pair?
      \label{3.1.1:step7}
-     S'.2 &= S.2
+     \mathit{S_r}' &= \mathit{\{rs\}}
      &&\quad \ref{3.1.1:step5} \\
      %Add, by deconstruction of (is,rs) pair?
      \label{3.1.1:qed}
@@ -264,6 +263,7 @@ Probably needs to be re-written.}
 
 
 \subsection{Secure Memory Access}
+Note, proofs after this area are unverified with the most recent setup of the language.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% BEGIN SUBSECTION 3.2 %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
