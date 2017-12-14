@@ -766,15 +766,15 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
             =\
             &if\ i_{in}=n\ then\\
             &\quad write(i_{out}, read(i_{in}))\\
-            &else\ \mathbf{C}_{(i_{in}, i_{out}, -, -})[0]\\
+            &\quad else\ \mathbf{C}_{(i_{in}, i_{out}, -, -})[0]\\
             &if\ r_{in}=n\ then\\
             &\quad write(r_{out}, read(r_{in}))\\
-            &else\ \mathbf{C}_{(-, -, r_{in}, r_{out}})[0]\\
+            &\quad else\ \mathbf{C}_{(-, -, r_{in}, r_{out}})[0]\\
          %Predicate Addition
          \mathbf{C}[a + b]\ 
              =\ &
-             let\ e_{aii}, e_{ari}, e_{bii}, e_{bri} = \text{new buf}\\
-                &DeMux(i_{in}, e_{aii}, e_{bii}); DeMux(r_{in}, e_{ari}, e_{bri})\\
+             let\ e_{aii}, e_{ari}, e_{bii}, e_{bri} = \text{new buf}\ in\\
+                &DeMux(i_{in}, e_{aii}, e_{bii})\ ||\ DeMux(r_{in}, e_{ari}, e_{bri})\\
              &let\ e_a = \mathbf{C}_{(e_{aii},e_{aio},e_{ari},e_{aro})}[a]\\
              &\quad\ \ e_b = \mathbf{C}_{(e_{bii},e_{bio},e_{bri},e_{bro})}[b]\\
              &in\ Mux(e_a\ \ e_b, (i_{out},r_{out}))\\
