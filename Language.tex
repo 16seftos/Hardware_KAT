@@ -710,10 +710,6 @@ Note, proofs after this area are unverified with the most recent setup of the la
                              & \textit{Write Value to Reg}\\
                     &        & $\mid$ & $let\ x = e_1\ in\ e_2$ 
                              & \textit{Assignment}\\  
-                    &        & $\mid$ & $DeMux(b_i, b_1, b_2)$  
-                             & \textit{DeMux (Copy)}\\
-                    &        & $\mid$ & $Mux(b_1, b_2, b_o)$ 
-                             & \textit{Mux (Combine)}\\
                     &        & $\mid$ & $e_1\ ||\ e_2$ 
                              & \textit{Parallel}\\
                     &        & $\mid$ & $f(e_1)$        
@@ -723,7 +719,9 @@ Note, proofs after this area are unverified with the most recent setup of the la
                     &        & $\mid$ & $e_1\ \&\&\ e_2$ 
                              & \textit{Product (AND)}\\
                     &        & $\mid$ & $e_1 ; e_2$
-                             & \textit{Concatination}
+                             & \textit{Concatination}\\
+                    &        & $\mid$ & $forever\ e$ 
+                             & \textit{Hardwire}
     \end{tabular}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% END OF SECTION 4             %%%
@@ -809,7 +807,7 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
              =\ &
              let\ i\_bog_i = \text{new buf}\\
              &\quad\ \ i\_bog_o = \text{new buf}\\
-             &in\ e_p = \mathbf{C}_{(i\_bog_i, i\_bog_o), r_{in}, r_{out}}[p]\\
+             &in\ e_p = \mathbf{C}_{(i\_bog_i, i\_bog_o, r_{in}, r_{out})}[p]\\
              &e_p\ ||\ write(i_{out}, read(i_{in}))
              \\
          %Inject Instruction
