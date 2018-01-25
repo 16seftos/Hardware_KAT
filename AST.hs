@@ -24,10 +24,10 @@ data Pred fi vi i fr vr r where
   PZero :: Pred fi vi i fr vr r
   POne :: Pred fi vi i fr vr r
   PTestInstruction :: Record i fi vi =>
-    i -> fi -> vi ->
+    fi -> vi ->
     Pred fi vi i fr vr r
   PTestResult :: Record r fr vr =>
-    r -> fr -> vr ->
+    fr -> vr ->
     Pred fi vi i fr vr r
   PBin ::
     Binop -> 
