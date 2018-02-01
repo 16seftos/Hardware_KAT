@@ -11,6 +11,8 @@ import Control.Monad.Trans.State.Lazy
 class Field f where
 
 class Value v where
+  { (==) :: (Value v) => v -> v -> Bool
+  }
 
 class (Field f, Value v) => Record f v t where
   { getField :: t -> f -> v
@@ -86,14 +88,18 @@ data Id where
 type Buffer = String
 
 data Exp where 
-  ERead :: Buffer -> Exp
-  EWrite :: Buffer -> Id -> Exp
-  EPar :: Exp -> Exp -> Exp
-  ELet :: Id -> Exp -> Exp -> Exp
-  EITE :: (Field f, Value v) => Id -> f -> v -> Exp -> Exp 
-  EUpd :: (Field f, Value v) => Id -> f -> v -> Exp
-  ESeq :: Exp -> Exp -> Exp
-  EForever :: Exp -> Exp
+  ERead :: Buffer -> Exp                                      {- Read Reg -}
+  EWrite :: Buffer -> Id -> Exp                               {- Write Value to Reg -}
+  ELet :: Id -> Exp -> Exp -> Exp                             {- Assignment -}
+  EPar :: Exp -> Exp -> Exp                                   {- Parallel -}
+  EITE :: (Field f, Value v) => Id -> f -> v -> Exp -> Exp    {- ? -}
+  EUpd :: (Field f, Value v) => Id -> f -> v -> Exp           {- ? -}
+  EIf  :: Bool -> Exp -> Exp -> Exp                           {- Conditional -}
+  EAnd :: Exp -> Exp -> Exp                                   {- Product (AND) -}
+  ESeq :: Exp -> Exp -> Exp                                   {- Concatination -}
+  EForever :: Exp -> Exp                                      {- Hardwire -}
+  {- Didn't we decide that EForever is obsolete because Steams not Sets? -}
+  EMux :: CompileM Exp -> CompileM Exp -> Buffer -> Buffer -> Exp {- Requires CompileM otherwise it can't be nested -}
  
 type CompileM a = State Int a
 
@@ -113,6 +119,9 @@ isSum :: Binop -> Bool
 isSum Sum = True
 isSum _ = False
 
+demux :: Buffer -> Buffer -> Buffer -> CompileM Exp
+demux b _ _ = return $ EForever (EWrite b (MkId "BOGUS"))
+
 {- Compile to Intermediate Language -}
 
 {- Compile Predicates -}
@@ -127,26 +136,62 @@ compile_pred iin iout rin rout PZero =
   
   {- POne -}
 compile_pred iin iout rin rout POne =
-  do { x1 <- new_id
-     ; x2 <- new_id
-     ; return $ 
-         EForever 
+  do{ x1 <- new_id
+    ; x2 <- new_id
+    ; return $ 
+        EForever 
            (EPar (ELet x1 (ERead iin) (EWrite iout x1))
                  (ELet x2 (ERead rin) (EWrite rout x2)))
      } 
 
+{- IMPORTANT NOTE:  These are not equivalent to C[] as C[] will allow Instr and Res to go in parallel -}
   {- PTestInstruction -}
 compile_pred iin iout rin rout (PTestInstruction fi vi) = 
-  return $ EForever (EPar (ERead iin) (ERead rin))
+  do{ x1 <- new_id
+    ; x2 <- new_id
+    ; return $ 
+        EIf {-(vi AST.== vi)-}
+        True {- I can't figure out how to test the equality of two values -}
+          (EForever 
+              {-(EPar-} (ELet x1 (ERead iin) (EWrite iout x1)) 
+                    {- Ambiguous based on C[] : (ELet x2 (ERead rin) (EWrite rout x2))) -}
+          )
+          (EForever (ERead iin)) {- Ambiguous based on C[] : (EPar (ERead iin) (ERead rin)) -}
+    }
 
   {- PTestResult -}
 compile_pred iin iout rin rout (PTestResult fr vr) = 
-  return $ EForever (EPar (ERead iin) (ERead rin))
+  do{ x1 <- new_id
+    ; x2 <- new_id
+    ; return $ 
+        EIf {-(vr AST.== vr)-}
+        True {- I can't figure out how to test the equality of two values -}
+          (EForever 
+              {-(EPar (ELet x1 (ERead iin) (EWrite iout x1))-}
+                    (ELet x2 (ERead rin) (EWrite rout x2)) {- Ambiguous based on C[] : ) -}
+          )
+          (EForever (ERead rin)) {- Ambiguous based on C[] : (EPar (ERead iin) (ERead rin)) -}
+    }
 
   {- PBin -}
 compile_pred iin iout rin rout (PBin bop pred1 pred2) =
   case bop of
-    Sum  -> return $ EForever (EPar (ERead iin) (ERead rin))
+    Sum  -> do{ eaii <- new_buf
+              ; eari <- new_buf
+              ; ebii <- new_buf
+              ; ebri <- new_buf
+              ; eaio <- new_buf
+              ; earo <- new_buf
+              ; ebio <- new_buf
+              ; ebro <- new_buf
+              ; demux iin eaii ebii
+              ; demux rin eari ebri
+              ; return $ EForever (EMux 
+                (compile_pred eaii eaio eari earo pred1)
+                (compile_pred ebii ebio ebri ebro pred2)
+                iout rout)
+              }
+
     Prod -> return $ EForever (EPar (ERead iin) (ERead rin))
 
 compile_pred iin iout rin rout (PUn uop pred1) =
@@ -190,7 +235,6 @@ compile_policy iin iout rin rout (PlBin bop policy1 policy2) =
 mux :: Buffer -> Buffer -> Buffer -> CompileM Exp
 mux b _ _ = return $ EForever (EWrite b (MkId "BOGUS"))
 
-demux :: Buffer -> Buffer -> Buffer -> CompileM Exp
-demux b _ _ = return $ EForever (EWrite b (MkId "BOGUS"))
+
 
 
