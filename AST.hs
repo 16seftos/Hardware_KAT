@@ -20,6 +20,7 @@ data Binop = Sum | Prod
 
 data Unop = Neg
 
+{- Predicate Definitions -}
 data Pred fi vi i fr vr r where
   PZero :: Pred fi vi i fr vr r
   POne :: Pred fi vi i fr vr r
@@ -45,6 +46,7 @@ pneg = PUn Neg
 
 data Slice = Action | Result
 
+{- Policy Definitions -}
 data Policy fi vi i fr vr r where
   PlTest ::
     Pred fi vi i fr vr r ->
@@ -74,6 +76,8 @@ data Policy fi vi i fr vr r where
     Policy fi vi i fr vr r ->
     Policy fi vi i fr vr r
   
+
+{- Intermediate Language Definitions -}
 class Reg r where
 
 data Id where 
@@ -105,6 +109,8 @@ new_id =
      ; return $ MkId ("x" ++ show n)
      } 
 
+
+{- Compile to Intermediate Language -}
 compile_pred ::
   Buffer -> Buffer -> Buffer -> Buffer ->  
   Pred fi vi i fr vr r -> 
@@ -119,7 +125,13 @@ compile_pred iin iout rin rout POne =
          EForever 
            (EPar (ELet x1 (ERead iin) (EWrite iout x1))
                  (ELet x2 (ERead rin) (EWrite rout x2)))
-     }  
+     } 
+
+compile_pred iin iout rin rout (PTestInstruction fi vi) = 
+  return $ EForever (EPar (ERead iin) (ERead rin))
+
+compile_pred iin iout rin rout (PTestResult fr vr) = 
+  return $ EForever (EPar (ERead iin) (ERead rin))
      
 mux :: Buffer -> Buffer -> Buffer -> CompileM Exp
 mux b _ _ = return $ EForever (EWrite b (MkId "BOGUS"))
