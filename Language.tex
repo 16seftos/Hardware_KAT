@@ -54,7 +54,7 @@
 
     %Policies table
     \begin{tabular}{l c r l l}
-        Policies    & $p,q$ & $::=$  & $a$              & \textit{Test}     \\
+        Policies    & $p,q$ & $::=$  & $\mathbf{test}(a)$ & \textit{Test}     \\
                     &       & $\mid$ & $act(p)$         & \textit{Slice Actions}    \\
                     &       & $\mid$ & $res(p)$         & \textit{Slice Results}    \\
                     &       & $\mid$ & $inj_{i}$        & \textit{Injection Action} \\
@@ -831,7 +831,7 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
          %Policy Nondeterministic Choice
          \mathbf{C}[p + q]\ 
              =\ &
-             let\ e_p = \mathbf{C}[q]\\
+             let\ e_p = \mathbf{C}[p]\\
              &\quad\ \ e_q = \mathbf{C}[q]\\
              &in\ Mux(e_p, e_q, (i_{out},r_{out}))
              \\

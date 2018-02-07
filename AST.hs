@@ -87,12 +87,12 @@ data Id where
 
 type Buffer = String
 
-data Exp where 
+data Exp where
   ERead :: Buffer -> Exp                                      {- Read Reg -}
   EWrite :: Buffer -> Id -> Exp                               {- Write Value to Reg -}
   ELet :: Id -> Exp -> Exp -> Exp                             {- Assignment -}
   EPar :: Exp -> Exp -> Exp                                   {- Parallel -}
-  EITE :: (Field f, Value v) => Id -> f -> v -> Exp -> Exp    {- ? -}
+  EITE :: (Field f, Value v) => Id -> f -> v -> Exp -> Exp    {- "If then Else" (test) If only -}
   EUpd :: (Field f, Value v) => Id -> f -> v -> Exp           {- ? -}
   EIf  :: Bool -> Exp -> Exp -> Exp                           {- Conditional -}
   EAnd :: CompileM Exp -> CompileM Exp -> Exp                 {- Product (AND) -}
