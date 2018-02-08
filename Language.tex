@@ -769,7 +769,7 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
             &\quad write(r_{out}, read(r_{in}))\\
             &\quad else\ \mathbf{C}_{(-, -, r_{in}, r_{out}})[0]\\
          %Predicate Addition
-         \mathbf{C}[a + b]\ 
+         \mathbf{C}[\mathsf{test}(a + b)]\ 
              =\ &
              let\ e_{aii}, e_{ari}, e_{bii}, e_{bri} = \text{new buf}\ in\\
                 &DeMux(i_{in}, e_{aii}, e_{bii})\ ||\ DeMux(r_{in}, e_{ari}, e_{bri})\\
@@ -779,11 +779,8 @@ Assume all $\mathbf{C}$ is short for $\mathbf{C}_{(i_{in},i_{out},r_{in},r_{out}
     \end{align*}
     \begin{align*}
          %Predicate Product
-         \mathbf{C}[a \cdot b]\ 
-            =\ &
-            let\ e_a = \mathbf{C}[a]\\
-            &\quad\ \ e_b = \mathbf{C}[b]\\
-            &in\ e_a\ \&\&\ e_b\\
+         \mathbf{C}[\mathsf{test}(a \cdot b)]\ 
+            =\ &\mathbf{C}[\mathsf{test}(a) \cdot \mathsf{test}(b)] \\
          %Predicate Negation
          \mathbf{C}[\neg a]\ 
             =\ 

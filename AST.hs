@@ -95,7 +95,7 @@ data Exp where
   EITE :: (Field f, Value v) => Id -> f -> v -> Exp -> Exp    {- "If then Else" (test) If only -}
   EUpd :: (Field f, Value v) => Id -> f -> v -> Exp           {- ? -}
   EIf  :: Bool -> Exp -> Exp -> Exp                           {- Conditional -}
-  EAnd :: CompileM Exp -> CompileM Exp -> Exp                 {- Product (AND) -}
+  EBinop :: Binop -> Exp -> Exp -> Exp                        {- Product (AND) -}
   ESeq :: Exp -> Exp -> Exp                                   {- Concatination -}
   EForever :: Exp -> Exp                                      {- Hardwire -}
   {- Didn't we decide that EForever is obsolete because Steams not Sets? -}
@@ -192,7 +192,11 @@ compile_pred iin iout rin rout (PBin bop pred1 pred2) =
                 iout rout)
               }
               {- The definition of C[prod] as per the paper is a bit badly described.  && of Exp isn't simplifying the Predicate?  Maybe it is -}
-    Prod ->   return $ EForever (EAnd 
+    Prod ->
+      do { 
+
+
+return $ EForever (EAnd 
                 (compile_pred iin iout rin rout pred1)
                 (compile_pred iin iout rin rout pred2)
               )
