@@ -10,11 +10,25 @@ Require Import Integers.
 
 Require Import lang.
 
+Inductive fld : Type := OpCode | EffAddr.
+
+Definition offset (f : fld) : int :=
+  match f with
+  | OpCode => Int.repr 0
+  | EffAddr => Int.repr 6 (*BOGUS*)
+  end.
+
+Definition size (f : fld) : int :=
+  match f with
+  | OpCode => Int.repr 6
+  | EffAddr => Int.repr 26 (*BOGUS*)
+  end.
+
 Inductive pred : Type := 
 | BPred : binop -> pred -> pred -> pred
 | BZero : pred
 | BNeg : pred -> pred
-| BField : bvec32 -> pred.
+| BField : fld -> bvec32 -> pred.
 
 Inductive pol : Type :=
 | PTest : pred -> pol
@@ -27,7 +41,8 @@ Fixpoint compile_pred (x : id TVec32) (p : pred) : exp TVec32 :=
   | BPred op pl pr => EBinop op (compile_pred x pl) (compile_pred x pr)
   | BZero => EVal (Int.repr 0)
   | BNeg p' => ENot (compile_pred x p')
-  | BField i => EVal i (*FIXME: EBinop OSub x (EVal i) = 0*)
+  | BField f i => (*FIXME: don't ignore offsets*)
+     EBinop OShru (EVar x) (EVal (Int.sub (Int.repr 32) (size f)))
   end.
 
 Section M.
@@ -45,7 +60,7 @@ Section M.
 End M.
 
 Definition new_buf : M nat string :=
-  fun n => (S n, append "_x" (String (Ascii.ascii_of_nat n) "")).
+  fun n => (S n, append "_x" (String (Ascii.ascii_of_nat n) "")). (*FIXME: will overflow*)
 
 Fixpoint compile_pol (i o : id TVec32) (p : pol) : M nat stmt :=
   match p with
@@ -78,4 +93,46 @@ Section test.
     PChoice (PTest BZero) (PTest (BNeg BZero)).
 
   Eval compute in compile_pol i o zero_or_notzero O.
-End test.  
+
+  Definition j := Int.repr 2.
+  Definition op_j := BField OpCode j.
+
+  Definition sec_addr := BField EffAddr (Int.repr 0). (*FIXME*)
+  
+  Definition sec_jmp : pol :=
+    PChoice
+      (PConcat (PTest op_j) (PTest (BNeg sec_addr)))
+      (PTest (BNeg op_j)).
+
+  Definition compile (p : pol) : prog :=
+    let (_,s) := compile_pol i o p O
+    in VDecl Input i (Int.repr 0)
+      (VDecl Output o (Int.repr 0)
+      (PStmt s)).              
+
+  Require Import syntax.
+
+  Local Open Scope hdl_stmt_scope.
+  Local Open Scope hdl_exp_scope.
+  
+  Eval vm_compute in compile sec_jmp.
+End test.
+
+Require Import Extractions.
+
+(* print the program *)
+
+Definition i : id TVec32 := "i".
+Definition o : id TVec32 := "o".
+
+Definition sec_jmp_compiled : prog := compile i o sec_jmp.
+
+Definition pretty_print_sec_jmp :=
+  pretty_print_tb "secjmp" sec_jmp_compiled.
+
+Eval vm_compute in pretty_print_sec_jmp.
+
+Extract Constant main => "Prelude.putStrLn pretty_print_sec_jmp".
+
+(* run the program 'secjmp.hs' and pipe to a file to get verilog *)
+Extraction "secjmp.hs" pretty_print_sec_jmp.

@@ -115,8 +115,8 @@ Inductive binop : Type :=
     | OShr (* shift right *) | OShru (* unsigned shift right *)
     | OShl (* shift left *)
     | OOr
-    | OSub.
-    (* | ORor (* rotate right *) | ORol (* rotate left *). *)
+    | OSub
+    | OEq.
 
 Inductive exp : ty -> Type :=
   | EVal :
@@ -169,7 +169,6 @@ Definition r_rotate (x : exp TVec32)
            (i : exp TVec32) : exp TVec32 :=
   EBinop OOr (EBinop OShr x i) (EBinop OShl x 
            (EBinop OSub (EVal (Int.repr 32)) i)).
-                                               
 
 Inductive var_kind : Type := Local | Input | Output.
 
@@ -209,6 +208,7 @@ Definition binop_interp (op : binop) (v1 v2 : bvec32) : bvec32 :=
   | OShru => Int.shru v1 v2
   | OShl => Int.shl v1 v2
   | OOr =>  Int.or v1 v2
+  | OEq => v1 (*BOGUS*)
   end.
 
 Section state.
