@@ -59,6 +59,7 @@ Definition verilog_of_binop (b : binop) : verilog :=
   | OShru => ">>"
   | OShl => "<<<"
   | OOr => "|"
+  | OEq => "=="
 end.
 
 Fixpoint verilog_of_exp (ty_exp : ty) (e : exp ty_exp) (st : state):
