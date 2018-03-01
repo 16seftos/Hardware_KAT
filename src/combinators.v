@@ -5,6 +5,7 @@ Require Import Arith ZArith.
 Require Import Vector. 
 Require Import String.
 Require Import JMeq.
+Require Import List. Import ListNotations.
 
 Require Import Integers.
 
@@ -59,8 +60,60 @@ Section M.
       end.
 End M.
 
+Inductive digit : Type :=
+  Zero | One | Two | Three | Four | Five | Six | Seven | Eight | Nine.
+
+Definition digit2string (d : digit) : string :=
+  match d with
+  | Zero => "0"
+  | One => "1"
+  | Two => "2"
+  | Three => "3"
+  | Four => "4"
+  | Five => "5"
+  | Six => "6"
+  | Seven => "7"
+  | Eight => "8"
+  | Nine => "9"
+  end.
+
+Definition decimal := list digit.
+
+Fixpoint decimal2string (d : decimal) : string :=
+  match d with
+  | nil => ""
+  | x :: d' => append (digit2string x) (decimal2string d')
+  end.
+
+Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
+  match fuel with
+  | O => Zero :: acc
+  | S fuel' => 
+      match n with
+      | 0 => Zero :: acc
+      | 1 => One :: acc
+      | 2 => Two :: acc
+      | 3 => Three :: acc
+      | 4 => Four :: acc
+      | 5 => Five :: acc
+      | 6 => Six :: acc
+      | 7 => Seven :: acc
+      | 8 => Eight :: acc
+      | 9 => Nine :: acc
+      | _ =>
+        let d := Nat.div n 10 in
+        let r := Nat.modulo n 10 in
+        nat2decimal_aux fuel' d (nat2decimal_aux fuel' r acc)
+      end
+  end.
+
+Definition nat2decimal (n : nat) : decimal :=
+  nat2decimal_aux n n nil.
+
+Definition nat2string (n : nat) : string := decimal2string (nat2decimal n).
+
 Definition new_buf : M nat string :=
-  fun n => (S n, append "_x" (String (Ascii.ascii_of_nat n) "")). (*FIXME: will overflow*)
+  fun n => (S n, append "internal" (nat2string n)).
 
 Fixpoint compile_pol (i o : id TVec32) (p : pol) : M nat stmt :=
   match p with
