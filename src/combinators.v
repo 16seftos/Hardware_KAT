@@ -15,8 +15,8 @@ Inductive fld : Type := OpCode | EffAddr.
 
 Definition offset (f : fld) : int :=
   match f with
-  | OpCode => Int.repr 0
-  | EffAddr => Int.repr 6 (*BOGUS*)
+  | OpCode => Int.repr 26
+  | EffAddr => Int.repr 0 (*BOGUS*)
   end.
 
 Definition size (f : fld) : int :=
@@ -37,15 +37,20 @@ Inductive pol : Type :=
 | PChoice : pol -> pol -> pol
 | PConcat : pol -> pol -> pol.
 
+(* Compile Predicates *)
+(*Define neg1 := EVal (Int.Repr 4294967295).*)
+
 Fixpoint compile_pred (x : id TVec32) (p : pred) : exp TVec32 :=
   match p with
   | BPred op pl pr => EBinop op (compile_pred x pl) (compile_pred x pr)
   | BZero => EVal (Int.repr 0)
   | BNeg p' => ENot (compile_pred x p')
+  (*BField OpCode Int.Repr 2*)
   | BField f i => (*FIXME: don't ignore offsets*)
-     EBinop OShru (EVar x) (EVal (Int.sub (Int.repr 32) (size f)))
+     EBinop OAnd (EBinop OShru (EVar x) (EVal (offset f))) )  (EBinop OShru (EVal (Int.repr 4294967295)) size f)
   end.
 
+(* Monad *)
 Section M.
   Variable state : Type.
 
@@ -60,6 +65,7 @@ Section M.
       end.
 End M.
 
+(* Variables using decimal integers *)
 Inductive digit : Type :=
   Zero | One | Two | Three | Four | Five | Six | Seven | Eight | Nine.
 
@@ -115,6 +121,7 @@ Definition nat2string (n : nat) : string := decimal2string (nat2decimal n).
 Definition new_buf : M nat string :=
   fun n => (S n, append "internal" (nat2string n)).
 
+(* Compile Policies *)
 Fixpoint compile_pol (i o : id TVec32) (p : pol) : M nat stmt :=
   match p with
   | PTest test =>
@@ -152,6 +159,7 @@ Section test.
 
   Definition sec_addr := BField EffAddr (Int.repr 0). (*FIXME*)
   
+  (*PTest BField OpCode Int.repr2*)
   Definition sec_jmp : pol :=
     PChoice
       (PConcat (PTest op_j) (PTest (BNeg sec_addr)))
