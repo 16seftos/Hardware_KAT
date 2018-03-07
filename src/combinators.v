@@ -47,7 +47,7 @@ Fixpoint compile_pred (x : id TVec32) (p : pred) : exp TVec32 :=
   | BNeg p' => ENot (compile_pred x p')
   (*BField OpCode Int.Repr 2*)
   | BField f i => (*FIXME: don't ignore offsets*)
-     EBinop OAnd (EBinop OShru (EVar x) (EVal (offset f))) )  (EBinop OShru (EVal (Int.repr 4294967295)) size f)
+     EBinop OAnd (EBinop OShru (EVar x) (EVal (offset f)))   (EBinop OShru (EVal (Int.repr 4294967295)) (EVal (size f)))
   end.
 
 (* Monad *)
