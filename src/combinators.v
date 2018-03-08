@@ -46,7 +46,7 @@ Fixpoint compile_pred (x : id TVec32) (p : pred) : exp TVec32 :=
   | BZero => EVal (Int.repr 0)
   | BNeg p' => ENot (compile_pred x p')
   (*BField OpCode Int.Repr 2*)
-  | BField f i => (*FIXME: don't ignore offsets*)
+  | BField f i => (*FIXME: don't ignore offsets*) (* Almost completely fixed, probably *)
      EBinop OAnd (EBinop OShru (EVar x) (EVal (offset f)))   (EBinop OShru (EVal (Int.repr 4294967295)) (EVal (size f)))
   end.
 
@@ -112,17 +112,17 @@ Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
         nat2decimal_aux fuel' d (nat2decimal_aux fuel' r acc)
       end
   end.
-
-Definition nat2decimal (n : nat) : decimal :=
-  nat2decimal_aux n n nil.
-
-Definition nat2string (n : nat) : string := decimal2string (nat2decimal n).
-
-Definition new_buf : M nat string :=
-  fun n => (S n, append "internal" (nat2string n)).
+ 
+ Definition nat2decimal (n : nat) : decimal :=
+   nat2decimal_aux n n nil.
+ 
+ Definition nat2string (n : nat) : string := decimal2string (nat2decimal n).
+ 
+ Definition new_buf : M nat string :=
+   fun n => (S n, append "internal" (nat2string n)).
 
 (* Compile Policies *)
-Fixpoint compile_pol (i o : id TVec32) (p : pol) : M nat stmt :=
+Fixpoint compile_pol (i o : id TVec32) (p : pol) (monad : M nat) : M nat stmt :=
   match p with
   | PTest test =>
     let e_test := compile_pred i test
@@ -140,9 +140,9 @@ Fixpoint compile_pol (i o : id TVec32) (p : pol) : M nat stmt :=
         (SAssign Nonblocking o (EBinop OOr (EVar o_new1) (EVar o_new2)))))))))
 
   | PConcat p1 p2 =>
-    bind new_buf (fun m_new =>
-    bind (compile_pol i m_new p1) (fun s1 =>
-    bind (compile_pol m_new o p2) (fun s2 => 
+    bind new_buf (fun m_new_buf =>
+    bind (compile_pol i m_new_buf p1) (fun s1 =>
+    bind (compile_pol m_new_buf o p2) (fun s2 => 
     ret (SSeq s1 s2))))
   end.
 
