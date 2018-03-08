@@ -38,23 +38,26 @@ Inductive pol : Type :=
 | PConcat : pol -> pol -> pol.
 
 (* Compile Predicates *)
-(*Define neg1 := EVal (Int.Repr 4294967295).*)
-
 Fixpoint compile_pred (x : id TVec32) (p : pred) : exp TVec32 :=
   match p with
   | BPred op pl pr => EBinop op (compile_pred x pl) (compile_pred x pr)
   | BZero => EVal (Int.repr 0)
   | BNeg p' => ENot (compile_pred x p')
-  (*BField OpCode Int.Repr 2*)
   | BField f i => (*FIXME: don't ignore offsets*) (* Almost completely fixed, probably *)
-     EBinop OAnd (EBinop OShru (EVar x) (EVal (offset f)))   (EBinop OShru (EVal (Int.repr 4294967295)) (EVal (size f)))
+    let field_val :=
+        EBinop
+          OAnd
+          (EBinop OShru (EVar x) (EVal (offset f)))
+          (EBinop OShru (EVal (Int.repr 4294967295))
+                  (EVal (Int.sub (Int.repr 32) (size f))))
+    in ENot (EBinop OXor field_val (EVal i)) (*FIXME: this computation should return all 0s or all 1s*)
   end.
 
 (* Monad *)
 Section M.
   Variable state : Type.
 
-  Definition M (A : Type) := state -> (state * A).
+  Definition M (A : Type) := state -> state * A.
 
   Definition ret (A : Type) (a : A) : M A := fun s => (s, a).
 
@@ -117,16 +120,25 @@ Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
    nat2decimal_aux n n nil.
  
  Definition nat2string (n : nat) : string := decimal2string (nat2decimal n).
- 
- Definition new_buf : M nat string :=
-   fun n => (S n, append "internal" (nat2string n)).
 
-(* Compile Policies *)
-Fixpoint compile_pol (i o : id TVec32) (p : pol) (monad : M nat) : M nat stmt :=
+ Definition state := (nat * list string)%type.
+ 
+ Definition new_buf : M state string :=
+   fun p =>
+     match p with
+     | (n, l) =>
+       let new_buf := append "internal" (nat2string n) in 
+       ((S n, new_buf::l), new_buf)
+     end.       
+ 
+ (* Compile Policies *)
+ Fixpoint compile_pol (i o : id TVec32) (p : pol) : M state stmt :=
   match p with
   | PTest test =>
     let e_test := compile_pred i test
     in ret (SAssign Nonblocking o (EBinop OAnd (EVar i) e_test))
+           (*NOTE: assumes  boolean true = 0b11111111111111111111111111111111
+                           boolean false = 0b00000000000000000000000000000000*)
 
   | PUpd f => ret (SAssign Nonblocking o (f i))
 
@@ -146,13 +158,30 @@ Fixpoint compile_pol (i o : id TVec32) (p : pol) (monad : M nat) : M nat stmt :=
     ret (SSeq s1 s2))))
   end.
 
+ Fixpoint compile_bufs (bufs : list string) (p : prog) : prog :=
+   match bufs with
+   | nil => p
+   | x::bufs' => VDecl Local x (Int.repr 0) (compile_bufs bufs' p)
+   end.
+ 
+Section compile.
+  Variables i o : id TVec32.
+  
+  Definition compile (p : pol) : prog :=
+    let (state, s) := compile_pol i o p (O, nil) in 
+    let output_p := VDecl Input i (Int.repr 0) (VDecl Output o (Int.repr 0) (PStmt s))
+    in match state with
+       | (_, bufs) => compile_bufs bufs output_p
+       end.
+End compile.
+ 
 Section test.
   Variables i o : id TVec32.
 
   Definition zero_or_notzero : pol :=
     PChoice (PTest BZero) (PTest (BNeg BZero)).
 
-  Eval compute in compile_pol i o zero_or_notzero O.
+  Eval compute in compile i o zero_or_notzero.
 
   Definition j := Int.repr 2.
   Definition op_j := BField OpCode j.
@@ -165,18 +194,12 @@ Section test.
       (PConcat (PTest op_j) (PTest (BNeg sec_addr)))
       (PTest (BNeg op_j)).
 
-  Definition compile (p : pol) : prog :=
-    let (_,s) := compile_pol i o p O
-    in VDecl Input i (Int.repr 0)
-      (VDecl Output o (Int.repr 0)
-      (PStmt s)).              
-
   Require Import syntax.
 
   Local Open Scope hdl_stmt_scope.
   Local Open Scope hdl_exp_scope.
   
-  Eval vm_compute in compile sec_jmp.
+  Eval vm_compute in compile i o sec_jmp.
 End test.
 
 Require Import Extractions.
