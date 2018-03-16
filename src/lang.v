@@ -159,6 +159,12 @@ Inductive stmt : Type :=
       stmt ->
       stmt
 
+  | SITE :
+      exp TVec32 ->
+      stmt ->
+      stmt ->
+      stmt
+
   | SIter :
       forall (lo hi:nat) (f:iN hi -> stmt),
         stmt
@@ -254,19 +260,23 @@ Definition itern lo hi T (f : iN hi -> T -> T) (t : T) : T :=
     (List.filter (fun i => let n := proj1_sig (Fin.to_nat i) in
                            (lo <=? n))  (enum_iN hi)).
 
-Fixpoint stmt_interp (s : state) (c : stmt) : state :=
+Fixpoint stmt_interp (s : state) (c : stmt) (cont : state -> state) : state :=
   match c with
   | SAssign k x e => 
     let v := exp_interp s e in
-    upd x v s
+    cont (upd x v s)
   | SUpdate k t x i e =>
     let v := exp_interp s e in
-    upd x (arr_upd (s _ x) i v) s
+    cont (upd x (arr_upd (s _ x) i v) s)
   | SSeq c1 c2 =>
-    stmt_interp (stmt_interp s c1) c2
+    stmt_interp s c1 (fun s' => stmt_interp s' c2 cont)
+  | SITE e c1 c2 =>
+    let v := exp_interp s e in
+    if Int.eq v Int.zero then stmt_interp s c2 cont
+    else stmt_interp s c1 cont
   | SIter lo hi f =>
-    itern lo (fun i s => stmt_interp s (f i)) s
-  | SSkip => s
+    cont (itern lo (fun i s => stmt_interp s (f i) (fun s' => s')) s)
+  | SSkip => cont s
   end.
 
 Program Fixpoint prog_interp (s : state) (p : prog) : state :=
@@ -275,7 +285,7 @@ Program Fixpoint prog_interp (s : state) (p : prog) : state :=
     prog_interp (upd x v s) p'
   | ADecl vk N t x p' =>
     prog_interp s p'
-  | PStmt c => stmt_interp s c
+  | PStmt c => stmt_interp s c (fun s => s)
   | PSeq p1 p2 =>
     prog_interp (prog_interp s p1) p2
   | PDone => s

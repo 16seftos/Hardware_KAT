@@ -77,19 +77,22 @@ Fixpoint verilog_of_exp (ty_exp : ty) (e : exp ty_exp) (st : state):
        ("(" ++ (verilog1)
             ++ " " ++ (verilog_of_binop b) ++ " " 
             ++ (verilog2) ++ ")", st2)
+  | ENot (ENot exp1) => verilog_of_exp exp1 st         
   | ENot exp1 => let (verilog1, st') := verilog_of_exp exp1 st in 
                  ("~" ++ verilog1, st')
   end.
 
 Definition enum_iN (lo N : nat) : list (iN N) :=
-  List.filter (fun i => negb ((proj1_sig (Fin.to_nat i)) <? lo)) (Vector.to_list (vector_keymap (Vector.const O N) (fun ix _ => ix))).
+  List.filter
+    (fun i => negb ((proj1_sig (Fin.to_nat i)) <? lo))
+    (Vector.to_list (vector_keymap (Vector.const O N) (fun ix _ => ix))).
 
 Program Fixpoint verilog_of_stmt (s : stmt) (st : state)
   : (verilog *state) :=
   match s with
   | SAssign a_kind id1 exp1 =>
     let (verilog1, st1) := (verilog_of_exp exp1 st) in
-    (" " ++ id1 ++ " = " ++ (verilog1) ++ ";" ++ newline,st1)
+    (" " ++ id1 ++ " = " ++ (verilog1) ++ ";" ++ newline, st1)
   | SUpdate kind N id1 inN exp1 =>
     let (verilog1, st1) := (verilog_of_exp exp1 st) in
     (" " ++ id1++"["++(show (nat_to_prelInt inN)) ++ "]"++" = "++
@@ -98,6 +101,14 @@ Program Fixpoint verilog_of_stmt (s : stmt) (st : state)
     let (verilog1, st1) := (verilog_of_stmt s1 st) in
     let (verilog2, st2) := (verilog_of_stmt s2 st1) in 
     (verilog1 ++ verilog2 ++ newline, st2)
+  | SITE e c1 c2 =>
+    let (ve, st0) := verilog_of_exp e st in
+    let (vc1, st1) := verilog_of_stmt c1 st0 in
+    let (vc2, st2) := verilog_of_stmt c2 st1 in
+    ("if (" ++ ve ++ ")" ++ newline ++
+            "begin" ++ newline ++ vc1 ++ "end" ++ newline ++
+            "else begin" ++ newline ++ vc2 ++ "end" ++ newline,
+     st2)
   | SIter lo hi f => 
     List.fold_right
       (fun elt (acc : (verilog*state)) =>
@@ -105,7 +116,7 @@ Program Fixpoint verilog_of_stmt (s : stmt) (st : state)
          let (verilog1, st') := (verilog_of_stmt (f elt) st_acc) in
          (v_acc ++ verilog1, st')) 
       ("", st) (enum_iN lo hi) 
-  | SSkip => ("skip!!!!", st)
+  | SSkip => ("", st)
   end.
 
 Program Fixpoint verilog_of_prog (p : prog) (st : state)
@@ -275,8 +286,8 @@ Definition pretty_print_tb_results (name : verilog)
   "module " ++ name ++ "_tb();" ++  newline ++ (TbDeclarations st)
    ++ name ++ " " ++ name ++ "1"
    ++ "("  ++ (verilog_of_args st) ++ ");" ++ newline ++
-   "// Make some instantiation here is a default" ++ newline ++
-   "integer i;" ++ newline ++
+   (* "// Make some instantiation here is a default" ++ newline ++ *)
+   (* "integer i;" ++ newline ++ *)
    "initial begin" ++ newline
    ++ default_insts st OneDecl ++ newline
    ++ default_insts st TwoOutput ++ newline ++
@@ -290,8 +301,8 @@ Definition pretty_print_tb (name : verilog)
   "module " ++ name ++ "_tb();" ++  newline ++ (TbDeclarations st)
    ++ name ++ " " ++ name ++ "1"
    ++ "("  ++ (verilog_of_args st) ++ ");" ++ newline ++
-   "// Make some instantiation here is a default" ++ newline ++
-   "integer i;" ++ newline ++
+   (* "// Make some instantiation here is a default" ++ newline ++ *)
+   (* "integer i;" ++ newline ++ *)
    "initial begin" ++ newline
    ++ default_insts st OneDecl ++ newline
    ++ default_insts st TwoOutput ++ newline

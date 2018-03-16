@@ -32,10 +32,12 @@ Inductive pred : Type :=
 | BField : fld -> bvec32 -> pred.
 
 Inductive pol : Type :=
-| PTest : pred -> pol
+| PTest : pred -> pol -> pol
 | PUpd : (id TVec32 -> exp TVec32) -> pol 
 | PChoice : pol -> pol -> pol
-| PConcat : pol -> pol -> pol.
+| PConcat : pol -> pol -> pol
+| PSkip : pol
+| PId : pol.
 
 (* Compile Predicates *)
 Fixpoint compile_pred (x : id TVec32) (p : pred) : exp TVec32 :=
@@ -134,11 +136,10 @@ Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
  (* Compile Policies *)
  Fixpoint compile_pol (i o : id TVec32) (p : pol) : M state stmt :=
   match p with
-  | PTest test =>
+  | PTest test p_cont =>
     let e_test := compile_pred i test
-    in ret (SAssign Nonblocking o (EBinop OAnd (EVar i) e_test))
-           (*NOTE: assumes  boolean true = 0b11111111111111111111111111111111
-                           boolean false = 0b00000000000000000000000000000000*)
+    in bind (compile_pol i o p_cont) (fun s_cont =>
+       ret (SITE e_test s_cont SSkip))
 
   | PUpd f => ret (SAssign Nonblocking o (f i))
 
@@ -156,6 +157,10 @@ Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
     bind (compile_pol i m_new_buf p1) (fun s1 =>
     bind (compile_pol m_new_buf o p2) (fun s2 => 
     ret (SSeq s1 s2))))
+
+  | PSkip => ret SSkip
+
+  | PId => ret (SAssign Nonblocking o (EVar i))
   end.
 
  Fixpoint compile_bufs (bufs : list string) (p : prog) : prog :=
@@ -178,21 +183,15 @@ End compile.
 Section test.
   Variables i o : id TVec32.
 
-  Definition zero_or_notzero : pol :=
-    PChoice (PTest BZero) (PTest (BNeg BZero)).
-
-  Eval compute in compile i o zero_or_notzero.
-
   Definition j := Int.repr 2.
   Definition op_j := BField OpCode j.
 
   Definition sec_addr := BField EffAddr (Int.repr 0). (*FIXME*)
   
-  (*PTest BField OpCode Int.repr2*)
   Definition sec_jmp : pol :=
     PChoice
-      (PConcat (PTest op_j) (PTest (BNeg sec_addr)))
-      (PTest (BNeg op_j)).
+      (PTest op_j (PTest (BNeg sec_addr) PId))
+      (PTest (BNeg op_j) PId).
 
   Require Import syntax.
 
