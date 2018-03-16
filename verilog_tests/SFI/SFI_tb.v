@@ -25,10 +25,10 @@
 module SFI_tb;
 
 	// Inputs
-	reg [31:0] ri;
+	reg [63:0] ri;
 
 	// Outputs
-	wire [31:0] ro;
+	wire [63:0] ro;
 
 	// Instantiate the Unit Under Test (UUT)
 	SFI uut (
@@ -37,7 +37,7 @@ module SFI_tb;
 	);
 
 	// Expected output register
-	reg [31:0] exp_ro;
+	reg [63:0] exp_ro;
 
 	initial begin
 		// Initialize Inputs

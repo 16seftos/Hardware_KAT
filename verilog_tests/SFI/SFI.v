@@ -3,17 +3,15 @@
 //SFI Testing verilog code
 
 module SFI(ri, ro);
-	output [31:0] ro;
-	reg [31:0] ro;
-	input [31:0] ri;
-	
-	always @(*)
-	begin
+	output [63:0] ro;
+	reg [63:0] ro;
+	input [63:0] ri;
+
+	always @(*) begin
 	 	ro = 0;
-		if (~(((ri >> 22) & (4294967295 >> 4294967241)) ^ 162))begin
-			ro = ri;
-		end
-		else begin
+		if (~(((ri >> 22) & (9223372036854775807 >> -23)) ^ 162)) begin
+	 		ro = ri;
+		end else begin
 		end
 	end
 endmodule
