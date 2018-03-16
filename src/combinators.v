@@ -209,12 +209,17 @@ End test.
 
 Section SFI.
   Variables ri ro : id TVec32.
+  (* ri must be able to include effaddr and the original instruction *)
+  
 
   (* Lets say that a secure addr. has a tag 0xA2...... *)
   (* Need to mask tag, see above *)
 
   Definition secure_mem_address := BField EffTag (Int.repr 162). (*FIXME*)
-  
+  (* Make sure it tests that it's a load or store type instruction, defined above *)
+  (* If the process0or has a memory access wire that would make things easier, but I don't think so *)
+  (* Just test all feasable isntructions of thost types?  mips instr? *)
+
   (*This test acts on results so pretend it's in the result slice*)
   Definition sec_field_iso : pol :=
       (PTest (secure_mem_address) PId).
