@@ -13,50 +13,50 @@ Require Import lang.
 
 Inductive fld : Type := OpCode | JField | EffAddr | EffTag.
 
-Definition offset (f : fld) : int :=
+Definition offset (f : fld) : Int64.int :=
   match f with
-  | OpCode  => Int.repr 26
-  | JField  => Int.repr  0 (* Jump field offset, of instr *)
-  | EffAddr => Int.repr  0 (* Technically EXE output, of res *)
-  | EffTag  => Int.repr 22 (* Tag is top 8 bits *)
+  | OpCode  => Int64.repr 26
+  | JField  => Int64.repr  0 (* Jump field offset, of instr *)
+  | EffAddr => Int64.repr  0 (* Technically EXE output, of res *)
+  | EffTag  => Int64.repr 22 (* Tag is top 8 bits *)
   end.
 
-Definition size (f : fld) : int :=
+Definition size (f : fld) : Int64.int :=
   match f with
-  | OpCode  => Int.repr  6
-  | JField  => Int.repr 26 (* Jump field size, of instr *)
-  | EffAddr => Int.repr 32 (* Exe output, of res *)
-  | EffTag  => Int.repr  87 (* Tag is top 8 bits *)
+  | OpCode  => Int64.repr  6
+  | JField  => Int64.repr 26 (* Jump field size, of instr *)
+  | EffAddr => Int64.repr 32 (* Exe output, of res *)
+  | EffTag  => Int64.repr  87 (* Tag is top 8 bits *)
   end.
 
 Inductive pred : Type := 
 | BPred : binop -> pred -> pred -> pred
 | BZero : pred
 | BNeg : pred -> pred
-| BField : fld -> bvec32 -> pred.
+| BField : fld -> bvec64 -> pred.
 
 Inductive pol : Type :=
 | PTest : pred -> pol -> pol
-| PUpd : (id TVec32 -> exp TVec32) -> pol 
+| PUpd : (id TVec64 -> exp TVec64) -> pol 
 | PChoice : pol -> pol -> pol
 | PConcat : pol -> pol -> pol
 | PSkip : pol
 | PId : pol.
 
 (* Compile Predicates *)
-Fixpoint compile_pred (x : id TVec32) (p : pred) : exp TVec32 :=
+Fixpoint compile_pred (x : id TVec64) (p : pred) : exp TVec64 :=
   match p with
   | BPred op pl pr => EBinop op (compile_pred x pl) (compile_pred x pr)
-  | BZero => EVal (Int.repr 0)
+  | BZero => EVal (Int64.repr 0)
   | BNeg p' => ENot (compile_pred x p')
-  | BField f i => (*FIXME: don't ignore offsets*) (* Almost completely fixed, probably *)
+  | BField f i => 
     let field_val :=
         EBinop
           OAnd
           (EBinop OShru (EVar x) (EVal (offset f)))
-          (EBinop OShru (EVal (Int.repr 4294967295))
-                  (EVal (Int.sub (Int.repr 32) (size f))))
-    in ENot (EBinop OXor field_val (EVal i)) (*FIXME: this computation should return all 0s or all 1s*)
+          (EBinop OShru (EVal (Int64.repr 9223372036854775807))
+                  (EVal (Int64.sub (Int64.repr 64) (size f))))
+    in ENot (EBinop OXor field_val (EVal i)) 
   end.
 
 (* Monad *)
@@ -138,7 +138,7 @@ Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
      end.       
  
  (* Compile Policies *)
- Fixpoint compile_pol (i o : id TVec32) (p : pol) : M state stmt :=
+ Fixpoint compile_pol (i o : id TVec64) (p : pol) : M state stmt :=
   match p with
   | PTest test p_cont =>
     let e_test := compile_pred i test
@@ -154,7 +154,8 @@ Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
     bind (compile_pol i o_new2 p2) (fun s2 => 
     ret (SSeq s1 
         (SSeq s2
-        (SAssign Nonblocking o (EBinop OOr (EVar o_new1) (EVar o_new2)))))))))
+        (SAssign Nonblocking o
+          (EBinop OOr (EVar o_new1) (EVar o_new2)))))))))
 
   | PConcat p1 p2 =>
     bind new_buf (fun m_new_buf =>
@@ -170,29 +171,29 @@ Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
  Fixpoint compile_bufs (bufs : list string) (p : prog) : prog :=
    match bufs with
    | nil => p
-   | x::bufs' => VDecl Local x (Int.repr 0) (compile_bufs bufs' p)
+   | x::bufs' => VDecl Local x (Int64.repr 0) (compile_bufs bufs' p)
    end.
  
 Section compile.
-  Variables i o : id TVec32.
+  Variables i o : id TVec64.
   
   Definition compile (p : pol) : prog :=
     let (state, s) := compile_pol i o p (O, nil) in 
-    let output_p := VDecl Input i (Int.repr 0) (VDecl Output o (Int.repr 0) (PStmt s))
+    let output_p := VDecl Input i (Int64.repr 0) (VDecl Output o (Int64.repr 0) (PStmt s))
     in match state with
        | (_, bufs) => compile_bufs bufs output_p
        end.
 End compile.
 
 Section opcodes.
-  Definition j := Int.repr 2.
+  Definition j := Int64.repr 2.
   Definition op_j := BField OpCode j.
 End opcodes.
 
 Section test.
-  Variables i o : id TVec32.
+  Variables i o : id TVec64.
 
-  Definition sec_addr := BField JField (Int.repr 0). (*FIXME*)
+  Definition sec_addr := BField JField (Int64.repr 0). (*FIXME*)
   
   Definition sec_jmp : pol :=
     PChoice
@@ -208,14 +209,14 @@ Section test.
 End test.
 
 Section SFI.
-  Variables ri ro : id TVec32.
+  Variables ri ro : id TVec64.
   (* ri must be able to include effaddr and the original instruction *)
   
 
   (* Lets say that a secure addr. has a tag 0xA2...... *)
   (* Need to mask tag, see above *)
 
-  Definition secure_mem_address := BField EffTag (Int.repr 162). (*FIXME*)
+  Definition secure_mem_address := BField EffTag (Int64.repr 162). (*FIXME*)
   (* Make sure it tests that it's a load or store type instruction, defined above *)
   (* If the process0or has a memory access wire that would make things easier, but I don't think so *)
   (* Just test all feasable isntructions of thost types?  mips instr? *)
@@ -236,10 +237,10 @@ Require Import Extractions.
 
 (* print the program *)
 
-Definition i : id TVec32 := "i".
-Definition o : id TVec32 := "o".
-Definition ri : id TVec32 := "ri".
-Definition ro : id TVec32 := "ro".
+Definition i : id TVec64 := "i".
+Definition o : id TVec64 := "o".
+Definition ri : id TVec64 := "ri".
+Definition ro : id TVec64 := "ro".
 
 Definition sec_jmp_compiled : prog := compile i o sec_jmp.
 Definition SFI_compiled : prog := compile ri ro sec_field_iso.

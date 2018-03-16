@@ -65,7 +65,7 @@ end.
 Fixpoint verilog_of_exp (ty_exp : ty) (e : exp ty_exp) (st : state):
   (verilog * state) :=
   match e with
-  | EVal bv32 => (Z_to_string (Int.intval bv32), st)
+  | EVal bv => (Z_to_string (Int64.intval bv), st)
   | EVar t id1 => (id1, st)
   | EDeref N t N_iN idtarr =>
     let verilog1 := idtarr ++ "[" ++ (show (nat_to_prelInt N_iN))
@@ -122,14 +122,14 @@ Program Fixpoint verilog_of_stmt (s : stmt) (st : state)
 Program Fixpoint verilog_of_prog (p : prog) (st : state)
   : (verilog*state) :=
   match p with
-  | VDecl kind id1 bv32 p' =>
+  | VDecl kind id1 bv p' =>
     let (verilog1, st') := (verilog_of_prog p' st) in
     (match kind with
-    | Input => (verilog1, state_map.add id1 (kind,TVec32) st')
+    | Input => (verilog1, state_map.add id1 (kind,TVec64) st')
     | _ => 
       let decl := " " ++ id1 ++ " = " ++
-      (show (Z_to_prelInt (Int.intval bv32))) ++ ";" ++ newline in
-      (decl ++ verilog1, state_map.add id1 (kind,TVec32) st')
+      (show (Z_to_prelInt (Int64.intval bv))) ++ ";" ++ newline in
+      (decl ++ verilog1, state_map.add id1 (kind,TVec64) st')
     end)
   | ADecl kind N t id1 p' =>
     let (verilog1, st') := (verilog_of_prog p' st) in
@@ -152,8 +152,8 @@ Definition verilog_of_kind (x : var_kind) : verilog :=
 (* This might need to be looked at to get the correct verilog datatypes*)
 Definition verilog_of_ty (x : (string*ty)) : verilog :=
   match x with
-  | (s,TVec32) => "[31:0] " ++ s 
-  | (s,TArr N t) => "[" ++ show (nat_to_prelInt (N - 1)) ++":" ++ "0" ++ "] [31:0] " ++ s
+  | (s,TVec64) => "[63:0] " ++ s 
+  | (s,TArr N t) => "[" ++ show (nat_to_prelInt (N - 1)) ++":" ++ "0" ++ "] [63:0] " ++ s
   end.
 
 Definition foldI (st : state) : list string :=
@@ -235,7 +235,7 @@ Definition pretty_print (name: verilog) (p : prog) : verilog :=
 
 Definition default_inst (id : string) (t : ty) :=
   match t with
-  | TVec32 => " " ++ id ++ "= 16;"
+  | TVec64 => " " ++ id ++ "= 16;"
   | TArr N t =>
     " for(i=0;i<" ++ show (nat_to_prelInt N) ++ ";i=i+1) begin"
     ++ newline ++ "  " ++ id ++ "[i] = i % 10 +1 * 20;" ++ newline ++ " end"
@@ -252,7 +252,7 @@ Definition default_insts (st : state) (pass : Pass) : verilog :=
            (match kind with
             | Input => 
               (match ty1 with
-               | TVec32 => acc ++ (default_inst key ty1) ++ newline
+               | TVec64 => acc ++ (default_inst key ty1) ++ newline
                | TArr N t => acc ++ (default_inst key ty1) ++ newline
                end)
             | _ => acc
@@ -261,7 +261,7 @@ Definition default_insts (st : state) (pass : Pass) : verilog :=
            (match kind with
             | Output => 
               (match ty1 with
-               | TVec32 =>
+               | TVec64 =>
                  acc ++ "#10 " ++ newline ++
                      "  $display (""Value of " ++ key ++
                      " is %d ""," ++ key ++ ");"
