@@ -211,8 +211,8 @@ Section Policy2.
   (*PTest BField OpCode Int.repr2*)
   Definition p2 : pol :=
     PChoice
-      (PConcat (PTest op_j) (PTest (BNeg sec_addr_p2)))
-      (PTest (BNeg op_j)).
+      (PTest op_j (PTest (BNeg sec_addr) PId))
+      (PTest (BNeg op_j) PId).
 
   Require Import syntax.
 
