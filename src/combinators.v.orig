@@ -188,6 +188,16 @@ End opcodes.
 Section test.
   Variables i o : id TVec32.
 
+<<<<<<< HEAD
+  Definition zero_or_notzero : pol :=
+    PChoice (PTest BZero) (PTest (BNeg BZero)).
+
+  Eval compute in compile i o zero_or_notzero.
+=======
+  Definition j := Int.repr 2.
+  Definition op_j := BField OpCode j.
+>>>>>>> 1eddf6609afe44f4efe3cde97fe0ca027c7c2e10
+
   Definition sec_addr := BField EffAddr (Int.repr 0). (*FIXME*)
   
   Definition sec_jmp : pol :=
