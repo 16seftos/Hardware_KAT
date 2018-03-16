@@ -4,7 +4,7 @@ Unset Strict Implicit.
 Require Import Integers.
 Require Import lang.
 
-Notation "'tvec32'" := (TVec32) (at level 60) : hdl_type_scope.
+Notation "'tvec64'" := (TVec64) (at level 60) : hdl_type_scope.
 Notation "'tarr' N <<< t >>>" := (TArr N t) (at level 60, right associativity) : hdl_type_scope.
 
 Notation "'val' v" := (EVal v) (at level 59) : hdl_exp_scope.

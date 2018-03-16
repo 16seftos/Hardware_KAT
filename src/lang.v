@@ -10,8 +10,8 @@ Require Import Integers.
 
 (* semantics definitions *)
 Definition bit := bool.
-Definition bvec32 := int.
-Definition bvec32_nil : bvec32 := Int.zero.
+Definition bvec64 := Int64.int.
+Definition bvec64_nil : bvec64 := Int64.zero.
 
 Definition iN (N : nat) := Fin.t N.
 
@@ -45,7 +45,7 @@ Definition arr_init (N : nat) T (t0 : T) (f : iN N -> T) : arr N T :=
 
 (* syntax *)
 Inductive ty : Type :=
-  | TVec32 : ty
+  | TVec64 : ty
   | TArr : nat -> ty -> ty.
 
 Ltac solve_ty_dec :=
@@ -68,7 +68,7 @@ Ltac solve_ty_dec :=
 
 Program Fixpoint ty_dec (t1 t2 : ty) : {t1=t2} + {t1<>t2} :=
   match t1, t2 with
-  | TVec32, TVec32 => left eq_refl
+  | TVec64, TVec64 => left eq_refl
   | TArr n1 t1', TArr n2 t2' =>
     match eq_nat_dec n1 n2 with
     | left pf =>
@@ -97,7 +97,7 @@ Defined.
 
 Fixpoint interp_ty (t : ty) : Type :=
   match t with
-  | TVec32 => int
+  | TVec64 => bvec64
   | TArr N t2 => arr N (interp_ty t2)
   end.
 
@@ -111,7 +111,7 @@ Program Definition cast_interp_ty (t1 t2 : ty) (pf : t1=t2)
 Definition id (t : ty) := string.
 
 Inductive binop : Type :=
-    OAnd (* and *)| OXor (* xor *) | OAdd (* 32-bit unsigned add *)
+    OAnd (* and *)| OXor (* xor *) | OAdd (* 64-bit unsigned add *)
     | OShr (* shift right *) | OShru (* unsigned shift right *)
     | OShl (* shift left *)
     | OOr
@@ -119,101 +119,46 @@ Inductive binop : Type :=
     | OEq.
 
 Inductive exp : ty -> Type :=
-  | EVal :
-      bvec32 -> 
-      exp TVec32
-            
-  | EVar :
-      forall t,
-        id t ->
-        exp t
-
-  | EDeref :
-      forall N t (i : iN N),
-        id (TArr N t) ->
-        exp t
-
-  | EBinop :
-        binop ->
-        exp TVec32 ->
-        exp TVec32 ->
-        exp TVec32
-  | ENot :
-      exp TVec32 -> 
-      exp TVec32.
+  | EVal : bvec64 -> exp TVec64
+  | EVar : forall t, id t -> exp t
+  | EDeref : forall N t (i : iN N), id (TArr N t) -> exp t
+  | EBinop : binop -> exp TVec64 -> exp TVec64 -> exp TVec64
+  | ENot : exp TVec64 -> exp TVec64.
 
 Inductive assign_kind : Type := Blocking | Nonblocking.
 
 Inductive stmt : Type :=
-  | SAssign :
-      forall (k:assign_kind) (x:id TVec32) (e:exp TVec32),
-        stmt
-
-  | SUpdate :
-      forall (k:assign_kind) N (x:id (TArr N TVec32)) (i:iN N)
-             (e:exp TVec32),
-        stmt
-
-  | SSeq :
-      stmt ->
-      stmt ->
-      stmt
-
-  | SITE :
-      exp TVec32 ->
-      stmt ->
-      stmt ->
-      stmt
-
-  | SIter :
-      forall (lo hi:nat) (f:iN hi -> stmt),
-        stmt
-
+  | SAssign : forall (k:assign_kind) (x:id TVec64) (e:exp TVec64), stmt
+  | SUpdate : forall (k:assign_kind) N (x:id (TArr N TVec64)) (i:iN N) (e:exp TVec64), stmt
+  | SSeq : stmt -> stmt -> stmt
+  | SITE : exp TVec64 -> stmt -> stmt -> stmt
+  | SIter : forall (lo hi:nat) (f:iN hi -> stmt), stmt
   | SSkip : stmt.
 
-Definition r_rotate (x : exp TVec32)
-           (i : exp TVec32) : exp TVec32 :=
+Definition r_rotate (x : exp TVec64)
+           (i : exp TVec64) : exp TVec64 :=
   EBinop OOr (EBinop OShr x i) (EBinop OShl x 
-           (EBinop OSub (EVal (Int.repr 32)) i)).
+           (EBinop OSub (EVal (Int64.repr 64)) i)).
 
 Inductive var_kind : Type := Local | Input | Output.
 
 Inductive prog : Type :=
-  | VDecl :
-      var_kind -> 
-      id TVec32 -> 
-      bvec32 ->
-      prog ->
-      prog
-
-  | ADecl :
-      var_kind -> 
-      forall N t,
-        id (TArr N t) ->
-        prog ->
-        prog
-          
-  | PStmt :
-      stmt ->
-      prog
-
-  | PSeq :
-      prog ->
-      prog ->
-      prog
-
+  | VDecl : var_kind -> id TVec64 -> bvec64 -> prog -> prog
+  | ADecl : var_kind -> forall N t, id (TArr N t) -> prog -> prog
+  | PStmt : stmt -> prog
+  | PSeq : prog -> prog -> prog
   | PDone : prog.
 
-Definition binop_interp (op : binop) (v1 v2 : bvec32) : bvec32 :=
+Definition binop_interp (op : binop) (v1 v2 : bvec64) : bvec64 :=
   match op with
-  | OAnd => Int.and v1 v2
-  | OSub => Int.sub v1 v2
-  | OXor => Int.xor v1 v2
-  | OAdd => Int.add v1 v2
-  | OShr => Int.shr v1 v2
-  | OShru => Int.shru v1 v2
-  | OShl => Int.shl v1 v2
-  | OOr =>  Int.or v1 v2
+  | OAnd => Int64.and v1 v2
+  | OSub => Int64.sub v1 v2
+  | OXor => Int64.xor v1 v2
+  | OAdd => Int64.add v1 v2
+  | OShr => Int64.shr v1 v2
+  | OShru => Int64.shru v1 v2
+  | OShl => Int64.shl v1 v2
+  | OOr =>  Int64.or v1 v2
   | OEq => v1 (*BOGUS*)
   end.
 
@@ -236,7 +181,7 @@ End state.
 Section exp_interp.
   Variable s : forall t, id t -> interp_ty t.
   
- Fixpoint exp_interp (e : exp TVec32) : interp_ty TVec32 := 
+ Fixpoint exp_interp (e : exp TVec64) : interp_ty TVec64 := 
     match e as e' in exp t return interp_ty t with 
     | EVal v => v
     | EVar _ x => s x
@@ -246,7 +191,7 @@ Section exp_interp.
       let v2 := exp_interp e2 in
       binop_interp op v1 v2
     | ENot e' =>
-      Int.not (exp_interp e')
+      Int64.not (exp_interp e')
     end.
      
 End exp_interp.
@@ -272,7 +217,7 @@ Fixpoint stmt_interp (s : state) (c : stmt) (cont : state -> state) : state :=
     stmt_interp s c1 (fun s' => stmt_interp s' c2 cont)
   | SITE e c1 c2 =>
     let v := exp_interp s e in
-    if Int.eq v Int.zero then stmt_interp s c2 cont
+    if Int64.eq v Int64.zero then stmt_interp s c2 cont
     else stmt_interp s c1 cont
   | SIter lo hi f =>
     cont (itern lo (fun i s => stmt_interp s (f i) (fun s' => s')) s)
