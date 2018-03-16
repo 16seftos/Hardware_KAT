@@ -11,18 +11,22 @@ Require Import Integers.
 
 Require Import lang.
 
-Inductive fld : Type := OpCode | EffAddr.
+Inductive fld : Type := OpCode | JField | EffAddr | EffTag.
 
 Definition offset (f : fld) : int :=
   match f with
-  | OpCode => Int.repr 26
-  | EffAddr => Int.repr 0 (*BOGUS*)
+  | OpCode  => Int.repr 26
+  | JField  => Int.repr  0 (* Jump field offset, of instr *)
+  | EffAddr => Int.repr  0 (* Technically EXE output, of res *)
+  | EffTag  => Int.repr 22 (* Tag is top 8 bits *)
   end.
 
 Definition size (f : fld) : int :=
   match f with
-  | OpCode => Int.repr 6
-  | EffAddr => Int.repr 26 (*BOGUS*)
+  | OpCode  => Int.repr  6
+  | JField  => Int.repr 26 (* Jump field size, of instr *)
+  | EffAddr => Int.repr 32 (* Exe output, of res *)
+  | EffTag  => Int.repr  87 (* Tag is top 8 bits *)
   end.
 
 Inductive pred : Type := 
@@ -188,7 +192,7 @@ End opcodes.
 Section test.
   Variables i o : id TVec32.
 
-  Definition sec_addr := BField EffAddr (Int.repr 0). (*FIXME*)
+  Definition sec_addr := BField JField (Int.repr 0). (*FIXME*)
   
   Definition sec_jmp : pol :=
     PChoice
@@ -203,24 +207,25 @@ Section test.
   Eval vm_compute in compile i o sec_jmp.
 End test.
 
-Section Policy2.
-  Variables i o : id TVec32.
+Section SFI.
+  Variables ri ro : id TVec32.
 
-  Definition sec_addr_p2 := BField EffAddr (Int.repr 0). (*FIXME*)
+  (* Lets say that a secure addr. has a tag 0xA2...... *)
+  (* Need to mask tag, see above *)
+
+  Definition secure_mem_address := BField EffTag (Int.repr 162). (*FIXME*)
   
-  (*PTest BField OpCode Int.repr2*)
-  Definition p2 : pol :=
-    PChoice
-      (PTest op_j (PTest (BNeg sec_addr) PId))
-      (PTest (BNeg op_j) PId).
+  (*This test acts on results so pretend it's in the result slice*)
+  Definition sec_field_iso : pol :=
+      (PTest (secure_mem_address) PId).
 
   Require Import syntax.
 
   Local Open Scope hdl_stmt_scope.
   Local Open Scope hdl_exp_scope.
   
-  Eval vm_compute in compile i o p2.
-End Policy2.
+  Eval vm_compute in compile ri ro sec_field_iso.
+End SFI.
 
 Require Import Extractions.
 
@@ -228,17 +233,19 @@ Require Import Extractions.
 
 Definition i : id TVec32 := "i".
 Definition o : id TVec32 := "o".
+Definition ri : id TVec32 := "ri".
+Definition ro : id TVec32 := "ro".
 
 Definition sec_jmp_compiled : prog := compile i o sec_jmp.
-Definition p2_compiled : prog := compile i o p2.
+Definition SFI_compiled : prog := compile ri ro sec_field_iso.
 
 Definition pretty_print_sec_jmp :=
   pretty_print_tb "secjmp" sec_jmp_compiled.
-Definition pretty_print_p2 :=
-  pretty_print_tb "p2" p2_compiled.
+Definition pretty_print_SFI :=
+  pretty_print_tb "SFI" SFI_compiled.
 
 Eval vm_compute in pretty_print_sec_jmp.
-Eval vm_compute in pretty_print_p2.
+Eval vm_compute in pretty_print_SFI.
 
 (* Not sure how this works. *)
 Extract Constant main => "Prelude.putStrLn pretty_print_sec_jmp".
@@ -246,6 +253,6 @@ Extract Constant main => "Prelude.putStrLn pretty_print_p2".
 
 (* run the program 'secjmp.hs' and pipe to a file to get verilog *)
 Extraction "secjmp.hs" pretty_print_sec_jmp.
-Extraction "p2.hs" pretty_print_p2.
+Extraction "SFI.hs" pretty_print_SFI.
 
 
