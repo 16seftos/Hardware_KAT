@@ -26,7 +26,7 @@ Definition size (f : fld) : Int64.int :=
   | OpCode  => Int64.repr  6
   | JField  => Int64.repr 26 (* Jump field size, of instr *)
   | EffAddr => Int64.repr 32 (* Exe output, of res *)
-  | EffTag  => Int64.repr  87 (* Tag is top 8 bits *)
+  | EffTag  => Int64.repr  8 (* Tag is top 8 bits *)
   end.
 
 Inductive pred : Type := 
@@ -54,7 +54,7 @@ Fixpoint compile_pred (x : id TVec64) (p : pred) : exp TVec64 :=
         EBinop
           OAnd
           (EBinop OShru (EVar x) (EVal (offset f)))
-          (EBinop OShru (EVal (Int64.repr 9223372036854775807))
+          (EBinop OShru (EVal (Int64.repr -1))
                   (EVal (Int64.sub (Int64.repr 64) (size f))))
     in ENot (EBinop OXor field_val (EVal i)) 
   end.
