@@ -4,15 +4,15 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   18:22:49 03/16/2018
-// Design Name:   SFI
-// Module Name:   /home/seaghan/Desktop/SecKat/verilog_tests/SFI/xilinx/SFI/SFI_tb.v
-// Project Name:  SFI
+// Create Date:   14:31:51 03/17/2018
+// Design Name:   secjmp
+// Module Name:   /home/seaghan/Desktop/SecKat/verilog_tests/secjmp/xilinx/secjmp/secjmp_tb.v
+// Project Name:  secjmp
 // Target Device:  
 // Tool versions:  
 // Description: 
 //
-// Verilog Test Fixture created by ISE for module: SFI
+// Verilog Test Fixture created by ISE for module: secjmp
 //
 // Dependencies:
 // 
@@ -22,38 +22,35 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-module SFI_tb;
+module secjmp_tb;
+	reg [63:0] exp_o;
 
 	// Inputs
-	reg [63:0] ri;
+	reg [63:0] i;
 
 	// Outputs
-	wire [63:0] ro;
+	wire [63:0] o;
 
 	// Instantiate the Unit Under Test (UUT)
-	SFI uut (
-		.ri(ri), 
-		.ro(ro)
+	secjmp uut (
+		.i(i), 
+		.o(o)
 	);
-
-	// Expected output register
-	reg [63:0] exp_ro;
 
 	initial begin
 		// Initialize Inputs
-		ri = 0;
-		exp_ro = 0;
+		i = 0;
 
-		// Wait 10 ns for global reset to finish
-		#10;
+		// Wait 100 ns for global reset to finish
+		#100;
         
 		// Add stimulus here
 		$monitor("Testing");
 		$monitor("Testintg bad eff addr:");
-			ri     <= 32'h00FFEEDD;
-			exp_ro <= 0;
+			i     <= 32'h00FFEEDD;
+			exp_o <= 0;
 			#1;
-			if(exp_ro == ro) begin
+			if(exp_o == o) begin
 				$monitor("Passed");
 			end else begin
 				$monitor("Failed");
@@ -61,10 +58,10 @@ module SFI_tb;
 		#10;
 		
 		$monitor("Testintg good eff addr:");
-			ri     <= 32'hA2199872;
-			exp_ro <= 32'hA2199872;
+			i     <= 32'hA2199872;
+			exp_o <= 32'hA2199872;
 			#1;
-			if(exp_ro == ro) begin
+			if(exp_o == o) begin
 				$monitor("Passed");
 			end else begin
 				$monitor("Failed");
@@ -73,7 +70,7 @@ module SFI_tb;
 		
 		$monitor("Done testing, exiting");
 		$finish();
-			
+		
 	end
       
 endmodule

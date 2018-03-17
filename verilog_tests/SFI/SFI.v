@@ -8,9 +8,9 @@ module SFI(ri, ro);
 	input [63:0] ri;
 
 	always @(*) begin
-	 	ro = 0;
+		ro = 0;
 		if (~(((ri >> 22) & (9223372036854775807 >> -23)) ^ 162)) begin
-	 		ro = ri;
+			ro = ri;
 		end else begin
 		end
 	end
