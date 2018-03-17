@@ -9,6 +9,7 @@ module SFI(ri, ro);
 
   always @(*) begin
     ro = 0;
+    //How does verilog/Xilinx know that -1 is 64bit?
     if ((((ri >> 56) & (-1 >> 56)) == 162)) begin
       ro = ri;
     end else begin
