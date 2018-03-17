@@ -9,11 +9,7 @@ module SFI(ri, ro);
 
   always @(*) begin
     ro = 0;
-    if (
-			(
-			((ri >> 56) & (-1 >> 56)) 
-			== 162)
-			) begin
+    if ((((ri >> 56) & (-1 >> 56)) == 162)) begin
       ro = ri;
     end else begin
     end

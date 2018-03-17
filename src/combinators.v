@@ -56,7 +56,7 @@ Fixpoint compile_pred (x : id TVec64) (p : pred) : exp TVec64 :=
           (EBinop OShru (EVar x) (EVal (offset f)))
           (EBinop OShru (EVal (Int64.repr 18446744073709551615))
                   (EVal (Int64.sub (Int64.repr 64) (size f))))
-    in ENot (EBinop OXor field_val (EVal i)) 
+    in (EBinop OEq field_val (EVal i)) 
   end.
 
 (* Monad *)
