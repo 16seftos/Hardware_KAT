@@ -18,7 +18,7 @@ Definition offset (f : fld) : Int64.int :=
   | OpCode  => Int64.repr 26
   | JField  => Int64.repr  0 (* Jump field offset, of instr *)
   | EffAddr => Int64.repr  0 (* Technically EXE output, of res *)
-  | EffTag  => Int64.repr 22 (* Tag is top 8 bits *)
+  | EffTag  => Int64.repr 56 (* Tag is top 8 bits *)  (* Assume it's the top 8bits of the top word *)
   end.
 
 Definition size (f : fld) : Int64.int :=

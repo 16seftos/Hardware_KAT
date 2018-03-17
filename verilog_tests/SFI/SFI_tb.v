@@ -48,30 +48,31 @@ module SFI_tb;
     #10;
         
     // Add stimulus here
-    $monitor("Testing");
-    $monitor("Testintg bad eff addr:");
-      ri     <= 32'h00FFEEDD;
-      exp_ro <= 0;
+    $monitor("\nTesting");#1;
+    $monitor("\nTestintg bad eff addr:");
+      ri     <= 64'hBAD0ADD012345678;
+      exp_ro <= 64'h0000000000000000;
+		// Should this pass the last 32b?
       #1;
       if(exp_ro == ro) begin
-        $monitor("Passed");
+        $monitor("\tPassed");
       end else begin
-        $monitor("Failed");
+        $monitor("\tFailed");
       end
     #10;
     
-    $monitor("Testintg good eff addr:");
-      ri     <= 32'hA2199872;
-      exp_ro <= 32'hA2199872;
+    $monitor("\nTestintg good eff addr:");
+      ri     <= 64'hA219987200000000;
+      exp_ro <= 64'hA219987200000000;
       #1;
       if(exp_ro == ro) begin
-        $monitor("Passed");
+        $monitor("\tPassed");
       end else begin
-        $monitor("Failed");
+        $monitor("\tFailed");
       end
     #10;
     
-    $monitor("Done testing, exiting");
+    $monitor("\nDone testing, exiting\n");#1;
     $finish();
       
   end
