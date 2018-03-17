@@ -42,33 +42,46 @@ module secjmp_tb;
 		i = 0;
 
 		// Wait 100 ns for global reset to finish
-		#100;
+		#10;
         
 		// Add stimulus here
-		$monitor("Testing");
-		$monitor("Testintg bad eff addr:");
-			i     <= 32'h00FFEEDD;
-			exp_o <= 0;
+		$monitor("\nTesting");#1;
+		// Note:  Secure address is nonzero (?)
+		// ignore the MSW 63:32
+		$monitor("\nTestintg non-jump instruction");
+			i     <= 32'h20210001;
+			exp_o <= 32'h20210001;
 			#1;
 			if(exp_o == o) begin
-				$monitor("Passed");
+				$monitor("\tPassed");
 			end else begin
-				$monitor("Failed");
+				$monitor("\tFailed");
 			end
 		#10;
 		
-		$monitor("Testintg good eff addr:");
-			i     <= 32'hA2199872;
-			exp_o <= 32'hA2199872;
+		$monitor("\nTesting secure jump (should noop)");
+			i     <= 32'h08000000;
+			exp_o <= 32'h00000000;
 			#1;
 			if(exp_o == o) begin
-				$monitor("Passed");
+				$monitor("\tPassed");
 			end else begin
-				$monitor("Failed");
+				$monitor("\tFailed");
 			end
 		#10;
 		
-		$monitor("Done testing, exiting");
+		$monitor("\nTestintg insecure jump (should pass through)");
+			i     <= 32'h0800FACE;
+			exp_o <= 32'h0800FACE;
+			#1;
+			if(exp_o == o) begin
+				$monitor("\tPassed");
+			end else begin
+				$monitor("\tFailed");
+			end
+		#10;
+		
+		$monitor("\nDone testing, exiting\n");#1;
 		$finish();
 		
 	end
