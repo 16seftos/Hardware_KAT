@@ -24,57 +24,57 @@
 
 module SFI_tb;
 
-	// Inputs
-	reg [63:0] ri;
+  // Inputs
+  reg [63:0] ri;
 
-	// Outputs
-	wire [63:0] ro;
+  // Outputs
+  wire [63:0] ro;
 
-	// Instantiate the Unit Under Test (UUT)
-	SFI uut (
-		.ri(ri), 
-		.ro(ro)
-	);
+  // Instantiate the Unit Under Test (UUT)
+  SFI uut (
+    .ri(ri), 
+    .ro(ro)
+  );
 
-	// Expected output register
-	reg [63:0] exp_ro;
+  // Expected output register
+  reg [63:0] exp_ro;
 
-	initial begin
-		// Initialize Inputs
-		ri = 0;
-		exp_ro = 0;
+  initial begin
+    // Initialize Inputs
+    ri = 0;
+    exp_ro = 0;
 
-		// Wait 10 ns for global reset to finish
-		#10;
+    // Wait 10 ns for global reset to finish
+    #10;
         
-		// Add stimulus here
-		$monitor("Testing");
-		$monitor("Testintg bad eff addr:");
-			ri     <= 32'h00FFEEDD;
-			exp_ro <= 0;
-			#1;
-			if(exp_ro == ro) begin
-				$monitor("Passed");
-			end else begin
-				$monitor("Failed");
-			end
-		#10;
-		
-		$monitor("Testintg good eff addr:");
-			ri     <= 32'hA2199872;
-			exp_ro <= 32'hA2199872;
-			#1;
-			if(exp_ro == ro) begin
-				$monitor("Passed");
-			end else begin
-				$monitor("Failed");
-			end
-		#10;
-		
-		$monitor("Done testing, exiting");
-		$finish();
-			
-	end
+    // Add stimulus here
+    $monitor("Testing");
+    $monitor("Testintg bad eff addr:");
+      ri     <= 32'h00FFEEDD;
+      exp_ro <= 0;
+      #1;
+      if(exp_ro == ro) begin
+        $monitor("Passed");
+      end else begin
+        $monitor("Failed");
+      end
+    #10;
+    
+    $monitor("Testintg good eff addr:");
+      ri     <= 32'hA2199872;
+      exp_ro <= 32'hA2199872;
+      #1;
+      if(exp_ro == ro) begin
+        $monitor("Passed");
+      end else begin
+        $monitor("Failed");
+      end
+    #10;
+    
+    $monitor("Done testing, exiting");
+    $finish();
+      
+  end
       
 endmodule
 

@@ -23,68 +23,68 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 module secjmp_tb;
-	reg [63:0] exp_o;
+  reg [63:0] exp_o;
 
-	// Inputs
-	reg [63:0] i;
+  // Inputs
+  reg [63:0] i;
 
-	// Outputs
-	wire [63:0] o;
+  // Outputs
+  wire [63:0] o;
 
-	// Instantiate the Unit Under Test (UUT)
-	secjmp uut (
-		.i(i), 
-		.o(o)
-	);
+  // Instantiate the Unit Under Test (UUT)
+  secjmp uut (
+    .i(i), 
+    .o(o)
+  );
 
-	initial begin
-		// Initialize Inputs
-		i = 0;
+  initial begin
+    // Initialize Inputs
+    i = 0;
 
-		// Wait 100 ns for global reset to finish
-		#10;
+    // Wait 100 ns for global reset to finish
+    #10;
         
-		// Add stimulus here
-		$monitor("\nTesting");#1;
-		// Note:  Secure address is nonzero (?)
-		// ignore the MSW 63:32
-		$monitor("\nTestintg non-jump instruction");
-			i     <= 32'h20210001;
-			exp_o <= 32'h20210001;
-			#1;
-			if(exp_o == o) begin
-				$monitor("\tPassed");
-			end else begin
-				$monitor("\tFailed");
-			end
-		#10;
-		
-		$monitor("\nTesting secure jump (should noop)");
-			i     <= 32'h08000000;
-			exp_o <= 32'h00000000;
-			#1;
-			if(exp_o == o) begin
-				$monitor("\tPassed");
-			end else begin
-				$monitor("\tFailed");
-			end
-		#10;
-		
-		$monitor("\nTestintg insecure jump (should pass through)");
-			i     <= 32'h0800FACE;
-			exp_o <= 32'h0800FACE;
-			#1;
-			if(exp_o == o) begin
-				$monitor("\tPassed");
-			end else begin
-				$monitor("\tFailed");
-			end
-		#10;
-		
-		$monitor("\nDone testing, exiting\n");#1;
-		$finish();
-		
-	end
+    // Add stimulus here
+    $monitor("\nTesting");#1;
+    // Note:  Secure address is nonzero (?)
+    // ignore the MSW 63:32
+    $monitor("\nTestintg non-jump instruction");
+      i     <= 32'h20210001;
+      exp_o <= 32'h20210001;
+      #1;
+      if(exp_o == o) begin
+        $monitor("\tPassed");
+      end else begin
+        $monitor("\tFailed");
+      end
+    #10;
+    
+    $monitor("\nTesting secure jump (should noop)");
+      i     <= 32'h08000000;
+      exp_o <= 32'h00000000;
+      #1;
+      if(exp_o == o) begin
+        $monitor("\tPassed");
+      end else begin
+        $monitor("\tFailed");
+      end
+    #10;
+    
+    $monitor("\nTestintg insecure jump (should pass through)");
+      i     <= 32'h0800FACE;
+      exp_o <= 32'h0800FACE;
+      #1;
+      if(exp_o == o) begin
+        $monitor("\tPassed");
+      end else begin
+        $monitor("\tFailed");
+      end
+    #10;
+    
+    $monitor("\nDone testing, exiting\n");#1;
+    $finish();
+    
+  end
       
 endmodule
 
