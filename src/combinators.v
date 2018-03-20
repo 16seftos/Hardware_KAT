@@ -199,7 +199,7 @@ Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
     in bind (compile_pol i o p_cont) (fun s_cont =>
        ret (SITE e_test s_cont SSkip))
 
-  | PUpd f => ret (SAssign Nonblocking o (f i))
+  | PUpd f => ret (SAssign Nonblocking o (f (EVar i)))
 
   | PChoice p1 p2 =>
     bind new_buf (fun o_new1 =>
@@ -218,6 +218,8 @@ Fixpoint nat2decimal_aux (fuel n : nat) (acc : decimal) : decimal :=
     ret (SSeq s1 s2))))
 
   | PSkip => ret SSkip
+
+  | PFail => ret (SAssign Nonblocking o (EVal Int64.zero))
 
   | PId => ret (SAssign Nonblocking o (EVar i))
   end.
@@ -269,7 +271,7 @@ Section opcodes.
     BField OpCode instr_SWR.
 End opcodes.
 
-Section sec_jmp.
+Section test.
   Variables i o : id TVec64.
 
   Definition sec_addr := BField JField (Int64.repr 0). (*FIXME*)
@@ -285,17 +287,16 @@ Section sec_jmp.
   Local Open Scope hdl_exp_scope.
   
   Eval vm_compute in compile i o sec_jmp.
-End sec_jmp.
+End test.
 
-(* FIXME *)
 Section SFI.
   Variables ri ro : id TVec64.
 
   Definition lfd_start := Int64.repr 11745387828182253567. (*162<<56*)
   Definition lfd_mask := Int64.repr 72057594037927935. (*0^8 1^56*)
  
-  Definition mask x := EBinop OAnd (EVal lfd_mask) (EVar x).
-  Definition force_range x := EBinop OOr (EVal lfd_start) (EVar x).
+  Definition mask e := EBinop OAnd (EVal lfd_mask) e.
+  Definition force_range e := EBinop OOr (EVal lfd_start) e.
  
   Definition sfi : pol := 
     PChoice
@@ -304,22 +305,6 @@ Section SFI.
                  (PUpd force_range)))
       (PTest (BNeg op_store) PId).
 End SFI.
-
-(* FIXME *)
-Section Taint.
-  Variables i o : id TVec64.
-
-  (* policy that tracks taint *)
-  Definition taint_tracker : pol :=
-    (*PTest (BNeg BZero) PId.*)
-    (* or *)
-    PId.
-
-  Require Import syntax.
-  Local Open Scope hdl_stmt_scope.
-  Local Open Scope hdl_exp_scope.
-  Eval vm_compute in compile i o taint_tracker.
-End Taint.
 
 Require Import Extractions.
 
@@ -330,29 +315,23 @@ Definition o : id TVec64 := "o".
 Definition ri : id TVec64 := "ri".
 Definition ro : id TVec64 := "ro".
 
-Definition sec_jmp_compiled : prog := compile  i  o       sec_jmp.
-Definition SFI_compiled     : prog := compile ri ro sec_field_iso.
-Definition taint_compiled   : prog := compile  i  o taint_tracker.
+Definition sec_jmp_compiled : prog := compile i o sec_jmp.
+Definition SFI_compiled : prog := compile ri ro sfi.
 
 Definition pretty_print_sec_jmp :=
   pretty_print_tb "secjmp" sec_jmp_compiled.
 Definition pretty_print_SFI :=
   pretty_print_tb "SFI" SFI_compiled.
-Definition pretty_print_taint :=
-  pretty_print_tb "taint" taint_compiled.
 
 Eval vm_compute in pretty_print_sec_jmp.
 Eval vm_compute in pretty_print_SFI.
-Eval vm_compute in pretty_print_taint.
 
 (* Not sure how this works. *)
 Extract Constant main => "Prelude.putStrLn pretty_print_sec_jmp".
 Extract Constant main => "Prelude.putStrLn pretty_print_SFI".
-Extract Constant main => "Prelude.putStrLn pretty_print_taint".
 
 (* run the program 'secjmp.hs' and pipe to a file to get verilog *)
 Extraction "secjmp.hs" pretty_print_sec_jmp.
 Extraction "SFI.hs" pretty_print_SFI.
-Extraction "taint.hs" pretty_print_taint.
 
 
