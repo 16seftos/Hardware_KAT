@@ -116,7 +116,9 @@ Inductive binop : Type :=
     | OShl (* shift left *)
     | OOr
     | OSub
-    | OEq.
+    | OEq
+    (*| OIfOr (* or used in IF statements *)*)
+    .
 
 Inductive exp : ty -> Type :=
   | EVal : bvec64 -> exp TVec64
@@ -160,6 +162,7 @@ Definition binop_interp (op : binop) (v1 v2 : bvec64) : bvec64 :=
   | OShl => Int64.shl v1 v2
   | OOr =>  Int64.or v1 v2
   | OEq => v1 (*BOGUS*)
+  (*| OIfOr => v1 (*BOGUS*)*)
   end.
 
 Section state.

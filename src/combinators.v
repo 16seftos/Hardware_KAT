@@ -33,8 +33,8 @@ Inductive pred : Type :=
 | BPred : binop -> pred -> pred -> pred
 | BZero : pred
 | BNeg : pred -> pred
-| BField : fld -> bvec64 -> pred.
-| BIfOr : pred -> pred -> pred. (* Combines 2 predicates *)
+| BField : fld -> bvec64 -> pred
+(*| BIfOr : pred -> pred -> pred*). (* Combines 2 predicates *)
 
 Inductive pol : Type :=
 | PTest : pred -> pol -> pol
@@ -58,7 +58,7 @@ Fixpoint compile_pred (x : id TVec64) (p : pred) : exp TVec64 :=
           (EBinop OShru (EVal (Int64.repr 18446744073709551615))
                   (EVal (Int64.sub (Int64.repr 64) (size f))))
     in (EBinop OEq field_val (EVal i)) 
-  | BIfOr pd1 pd2 => EBinop OIfOr pd1 Pd2. (* The OR of two predicates, | will not work in IF statements (probably?) *)
+  (*| BIfOr pd1 pd2 => EBinop OIfOr pd1 pd2*) (* The OR of two predicates, | will not work in IF statements (probably?) *)
   end.
 
 (* Monad *)
@@ -202,7 +202,7 @@ Section opcodes.
   Definition instr_SW := Int64.repr 43.
   Definition instr_SWL:= Int64.repr 42.
   Definition instr_SWR:= Int64.repr 46.
-  Definition op_store := BIfOr (
+  (*Definition op_store := BIfOr (
     BIfOr ( BIfOr ( BIfOr (BField OpCode instr_SB )
                           (BField OpCode instr_SC ) )
                   ( BIfOr (BField OpCode instr_SCD)
@@ -213,7 +213,8 @@ Section opcodes.
                           (BField OpCode instr_SW ) ) )
                                )(
     BIfOr                 (BField OpCode instr_SWL)
-                          (BField OpCode instr_SWR) ).
+                          (BField OpCode instr_SWR) ).*)
+  Definition op_storew := BField OpCode instr_SW.
 End opcodes.
 
 Section test.
@@ -250,10 +251,18 @@ Section SFI.
   (* Check st. instruction *)
   (* op_store *)
 
+  (* Force address into range 162 *)
+  Definition force_range_ef_adr :=
+    OOr (EBinop (OAnd (BField EffAddr) (Int64.repr 67108864))) 
+        (OShl (Int64.repr 164) (Int64.repr 26) ).
+
   (*This test acts on results so pretend it's in the result slice*)
   Definition sec_field_iso : pol :=
-      (PTest op_store
-      (PTest (secure_mem_address) PId)).
+    PConcat(
+            PTest op_storew)
+           (
+            PUpd ro (force_range_ef_adr)
+           ).
 
   Require Import syntax.
 
