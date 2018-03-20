@@ -34,6 +34,7 @@ Inductive pred : Type :=
 | BZero : pred
 | BNeg : pred -> pred
 | BField : fld -> bvec64 -> pred.
+| BIfOr : pred -> pred -> pred. (* Combines 2 predicates *)
 
 Inductive pol : Type :=
 | PTest : pred -> pol -> pol
@@ -57,6 +58,7 @@ Fixpoint compile_pred (x : id TVec64) (p : pred) : exp TVec64 :=
           (EBinop OShru (EVal (Int64.repr 18446744073709551615))
                   (EVal (Int64.sub (Int64.repr 64) (size f))))
     in (EBinop OEq field_val (EVal i)) 
+  | BIfOr pd1 pd2 => EBinop OIfOr pd1 Pd2. (* The OR of two predicates, | will not work in IF statements (probably?) *)
   end.
 
 (* Monad *)
@@ -188,6 +190,30 @@ End compile.
 Section opcodes.
   Definition j := Int64.repr 2.
   Definition op_j := BField OpCode j.
+  (* Store-type instruction are: *)
+  (*  *)
+  Definition instr_SB := Int64.repr 40.
+  Definition instr_SC := Int64.repr 56.
+  Definition instr_SCD:= Int64.repr 60.
+  Definition instr_SD := Int64.repr 63.
+  Definition instr_SDL:= Int64.repr 44.
+  Definition instr_SDR:= Int64.repr 45.
+  Definition instr_SH := Int64.repr 41.
+  Definition instr_SW := Int64.repr 43.
+  Definition instr_SWL:= Int64.repr 42.
+  Definition instr_SWR:= Int64.repr 46.
+  Definition op_store := BIfOr (
+    BIfOr ( BIfOr ( BIfOr (BField OpCode instr_SB )
+                          (BField OpCode instr_SC ) )
+                  ( BIfOr (BField OpCode instr_SCD)
+                          (BField OpCode instr_SD ) ) )
+          ( BIfOr ( BIfOr (BField OpCode instr_SDL)
+                          (BField OpCode instr_SDR) )
+                  ( BIfOr (BField OpCode instr_SH )
+                          (BField OpCode instr_SW ) ) )
+                               )(
+    BIfOr                 (BField OpCode instr_SWL)
+                          (BField OpCode instr_SWR) ).
 End opcodes.
 
 Section test.
@@ -221,9 +247,13 @@ Section SFI.
   (* If the process0or has a memory access wire that would make things easier, but I don't think so *)
   (* Just test all feasable isntructions of thost types?  mips instr? *)
 
+  (* Check st. instruction *)
+  (* op_store *)
+
   (*This test acts on results so pretend it's in the result slice*)
   Definition sec_field_iso : pol :=
-      (PTest (secure_mem_address) PId).
+      (PTest op_store
+      (PTest (secure_mem_address) PId)).
 
   Require Import syntax.
 
@@ -255,7 +285,7 @@ Eval vm_compute in pretty_print_SFI.
 
 (* Not sure how this works. *)
 Extract Constant main => "Prelude.putStrLn pretty_print_sec_jmp".
-Extract Constant main => "Prelude.putStrLn pretty_print_p2".
+Extract Constant main => "Prelude.putStrLn pretty_print_SFI".
 
 (* run the program 'secjmp.hs' and pipe to a file to get verilog *)
 Extraction "secjmp.hs" pretty_print_sec_jmp.
