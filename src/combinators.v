@@ -252,14 +252,16 @@ Section SFI.
   (* op_store *)
 
   (* Force address into range 162 *)
-  Definition force_range_ef_adr :=
-    OOr (EBinop (OAnd (BField EffAddr) (Int64.repr 67108864))) 
-        (OShl (Int64.repr 164) (Int64.repr 26) ).
+  Definition force_range_ef_adr : ro :=
+    EBinop OOr (EBinop OAnd (EVar ri)
+                            (EBinop OShl (EVal (Int64.repr 67108864)) (EVal (Int64.repr 32)) ) ) 
+               (EBinop OShl (EVal (Int64.repr 164))
+                            (EVal (Int64.repr 56)) ).
 
   (*This test acts on results so pretend it's in the result slice*)
   Definition sec_field_iso : pol :=
     PConcat(
-            PTest op_storew)
+            PTest op_storew PId)
            (
             PUpd ro (force_range_ef_adr)
            ).
