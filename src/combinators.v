@@ -33,8 +33,7 @@ Inductive pred : Type :=
 | BPred : binop -> pred -> pred -> pred
 | BZero : pred
 | BNeg : pred -> pred
-| BField : fld -> bvec64 -> pred
-(*| BIfOr : pred -> pred -> pred*). (* Combines 2 predicates *)
+| BField : fld -> bvec64 -> pred.
 
 Inductive pol : Type :=
 | PTest : pred -> pol -> pol
@@ -58,7 +57,6 @@ Fixpoint compile_pred (x : id TVec64) (p : pred) : exp TVec64 :=
           (EBinop OShru (EVal (Int64.repr 18446744073709551615))
                   (EVal (Int64.sub (Int64.repr 64) (size f))))
     in (EBinop OEq field_val (EVal i)) 
-  (*| BIfOr pd1 pd2 => EBinop OIfOr pd1 pd2*) (* The OR of two predicates, | will not work in IF statements (probably?) *)
   end.
 
 (* Monad *)
@@ -187,6 +185,8 @@ Section compile.
        end.
 End compile.
 
+Infix "`orpred`" := (BPred OOr) (at level 60).
+
 Section opcodes.
   Definition j := Int64.repr 2.
   Definition op_j := BField OpCode j.
@@ -202,19 +202,17 @@ Section opcodes.
   Definition instr_SW := Int64.repr 43.
   Definition instr_SWL:= Int64.repr 42.
   Definition instr_SWR:= Int64.repr 46.
-  (*Definition op_store := BIfOr (
-    BIfOr ( BIfOr ( BIfOr (BField OpCode instr_SB )
-                          (BField OpCode instr_SC ) )
-                  ( BIfOr (BField OpCode instr_SCD)
-                          (BField OpCode instr_SD ) ) )
-          ( BIfOr ( BIfOr (BField OpCode instr_SDL)
-                          (BField OpCode instr_SDR) )
-                  ( BIfOr (BField OpCode instr_SH )
-                          (BField OpCode instr_SW ) ) )
-                               )(
-    BIfOr                 (BField OpCode instr_SWL)
-                          (BField OpCode instr_SWR) ).*)
-  Definition op_storew := BField OpCode instr_SW.
+  Definition op_store := 
+    BField OpCode instr_SB `orpred`
+    BField OpCode instr_SC `orpred`
+    BField OpCode instr_SCD `orpred`
+    BField OpCode instr_SD `orpred`
+    BField OpCode instr_SDL `orpred`
+    BField OpCode instr_SDR `orpred`
+    BField OpCode instr_SH `orpred`
+    BField OpCode instr_SW `orpred`
+    BField OpCode instr_SWL `orpred`
+    BField OpCode instr_SWR.
 End opcodes.
 
 Section sec_jmp.
@@ -238,41 +236,19 @@ End sec_jmp.
 (* FIXME *)
 Section SFI.
   Variables ri ro : id TVec64.
-  (* ri must be able to include effaddr and the original instruction *)
-  
 
-  (* Lets say that a secure addr. has a tag 0xA2...... *)
-  (* Need to mask tag, see above *)
-
-  Definition secure_mem_address := BField EffTag (Int64.repr 162). (*FIXME*)
-  (* Make sure it tests that it's a load or store type instruction, defined above *)
-  (* If the process0or has a memory access wire that would make things easier, but I don't think so *)
-  (* Just test all feasable isntructions of thost types?  mips instr? *)
-
-  (* Check st. instruction *)
-  (* op_store *)
-
-  (* Force address into range 162 *)
-  (* Definition force_range_ef_adr : (id TVec64 -> exp TVec64) :=
-    EBinop OOr (EBinop OAnd (EVar ri)
-                            (EBinop OShl (EVal (Int64.repr 67108864)) (EVal (Int64.repr 32)) ) ) 
-               (EBinop OShl (EVal (Int64.repr 162))
-                            (EVal (Int64.repr 56)) ). *)
-
-  (*This test acts on results so pretend it's in the result slice*)
-  Definition sec_field_iso : pol :=
-   (*PConcat( *)
-            PTest op_storew PId (*)
-           (
-            PUpd ro (force_range_ef_adr)
-           )*).
-
-  Require Import syntax.
-
-  Local Open Scope hdl_stmt_scope.
-  Local Open Scope hdl_exp_scope.
-  
-  Eval vm_compute in compile ri ro sec_field_iso.
+  Definition lfd_start := Int64.repr 11745387828182253567. (*162<<56*)
+  Definition lfd_mask := Int64.repr 72057594037927935. (*0^8 1^56*)
+ 
+  Definition mask x := EBinop OAnd (EVal lfd_mask) (EVar x).
+  Definition force_range x := EBinop OOr (EVal lfd_start) (EVar x).
+ 
+  Definition sfi : pol := 
+    PChoice
+      (PTest op_store 
+        (PConcat (PUpd mask)
+                 (PUpd force_range)))
+      (PTest (BNeg op_store) PId).
 End SFI.
 
 (* FIXME *)
