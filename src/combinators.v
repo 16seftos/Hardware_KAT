@@ -11,7 +11,8 @@ Require Import Integers.
 
 Require Import lang.
 
-Inductive fld : Type := OpCode | JField | EffAddr | EffTag.
+Inductive fld : Type := OpCode | JField | EffAddr | EffTag
+  | TaintBit : Int64.int -> fld.
 
 Definition offset (f : fld) : Int64.int :=
   match f with
@@ -19,6 +20,7 @@ Definition offset (f : fld) : Int64.int :=
   | JField  => Int64.repr  0 (* Jump field offset, of instr *)
   | EffAddr => Int64.repr  0 (* Technically EXE output, of res *)
   | EffTag  => Int64.repr 56 (* Tag is top 8 bits *)  (* Assume it's the top 8bits of the top word *)
+  | TaintBit off => off
   end.
 
 Definition size (f : fld) : Int64.int :=
@@ -27,6 +29,7 @@ Definition size (f : fld) : Int64.int :=
   | JField  => Int64.repr 26 (* Jump field size, of instr *)
   | EffAddr => Int64.repr 32 (* Exe output, of res *)
   | EffTag  => Int64.repr  8 (* Tag is top 8 bits *)
+  | TaintBit _ => Int64.one  (* Taint bits are always size-1 *)
   end.
 
 Inductive pred : Type := 
@@ -306,6 +309,35 @@ Section SFI.
       (PTest (BNeg op_store) PId).
 End SFI.
 
+Module Taint. Section taint.
+  Variables i o : id TVec64.
+
+  (* inputs: 
+       - i[63-32]: arg0
+       - i[31-0]: arg1
+     outputs:
+       - o[63-32]: taint(arg0)
+       - o[31-0]: taint(arg1)
+   *)
+
+  Definition tainted : pred := 
+    BPred OOr (BField (TaintBit (Int64.repr 64)) Int64.one)
+              (BField (TaintBit (Int64.repr 32)) Int64.one).
+
+  Definition taint_mask := Int64.repr 9223372035781033983. (*0 1^31 0 1^31*)
+  Definition taint_bits := Int64.repr 9223372037928517632. (*1 0^31 1 0^31*)
+
+  Definition mask e := EBinop OAnd (EVal taint_mask) e.
+  Definition apply_taint e := EBinop OOr (EVal taint_bits) e.
+
+  Definition taint : pol := 
+    PChoice
+      (PTest tainted 
+             (PConcat (PUpd mask)
+                      (PUpd apply_taint)))
+      (PTest (BNeg tainted) PId).
+End taint. End Taint.
+
 Require Import Extractions.
 
 (* print the program *)
@@ -317,11 +349,14 @@ Definition ro : id TVec64 := "ro".
 
 Definition sec_jmp_compiled : prog := compile i o sec_jmp.
 Definition SFI_compiled : prog := compile ri ro sfi.
+Definition taint_compiled : prog := compile i o Taint.taint.
 
 Definition pretty_print_sec_jmp :=
   pretty_print_tb "secjmp" sec_jmp_compiled.
 Definition pretty_print_SFI :=
   pretty_print_tb "SFI" SFI_compiled.
+Definition pretty_print_taint := 
+  pretty_print_tb "taint" taint_compiled.
 
 Eval vm_compute in pretty_print_sec_jmp.
 Eval vm_compute in pretty_print_SFI.
@@ -333,5 +368,6 @@ Extract Constant main => "Prelude.putStrLn pretty_print_SFI".
 (* run the program 'secjmp.hs' and pipe to a file to get verilog *)
 Extraction "secjmp.hs" pretty_print_sec_jmp.
 Extraction "SFI.hs" pretty_print_SFI.
+Extraction "taint.hs" pretty_print_taint.
 
 
