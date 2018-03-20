@@ -37,11 +37,65 @@ Inductive pred : Type :=
 
 Inductive pol : Type :=
 | PTest : pred -> pol -> pol
-| PUpd : (id TVec64 -> exp TVec64) -> pol 
+| PUpd : (exp TVec64 -> exp TVec64) -> pol 
 | PChoice : pol -> pol -> pol
 | PConcat : pol -> pol -> pol
 | PSkip : pol
+| PFail : pol
 | PId : pol.
+
+Fixpoint pred_interp (e : pred) : bvec64 -> Prop :=
+  match e with 
+  | BPred OAnd e1 e2 => fun v => pred_interp e1 v /\ pred_interp e2 v
+  | BPred OOr e1 e2 => fun v => pred_interp e1 v \/ pred_interp e2 v
+  | BPred _ _ _ => fun _ => False (*other binops are nonboolean*)
+  | BZero => fun _ => False
+  | BNeg e2 => fun v => not (pred_interp e2 v)
+  | BField f i => fun v => 
+      (Int64.eq 
+         (Int64.and (Int64.shru v (offset f)) 
+                    (Int64.shru (Int64.repr 18446744073709551615) (size f)))
+         i) = true
+  end.
+
+Fixpoint pol_interp (p : pol) : bvec64 -> bvec64 -> Prop :=
+  match p with 
+  | PTest e p2 => fun v_in v_out => pred_interp e v_in /\ pol_interp p2 v_in v_out 
+  | PUpd f => fun v_in v_out => forall s, exp_interp s (f (EVal v_in)) = v_out
+  | PChoice p1 p2 => fun v_in v_out => pol_interp p1 v_in v_out \/ pol_interp p2 v_in v_out
+  | PConcat p1 p2 => fun v_in v_out => 
+      exists v_int, 
+      pol_interp p1 v_in v_int /\ pol_interp p2 v_int v_out
+  | PSkip => fun v_in v_out => True
+  | PFail => fun v_in v_out => False
+  | PId => fun v_in v_out => v_in = v_out
+end.
+
+Definition pol_eq (p1 p2 : pol) := 
+  forall v_in v_out,
+    pol_interp p1 v_in v_out <-> pol_interp p2 v_in v_out.
+
+Infix "===" := (pol_eq) (at level 70).
+
+Lemma concat_idl : forall p, PConcat PId p === p.
+Proof.
+  intros p; split; simpl.
+  { intros [v [-> H]]; auto. }
+  intros H; exists v_in; split; auto.
+Qed.
+
+Lemma pol_eq_sym : forall p1 p2, p1 === p2 -> p2 === p1.
+Proof.
+  intros p1 p2; unfold pol_eq; intros H v1 v2.
+  rewrite (H v1 v2); split; auto.
+Qed.
+
+Lemma choice_failr : forall p, PChoice p PFail === p.
+Proof.
+  intros p v1 v2; split. 
+  { intros [H|H]; [auto|inversion H]. }
+  intros; left; auto.
+Qed.
 
 (* Compile Predicates *)
 Fixpoint compile_pred (x : id TVec64) (p : pred) : exp TVec64 :=
