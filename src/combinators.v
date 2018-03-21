@@ -264,35 +264,46 @@ Infix "`orpred`" := (BPred OOr) (at level 60).
 
 Section opcodes.
   Definition reg_imm   := Int64.repr  1. (* These will cause problems, probably *)
+  Definition op_reg_imm:= BField OpCode reg_imm.
     (* Control Flow *)
     Definition reg_imm_BGEZ   := Int64.repr  1.
     Definition reg_imm_BGEZAL := Int64.repr 17.
     Definition reg_imm_BLTZ   := Int64.repr  0.
     Definition reg_imm_BLTZAL := Int64.repr 16.
-  Definition special   := Int64.repr  0. (* These will cause problems, probably *)
+      Definition op_reg_imm_branch := 
+        BField RegImmCode reg_imm_BGEZ `orpred`
+        BField RegImmCode reg_imm_BGEZAL `orpred`
+        BField RegImmCode reg_imm_BLTZ `orpred`
+        BField RegImmCode reg_imm_BLTZAL.
+  Definition special   := Int64.repr 0. (* These will cause problems, probably *)
+  Definition op_special:= BField OpCode special.
     (* Control Flow *)
-    Definition special_JALR   := Int64.repr  9.
-    Definition special_JR     := Int64.repr  8.
+    Definition special_JALR   := Int64.repr 9.
+    Definition special_JR     := Int64.repr 8.
+      Definition op_special_j := 
+        BField SpecialCode special_JALR `orpred`
+        BField SpecialCode special_JR.
     (* ALU *)
     (* TODO/FIXME *)
+
   (* Branch-type instructions: *)
-  Definition instr_BEQ := Int64.repr  4.
-  Definition instr_BGTZ:= Int64.repr  7.
-  Definition instr_BLEZ:= Int64.repr  6.
-  Definition instr_BNE := Int64.repr  5.
-  Definition instr_J   := Int64.repr  2.
-  Definition instr_JAL := Int64.repr  3.
-  Definition op_ctrl_flow :=
+  Definition instr_BEQ := Int64.repr 4.
+  Definition instr_BGTZ:= Int64.repr 7.
+  Definition instr_BLEZ:= Int64.repr 6.
+  Definition instr_BNE := Int64.repr 5.
+  Definition instr_J   := Int64.repr 2.
+  Definition instr_JAL := Int64.repr 3.
+  Definition op_branch :=
     BField OpCode instr_BEQ `orpred`
     BField OpCode instr_BEQ `orpred`
     BField OpCode instr_BGTZ `orpred`
     BField OpCode instr_BLEZ `orpred`
-    BField OpCode instr_BNE `orpred`
+    BField OpCode instr_BNE. (* does not support special and regimm *)
+    (* Does branch addr. get calculated before exe? *)
+  Definition op_j := 
     BField OpCode instr_J `orpred`
-    BField OpCode instr_JAL. (* Currently ignoring specials and reg_imm *)
+    BField OpCode instr_JAL.
 
-  Definition j := Int64.repr 2.
-  Definition op_j := BField OpCode j.
   (* Store-type instructions: *)
   Definition instr_SB  := Int64.repr 40.
   Definition instr_SC  := Int64.repr 56.
@@ -315,9 +326,13 @@ Section opcodes.
     BField OpCode instr_SW `orpred`
     BField OpCode instr_SWL `orpred`
     BField OpCode instr_SWR.
+  (* Load-type instructions: *)
+    (* SKIP *)
+  (* ALU-type instructions: *)
+    (* TODO *)
 End opcodes.
 
-Section test.
+Section test_secjmp.
   Variables i o : id TVec64.
 
   Definition sec_addr := BField JField (Int64.repr 0). (*FIXME*)
@@ -333,7 +348,48 @@ Section test.
   Local Open Scope hdl_exp_scope.
   
   Eval vm_compute in compile i o sec_jmp.
-End test.
+End test_secjmp.
+
+Section sec_ctrlflow. (*SCF*)
+  (* assumes that the branch addr. is pre-calculated in the top 32b *)
+  Variables i o : id TVec64.
+
+  Definition sec_addr_j := BField JField (Int64.repr 0). (*FIXME*)
+  Definition sec_addr32 := BField EffAddr (Int64.repr 0).
+  
+  Definition scf : pol :=
+    PChoice
+      (PChoice
+        (PChoice
+          (PTest op_j (PTest (BNeg sec_addr_j) PId)) (* normal jumps *)
+          (PTest op_branch (PTest (BNeg sec_addr32) PId)) (* normal branches *)
+        )
+        (PChoice 
+            (PTest op_special (PTest op_special_j      (PTest (BNeg sec_addr32) PId))) (* special jumps *)
+            (PTest op_reg_imm (PTest op_reg_imm_branch (PTest (BNeg sec_addr32) PId))) (* special regims *)
+        )
+      )
+      (* FIXME: This requires prod I think? or else clause.  Ignoring it would also work?
+      (PChoice 
+        (PChoice
+          (PTest      (BNeg op_j) PId)
+          (PTest (BNeg op_branch) PId)
+        )
+        (PChoice
+          (PTest op_special      (PTest (BNeg op_special_j) PId))
+          (PTest op_reg_imm (PTest (BNeg op_reg_imm_branch) PId))
+        ) 
+      )
+      *)
+      PId.
+
+  Require Import syntax.
+
+  Local Open Scope hdl_stmt_scope.
+  Local Open Scope hdl_exp_scope.
+  
+  Eval vm_compute in compile i o sec_jmp.
+End sec_ctrlflow.
 
 Section SFI.
   Variables ri ro : id TVec64.
