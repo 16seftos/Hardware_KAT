@@ -467,7 +467,7 @@ End sec_ctrlflow.
 Section SFI.
   Variables ri ro : id TVec64.
 
-  Definition lfd_start := Int64.repr 11745387828182253567. (*162<<56*)
+  Definition lfd_start := Int64.repr 11673330234144325632. (*162<<56*)
   Definition lfd_mask := Int64.repr 72057594037927935. (*0^8 1^56*)
  
   Definition mask e := EBinop OAnd (EVal lfd_mask) e.
