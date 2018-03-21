@@ -11,15 +11,25 @@ Require Import Integers.
 
 Require Import lang.
 
-Inductive fld : Type := OpCode | JField | EffAddr | EffTag
+Inductive fld : Type := OpCode | JField | EffAddr | EffTag 
+  | SpecialCode | RegImmCode
+  | Reg_rsAddr | Reg_rtAddr | Reg_rdAddr | ImmediateV (* r-type instructions *)
   | TaintBit : Int64.int -> fld.
 
+(* SIGNATURE: i:<n/a><instr>  r:<exeout><instr> *)
+(* Instr r-t:  i{6} rs{5} rt{5} rd{5} 0* sp{6} *)
 Definition offset (f : fld) : Int64.int :=
   match f with
   | OpCode  => Int64.repr 26
   | JField  => Int64.repr  0 (* Jump field offset, of instr *)
-  | EffAddr => Int64.repr  0 (* Technically EXE output, of res *)
+  | EffAddr => Int64.repr 32 (* Technically EXE output, of res *)
   | EffTag  => Int64.repr 56 (* Tag is top 8 bits *)  (* Assume it's the top 8bits of the top word *)
+  | SpecialCode => Int64.repr  0 (* Last 6b of an instr *)
+  | RegImmCode  => Int64.repr 16 (* like special, but more confusing.  eq to rt *)
+  | Reg_rsAddr  => Int64.repr 21
+  | Reg_rtAddr  => Int64.repr 16
+  | Reg_rdAddr  => Int64.repr 11
+  | ImmediateV  => Int64.repr  0 (* r-type instr immediate *)
   | TaintBit off => off
   end.
 
@@ -29,6 +39,12 @@ Definition size (f : fld) : Int64.int :=
   | JField  => Int64.repr 26 (* Jump field size, of instr *)
   | EffAddr => Int64.repr 32 (* Exe output, of res *)
   | EffTag  => Int64.repr  8 (* Tag is top 8 bits *)
+  | SpecialCode => Int64.repr  6 (* Last 6b of an instr *)
+  | RegImmCode  => Int64.repr  5 (* like special, but more confusing.  eq to rt *)
+  | Reg_rsAddr  => Int64.repr  5
+  | Reg_rtAddr  => Int64.repr  5
+  | Reg_rdAddr  => Int64.repr  5
+  | ImmediateV  => Int64.repr 16 (* r-type instr immediate *)
   | TaintBit _ => Int64.one  (* Taint bits are always size-1 *)
   end.
 
@@ -247,21 +263,48 @@ End compile.
 Infix "`orpred`" := (BPred OOr) (at level 60).
 
 Section opcodes.
+  Definition reg_imm   := Int64.repr  1. (* These will cause problems, probably *)
+    (* Control Flow *)
+    Definition reg_imm_BGEZ   := Int64.repr  1.
+    Definition reg_imm_BGEZAL := Int64.repr 17.
+    Definition reg_imm_BLTZ   := Int64.repr  0.
+    Definition reg_imm_BLTZAL := Int64.repr 16.
+  Definition special   := Int64.repr  0. (* These will cause problems, probably *)
+    (* Control Flow *)
+    Definition special_JALR   := Int64.repr  9.
+    Definition special_JR     := Int64.repr  8.
+    (* ALU *)
+    (* TODO/FIXME *)
+  (* Branch-type instructions: *)
+  Definition instr_BEQ := Int64.repr  4.
+  Definition instr_BGTZ:= Int64.repr  7.
+  Definition instr_BLEZ:= Int64.repr  6.
+  Definition instr_BNE := Int64.repr  5.
+  Definition instr_J   := Int64.repr  2.
+  Definition instr_JAL := Int64.repr  3.
+  Definition op_ctrl_flow :=
+    BField OpCode instr_BEQ `orpred`
+    BField OpCode instr_BEQ `orpred`
+    BField OpCode instr_BGTZ `orpred`
+    BField OpCode instr_BLEZ `orpred`
+    BField OpCode instr_BNE `orpred`
+    BField OpCode instr_J `orpred`
+    BField OpCode instr_JAL. (* Currently ignoring specials and reg_imm *)
+
   Definition j := Int64.repr 2.
   Definition op_j := BField OpCode j.
-  (* Store-type instruction are: *)
-  (*  *)
-  Definition instr_SB := Int64.repr 40.
-  Definition instr_SC := Int64.repr 56.
-  Definition instr_SCD:= Int64.repr 60.
-  Definition instr_SD := Int64.repr 63.
-  Definition instr_SDL:= Int64.repr 44.
-  Definition instr_SDR:= Int64.repr 45.
-  Definition instr_SH := Int64.repr 41.
-  Definition instr_SW := Int64.repr 43.
-  Definition instr_SWL:= Int64.repr 42.
-  Definition instr_SWR:= Int64.repr 46.
-  Definition op_store := 
+  (* Store-type instructions: *)
+  Definition instr_SB  := Int64.repr 40.
+  Definition instr_SC  := Int64.repr 56.
+  Definition instr_SCD := Int64.repr 60.
+  Definition instr_SD  := Int64.repr 63.
+  Definition instr_SDL := Int64.repr 44.
+  Definition instr_SDR := Int64.repr 45.
+  Definition instr_SH  := Int64.repr 41.
+  Definition instr_SW  := Int64.repr 43.
+  Definition instr_SWL := Int64.repr 42.
+  Definition instr_SWR := Int64.repr 46.
+  Definition op_store  := 
     BField OpCode instr_SB `orpred`
     BField OpCode instr_SC `orpred`
     BField OpCode instr_SCD `orpred`
