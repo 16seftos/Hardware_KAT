@@ -38,11 +38,13 @@ module SFI_tb;
 
   // Expected output register
   reg [63:0] exp_ro;
+  reg all_pass;
 
   initial begin
     // Initialize Inputs
     ri = 0;
     exp_ro = 0;
+	 all_pass = 1;
 
     // Wait 10 ns for global reset to finish
     #10;
@@ -58,6 +60,7 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
+	     all_pass = 0;
       end
     #10;
     
@@ -69,10 +72,16 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
+	     all_pass = 0;
       end
     #10;
     
     $monitor("\nDone testing, exiting\n");#1;
+	 if(all_pass == 1) begin
+	   $monitor("All Pass");#1;
+	 end else begin
+		$monitor("Not all pass");#1;
+	 end
     $finish();
       
   end
