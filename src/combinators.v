@@ -277,14 +277,62 @@ Section opcodes.
         BField RegImmCode reg_imm_BLTZAL.
   Definition special   := Int64.repr 0. (* These will cause problems, probably *)
   Definition op_special:= BField OpCode special.
-    (* Control Flow *)
+      (* Control Flow: *)
     Definition special_JALR   := Int64.repr 9.
     Definition special_JR     := Int64.repr 8.
       Definition op_special_j := 
         BField SpecialCode special_JALR `orpred`
         BField SpecialCode special_JR.
-    (* ALU *)
-    (* TODO/FIXME *)
+    (* ALU *) 
+    (* Skipping special2 (CLO, CLZ, DCLO, DCLZ, MADD, MADDU, MSUB, MSUBU, MUL) *)
+      (* Arith: *)
+    Definition special_ADD  := Int64.repr 32.
+    Definition special_ADDU := Int64.repr 33.
+    Definition special_DADD := Int64.repr 44.
+    Definition special_DADDU:= Int64.repr 45.
+    Definition special_DDIV := Int64.repr 30.
+    Definition special_DDIVU:= Int64.repr 31.
+    Definition special_DIV  := Int64.repr 26.
+    Definition special_DIVU := Int64.repr 27.
+    Definition special_DMULT:= Int64.repr 28.
+    Definition special_DMULTU:=Int64.repr 29.
+    Definition special_DSUB := Int64.repr 46.
+    Definition special_DSUBU:= Int64.repr 47.
+    Definition special_MULT := Int64.repr 24.
+    Definition special_MULTU:= Int64.repr 25.
+    Definition special_SLT  := Int64.repr 42.
+    Definition special_SLTU := Int64.repr 43.
+    Definition special_SUB  := Int64.repr 34.
+    Definition special_SUBU := Int64.repr 35.
+      Definition op_special_arithmetic :=
+        BField SpecialCode special_ADD `orpred`
+        BField SpecialCode special_ADDU `orpred`
+        BField SpecialCode special_DADD `orpred`
+        BField SpecialCode special_DADDU `orpred`
+        BField SpecialCode special_DDIV `orpred`
+        BField SpecialCode special_DDIVU `orpred`
+        BField SpecialCode special_DIV `orpred`
+        BField SpecialCode special_DIVU `orpred`
+        BField SpecialCode special_DMULT `orpred`
+        BField SpecialCode special_DMULTU `orpred`
+        BField SpecialCode special_DSUB `orpred`
+        BField SpecialCode special_DSUBU `orpred`
+        BField SpecialCode special_MULT `orpred`
+        BField SpecialCode special_MULTU `orpred`
+        BField SpecialCode special_SLT `orpred`
+        BField SpecialCode special_SLTU `orpred`
+        BField SpecialCode special_SUB `orpred`
+        BField SpecialCode special_SUBU.
+      (* Logical: *)
+    Definition special_AND  := Int64.repr 36.
+    Definition special_NOR  := Int64.repr 39.
+    Definition special_OR   := Int64.repr 37.
+    Definition special_XOR  := Int64.repr 38.
+      Definition op_special_logical :=
+        BField SpecialCode special_AND `orpred`
+        BField SpecialCode special_NOR `orpred`
+        BField SpecialCode special_OR `orpred`
+        BField SpecialCode special_XOR.
 
   (* Branch-type instructions: *)
   Definition instr_BEQ := Int64.repr 4.
@@ -329,7 +377,31 @@ Section opcodes.
   (* Load-type instructions: *)
     (* SKIP *)
   (* ALU-type instructions: *)
-    (* TODO *)
+  (* dont forget special type ALUs *)
+    (* Ariths: *)
+  Definition instr_ADDI  := Int64.repr  8.
+  Definition instr_ADDIU := Int64.repr  9.
+  Definition instr_DADDI := Int64.repr 24.
+  Definition instr_DADDIU:= Int64.repr 25.
+  Definition instr_SLTI  := Int64.repr 10.
+  Definition instr_SLTIU := Int64.repr 11.
+  Definition op_arithmetic :=
+    BField OpCode instr_ADDI `orpred` 
+    BField OpCode instr_ADDIU `orpred` 
+    BField OpCode instr_DADDI `orpred` 
+    BField OpCode instr_DADDIU `orpred` 
+    BField OpCode instr_SLTI `orpred` 
+    BField OpCode instr_SLTIU.
+    (* Logical: *)
+  Definition instr_ANDI := Int64.repr 12.
+  Definition instr_LUI  := Int64.repr 15.
+  Definition instr_ORI  := Int64.repr 13.
+  Definition instr_XORI := Int64.repr 14.
+  Definition op_logical :=
+    BField OpCode instr_ANDI `orpred`
+    BField OpCode instr_LUI `orpred`
+    BField OpCode instr_ORI `orpred`
+    BField OpCode instr_XORI.
 End opcodes.
 
 Section test_secjmp.
@@ -350,6 +422,7 @@ Section test_secjmp.
   Eval vm_compute in compile i o sec_jmp.
 End test_secjmp.
 
+(* FIXME: WILL NOT WORK: PChoice assumes exclusivity*)
 Section sec_ctrlflow. (*SCF*)
   (* assumes that the branch addr. is pre-calculated in the top 32b *)
   Variables i o : id TVec64.
@@ -388,7 +461,7 @@ Section sec_ctrlflow. (*SCF*)
   Local Open Scope hdl_stmt_scope.
   Local Open Scope hdl_exp_scope.
   
-  Eval vm_compute in compile i o sec_jmp.
+  Eval vm_compute in compile i o scf.
 End sec_ctrlflow.
 
 Section SFI.
