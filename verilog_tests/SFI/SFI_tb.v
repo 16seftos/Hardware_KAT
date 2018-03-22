@@ -44,7 +44,7 @@ module SFI_tb;
     // Initialize Inputs
     ri = 0;
     exp_ro = 0;
-	 all_pass = 1;
+    all_pass = 1;
 
     // Wait 10 ns for global reset to finish
     #10;
@@ -52,7 +52,7 @@ module SFI_tb;
     // Add stimulus here
     $monitor("\nTesting");#1;
     $monitor("\nTestintg non-store instructions:");
-	   //these are from other programs I wrote, or random inputs
+      //these are from other programs I wrote, or random inputs
       ri     <= 64'hBAD0ADD012345678;
       exp_ro <= 64'hBAD0ADD012345678;
       #1;
@@ -60,43 +60,43 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		ri     <= 64'h0021302000432820;
+      ri     <= 64'h0021302000432820;
       exp_ro <= 64'h0021302000432820;
-		// Should this pass the last 32b?
+      // Should this pass the last 32b?
       #1;
       if(exp_ro == ro) begin
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		ri     <= 64'h2021000100031020;
+      ri     <= 64'h2021000100031020;
       exp_ro <= 64'h2021000100031020;
-		// Should this pass the last 32b?
+      // Should this pass the last 32b?
       #1;
       if(exp_ro == ro) begin
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		ri     <= 64'h0123456789ABCDEF;
+      ri     <= 64'h0123456789ABCDEF;
       exp_ro <= 64'h0123456789ABCDEF;
-		// Should this pass the last 32b?
+      // Should this pass the last 32b?
       #1;
       if(exp_ro == ro) begin
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
     #10;
     
-	 //GOOD TESTS
+    //GOOD TESTS
     $monitor("\nTestintg good eff addrs:");
-	   //SB
+      //SB
       ri     <= 64'hFAFA0000A0111111;
       exp_ro <= 64'hA2FA0000A0111111;
       #1;
@@ -104,9 +104,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SC
+      //SC
       ri     <= 64'hFACA0001E0111111;
       exp_ro <= 64'hA2CA0001E0111111;
       #1;
@@ -114,9 +114,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SCD
+      //SCD
       ri     <= 64'h01000002F0111111;
       exp_ro <= 64'hA2000002F0111111;
       #1;
@@ -124,9 +124,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SD
+      //SD
       ri     <= 64'h2A321403FC111111;
       exp_ro <= 64'hA2321403FC111111;
       #1;
@@ -134,9 +134,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SDL
+      //SDL
       ri     <= 64'hA1222004B8111111;
       exp_ro <= 64'hA2222004B8111111;
       #1;
@@ -144,9 +144,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SDR
+      //SDR
       ri     <= 64'hB1000005B4111111;
       exp_ro <= 64'hA2000005B4111111;
       #1;
@@ -154,9 +154,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SH
+      //SH
       ri     <= 64'hF2CAFE06A4111111;
       exp_ro <= 64'hA2CAFE06A4111111;
       #1;
@@ -164,9 +164,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SW
+      //SW
       ri     <= 64'hFFCAD007AC111111;
       exp_ro <= 64'hA2CAD007AC111111;
       #1;
@@ -174,9 +174,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SWL
+      //SWL
       ri     <= 64'h00000008A8111111;
       exp_ro <= 64'hA2000008A8111111;
       #1;
@@ -184,9 +184,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SWR
+      //SWR
       ri     <= 64'h44FACE09B8111111;
       exp_ro <= 64'hA2FACE09B8111111;
       #1;
@@ -194,14 +194,14 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
     #10;
-	 
-	 
-	 
-	 //Bad Tests:
-	 $monitor("\nTestintg bad eff addrs:");
+    
+    
+    
+    //Bad Tests:
+    $monitor("\nTestintg bad eff addrs:");
       //SB
       ri     <= 64'hA2000000A0111111;
       exp_ro <= 64'hA2000000A0111111;
@@ -210,9 +210,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SC
+      //SC
       ri     <= 64'hA20A0001E0111111;
       exp_ro <= 64'hA20A0001E0111111;
       #1;
@@ -220,9 +220,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SCD
+      //SCD
       ri     <= 64'hA2000002F0111111;
       exp_ro <= 64'hA2000002F0111111;
       #1;
@@ -230,9 +230,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SD
+      //SD
       ri     <= 64'hA2321403FC111111;
       exp_ro <= 64'hA2321403FC111111;
       #1;
@@ -240,9 +240,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SDL
+      //SDL
       ri     <= 64'hA2222004B8111111;
       exp_ro <= 64'hA2222004B8111111;
       #1;
@@ -250,9 +250,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SDR
+      //SDR
       ri     <= 64'hA2000005B4111111;
       exp_ro <= 64'hA2000005B4111111;
       #1;
@@ -260,9 +260,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SH
+      //SH
       ri     <= 64'hA2CAFE06A4111111;
       exp_ro <= 64'hA2CAFE06A4111111;
       #1;
@@ -270,9 +270,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SW
+      //SW
       ri     <= 64'hA2CAD007AC111111;
       exp_ro <= 64'hA2CAD007AC111111;
       #1;
@@ -280,9 +280,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SWL
+      //SWL
       ri     <= 64'hA2000008A8111111;
       exp_ro <= 64'hA2000008A8111111;
       #1;
@@ -290,9 +290,9 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
-		//SWR
+      //SWR
       ri     <= 64'hA2FACE09B8111111;
       exp_ro <= 64'hA2FACE09B8111111;
       #1;
@@ -300,19 +300,19 @@ module SFI_tb;
         $monitor("\tPassed");
       end else begin
         $monitor("\tFailed");
-	     all_pass = 0;
+        all_pass = 0;
       end
     #10;
     #10;
     
-	 
-	 //FINISHED TESTING
+    
+    //FINISHED TESTING
     $monitor("\nDone testing, exiting\n");#1;
-	 if(all_pass == 1) begin
-	   $monitor("All Pass");#1;
-	 end else begin
-		$monitor("Not all pass");#1;
-	 end
+    if(all_pass == 1) begin
+      $monitor("All Pass");#1;
+    end else begin
+      $monitor("Not all pass");#1;
+    end
     $finish();
       
   end
