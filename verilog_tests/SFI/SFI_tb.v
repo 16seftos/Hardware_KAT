@@ -198,8 +198,6 @@ module SFI_tb;
       end
     #10;
     
-    
-    
     //Bad Tests:
     $monitor("\nTestintg bad eff addrs:");
       //SB

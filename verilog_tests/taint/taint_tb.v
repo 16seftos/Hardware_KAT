@@ -24,23 +24,23 @@
 
 module taint_tb;
 
-   // Inputs
-   reg [63:0] i;
+  // Inputs
+  reg [63:0] i;
 
-   // Outputs
-   wire [63:0] o;
+  // Outputs
+  wire [63:0] o;
    
-   //Experemental values
-   reg [63:0] exp_o;
-   reg all_pass;
+  //Experemental values
+  reg [63:0] exp_o;
+  reg all_pass;
 
-   // Instantiate the Unit Under Test (UUT)
-   taint uut (
-      .i(i), 
-      .o(o)
-   );
+  // Instantiate the Unit Under Test (UUT)
+  taint uut (
+    .i(i), 
+    .o(o)
+  );
 
-   initial begin
+  initial begin
     // Initialize Inputs
     i = 0;
     exp_o = 0;
@@ -95,6 +95,7 @@ module taint_tb;
       #1;
     #10;
     
+    //Left taint
     $monitor("\nTestintg left taint:");
       //these are from other programs I wrote, or random inputs
       i     <= 64'hE000000070000000;
@@ -139,7 +140,7 @@ module taint_tb;
       #1;
     #10;
     
-    
+    //Right taint
     $monitor("\nTestintg right taint:");
       //these are from other programs I wrote, or random inputs
       i     <= 64'h70000000FACE0000;
@@ -184,7 +185,7 @@ module taint_tb;
       #1;
     #10;
     
-    
+    //Both taint
     $monitor("\nTestintg both taint:");
       //these are from other programs I wrote, or random inputs
       i     <= 64'hF0000000FACE0000;
@@ -229,14 +230,14 @@ module taint_tb;
       #1;
     #10;
    
-   //FINISHED TESTING
+  //FINISHED TESTING
     $monitor("\nDone testing, exiting\n");#1;
-   if(all_pass == 1) begin
-     $monitor("All Pass");#1;
-   end else begin
+  if(all_pass == 1) begin
+    $monitor("All Pass");#1;
+  end else begin
     $monitor("Not all pass");#1;
-   end
-    $finish();
+  end
+  $finish();
       
   end
       
