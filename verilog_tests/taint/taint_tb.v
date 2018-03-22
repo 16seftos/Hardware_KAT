@@ -24,23 +24,23 @@
 
 module taint_tb;
 
-	// Inputs
-	reg [63:0] i;
+   // Inputs
+   reg [63:0] i;
 
-	// Outputs
-	wire [63:0] o;
-	
-	//Experemental values
-	reg [63:0] exp_o;
-	reg all_pass;
+   // Outputs
+   wire [63:0] o;
+   
+   //Experemental values
+   reg [63:0] exp_o;
+   reg all_pass;
 
-	// Instantiate the Unit Under Test (UUT)
-	taint uut (
-		.i(i), 
-		.o(o)
-	);
+   // Instantiate the Unit Under Test (UUT)
+   taint uut (
+      .i(i), 
+      .o(o)
+   );
 
-	initial begin
+   initial begin
     // Initialize Inputs
     i = 0;
     exp_o = 0;
@@ -62,7 +62,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'h70042331700FACE0;
       exp_o <= 64'h70042331700FACE0;
       #1;
@@ -72,7 +72,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'h700000000CAEF120;
       exp_o <= 64'h700000000CAEF120;
       #1;
@@ -82,7 +82,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'h0000000000000000;
       exp_o <= 64'h0000000000000000;
       #1;
@@ -92,10 +92,10 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
     #10;
-	 
-	 $monitor("\nTestintg left taint:");
+    
+    $monitor("\nTestintg left taint:");
       //these are from other programs I wrote, or random inputs
       i     <= 64'hE000000070000000;
       exp_o <= 64'hE0000000F0000000;
@@ -106,7 +106,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'h80042331700FACE0;
       exp_o <= 64'h80042331F00FACE0;
       #1;
@@ -116,7 +116,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'hF00000000CAEF120;
       exp_o <= 64'hF00000008CAEF120;
       #1;
@@ -126,7 +126,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'h8000000000000000;
       exp_o <= 64'h8000000080000000;
       #1;
@@ -136,10 +136,10 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
     #10;
-	 
-	 
+    
+    
     $monitor("\nTestintg right taint:");
       //these are from other programs I wrote, or random inputs
       i     <= 64'h70000000FACE0000;
@@ -151,7 +151,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'h70042331F00FACE0;
       exp_o <= 64'hF0042331F00FACE0;
       #1;
@@ -161,7 +161,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'h700000008CAEF120;
       exp_o <= 64'hF00000008CAEF120;
       #1;
@@ -171,7 +171,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'h0000000080000000;
       exp_o <= 64'h8000000080000000;
       #1;
@@ -181,10 +181,10 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
     #10;
-	 
-	 
+    
+    
     $monitor("\nTestintg both taint:");
       //these are from other programs I wrote, or random inputs
       i     <= 64'hF0000000FACE0000;
@@ -196,7 +196,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'hF0042331F00FACE0;
       exp_o <= 64'hF0042331F00FACE0;
       #1;
@@ -206,7 +206,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'hF00000008CAEF120;
       exp_o <= 64'hF00000008CAEF120;
       #1;
@@ -216,7 +216,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
       i     <= 64'h8000000080000000;
       exp_o <= 64'h8000000080000000;
       #1;
@@ -226,7 +226,7 @@ module taint_tb;
         $monitor("\tFailed");
        all_pass = 0;
       end
-		#1;
+      #1;
     #10;
    
    //FINISHED TESTING
