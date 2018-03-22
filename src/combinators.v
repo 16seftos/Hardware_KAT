@@ -350,7 +350,8 @@ Section opcodes.
     (* Does branch addr. get calculated before exe? *)
   Definition op_j := 
     BField OpCode instr_J `orpred`
-    BField OpCode instr_JAL.
+           BField OpCode instr_JAL.
+  Definition op_branch_or_j := op_branch `orpred` op_j.
 
   (* Store-type instructions: *)
   Definition instr_SB  := Int64.repr 40.
@@ -422,39 +423,22 @@ Section test_secjmp.
   Eval vm_compute in compile i o sec_jmp.
 End test_secjmp.
 
-(* FIXME: WILL NOT WORK: PChoice assumes exclusivity*)
+Notation "'`IF`' e '`THEN`' p1 '`ELSE`' p2" :=
+  (PChoice (PTest e p1) (PTest (BNeg e) p2)) (at level 101).
+
 Section sec_ctrlflow. (*SCF*)
   (* assumes that the branch addr. is pre-calculated in the top 32b *)
   Variables i o : id TVec64.
 
   Definition sec_addr_j := BField JField (Int64.repr 0). (*FIXME*)
-  Definition sec_addr32 := BField EffAddr (Int64.repr 0).
-  
+  Definition sec_addr32 := BField EffAddr (Int64.repr 0). (*FIXME*)
+
   Definition scf : pol :=
-    PChoice
-      (PChoice
-        (PChoice
-          (PTest op_j (PTest (BNeg sec_addr_j) PId)) (* normal jumps *)
-          (PTest op_branch (PTest (BNeg sec_addr32) PId)) (* normal branches *)
-        )
-        (PChoice 
-            (PTest op_special (PTest op_special_j      (PTest (BNeg sec_addr32) PId))) (* special jumps *)
-            (PTest op_reg_imm (PTest op_reg_imm_branch (PTest (BNeg sec_addr32) PId))) (* special regims *)
-        )
-      )
-      (* FIXME: This requires prod I think? or else clause.  Ignoring it would also work?
-      (PChoice 
-        (PChoice
-          (PTest      (BNeg op_j) PId)
-          (PTest (BNeg op_branch) PId)
-        )
-        (PChoice
-          (PTest op_special      (PTest (BNeg op_special_j) PId))
-          (PTest op_reg_imm (PTest (BNeg op_reg_imm_branch) PId))
-        ) 
-      )
-      *)
-      PId.
+    `IF` op_branch `THEN` PTest (BNeg sec_addr32) PId
+    `ELSE` (`IF` op_j `THEN` PTest (BNeg sec_addr_j) PId
+    `ELSE` (`IF` op_special `THEN` PTest op_special_j (PTest (BNeg sec_addr32) PId) 
+    `ELSE` (`IF` op_reg_imm `THEN` PTest op_reg_imm_branch (PTest (BNeg sec_addr32) PId)
+    `ELSE` PId))).
 
   Require Import syntax.
 
