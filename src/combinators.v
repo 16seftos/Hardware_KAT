@@ -493,11 +493,11 @@ Module Taint. Section taint.
    *)
 
   Definition tainted : pred := 
-    BPred OOr (BField (TaintBit (Int64.repr 64)) Int64.one)
-              (BField (TaintBit (Int64.repr 32)) Int64.one).
+    BPred OOr (BField (TaintBit (Int64.repr 63)) Int64.one)
+              (BField (TaintBit (Int64.repr 31)) Int64.one).
 
-  Definition taint_mask := Int64.repr 9223372035781033983. (*0 1^31 0 1^31*)
-  Definition taint_bits := Int64.repr 9223372037928517632. (*1 0^31 1 0^31*)
+  Definition taint_mask := Int64.repr 9223372034707292159. (*0 1^31 0 1^31*)
+  Definition taint_bits := Int64.repr 9223372039002259456. (*1 0^31 1 0^31*)
 
   Definition mask e := EBinop OAnd (EVal taint_mask) e.
   Definition apply_taint e := EBinop OOr (EVal taint_bits) e.
