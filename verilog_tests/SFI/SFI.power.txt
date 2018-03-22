@@ -1,0 +1,57 @@
+Loading db file '/apps/synopsys/VCS/work/libs/tcbn40lpbwpbc.db'
+Information: Updating design information... (UID-85)
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : SFI
+Version: I-2013.12-SP2
+Date   : Thu Mar 22 19:04:39 2018
+****************************************
+
+
+Library(s) Used:
+
+    tcbn40lpbwpbc (File: /apps/synopsys/VCS/work/libs/tcbn40lpbwpbc.db)
+
+
+Operating Conditions: BCCOM   Library: tcbn40lpbwpbc
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+SFI                    ZeroWireload      tcbn40lpbwpbc
+
+
+Global Operating Voltage = 1.21 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+  Cell Internal Power  =  26.1498 nW   (83%)
+  Net Switching Power  =   5.3868 nW   (17%)
+                         ---------
+Total Dynamic Power    =  31.5366 nW  (100%)
+
+Cell Leakage Power     =   8.3955 nW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
+register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational  2.6150e-05        5.3868e-06            8.3955        3.9932e-05  ( 100.00%)
+--------------------------------------------------------------------------------------------------
+Total          2.6150e-05 mW     5.3868e-06 mW         8.3955 nW     3.9932e-05 mW
+1

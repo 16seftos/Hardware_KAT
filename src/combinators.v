@@ -343,7 +343,6 @@ Section opcodes.
   Definition instr_JAL := Int64.repr 3.
   Definition op_branch :=
     BField OpCode instr_BEQ `orpred`
-    BField OpCode instr_BEQ `orpred`
     BField OpCode instr_BGTZ `orpred`
     BField OpCode instr_BLEZ `orpred`
     BField OpCode instr_BNE. (* does not support special and regimm *)

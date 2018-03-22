@@ -1,0 +1,38 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : SFI
+Version: I-2013.12-SP2
+Date   : Thu Mar 22 19:04:51 2018
+****************************************
+
+Operating Conditions: BCCOM   Library: tcbn40lpbwpbc
+Wire Load Model Mode: segmented
+
+  Startpoint: ri[28] (input port)
+  Endpoint: ro[62] (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SFI                ZeroWireload          tcbn40lpbwpbc
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  input external delay                     0.00       0.00 f
+  ri[28] (in)                              0.00       0.00 f
+  U16/ZN (ND3D1BWP)                        0.01       0.01 r
+  U11/Z (XOR2D1BWP)                        0.05       0.06 f
+  U14/ZN (OAI211D1BWP)                     0.06       0.12 r
+  U3/Z (AN2XD1BWP)                         0.04       0.16 r
+  ro[62] (out)                             0.00       0.16 r
+  data arrival time                                   0.16
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

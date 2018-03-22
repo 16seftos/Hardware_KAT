@@ -1,0 +1,37 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : taint
+Version: I-2013.12-SP2
+Date   : Thu Mar 22 19:05:46 2018
+****************************************
+
+Operating Conditions: BCCOM   Library: tcbn40lpbwpbc
+Wire Load Model Mode: segmented
+
+  Startpoint: i[63] (input port)
+  Endpoint: o[63] (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  taint              ZeroWireload          tcbn40lpbwpbc
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  input external delay                     0.00       0.00 r
+  i[63] (in)                               0.00       0.00 r
+  C345/Z (GTECH_OR2)                       0.00       0.00 r
+  B_3/Z (GTECH_BUF)                        0.00       0.00 r
+  C352/Z (GTECH_OR2)                       0.00       0.00 r
+  o[63] (out)                              0.00       0.00 r
+  data arrival time                                   0.00
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

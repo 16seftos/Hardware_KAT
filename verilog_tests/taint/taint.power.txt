@@ -1,0 +1,56 @@
+Information: Updating design information... (UID-85)
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : taint
+Version: I-2013.12-SP2
+Date   : Thu Mar 22 19:05:31 2018
+****************************************
+
+
+Library(s) Used:
+
+    gtech (File: /apps/synopsys/Synopsys-2013/libraries/syn/gtech.db)
+
+
+Operating Conditions: BCCOM   Library: tcbn40lpbwpbc
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+taint                  ZeroWireload      tcbn40lpbwpbc
+
+
+Global Operating Voltage = 1.21 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+  Cell Internal Power  =   0.0000 mW        
+  Net Switching Power  =   0.0000 mW        
+                         ---------
+Total Dynamic Power    =   0.0000 mW        
+
+Cell Leakage Power     =   0.0000 nW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (     N/A)
+memory             0.0000            0.0000            0.0000            0.0000  (     N/A)
+black_box          0.0000            0.0000            0.0000            0.0000  (     N/A)
+clock_network      0.0000            0.0000            0.0000            0.0000  (     N/A)
+register           0.0000            0.0000            0.0000            0.0000  (     N/A)
+sequential         0.0000            0.0000            0.0000            0.0000  (     N/A)
+combinational      0.0000            0.0000            0.0000            0.0000  (     N/A)
+--------------------------------------------------------------------------------------------------
+Total              0.0000 mW         0.0000 mW         0.0000 nW         0.0000 mW
+1

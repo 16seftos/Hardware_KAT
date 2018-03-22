@@ -1,0 +1,45 @@
+ 
+****************************************
+Report : area
+Design : taint
+Version: I-2013.12-SP2
+Date   : Thu Mar 22 19:05:38 2018
+****************************************
+
+Library(s) Used:
+
+    gtech (File: /apps/synopsys/Synopsys-2013/libraries/syn/gtech.db)
+
+Number of ports:                          130
+Number of nets:                           263
+Number of cells:                           74
+Number of combinational cells:             72
+Number of sequential cells:                 2
+Number of macros/black boxes:               0
+Number of buf/inv:                          6
+Number of references:                       5
+
+Combinational area:                  0.000000
+Buf/Inv area:                        0.000000
+Noncombinational area:               0.000000
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                     0.000000
+Total area:                 undefined
+
+Information: This design contains unmapped logic. (RPT-7)
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area          Local cell area
+                                  ------------------  --------------------------- 
+Hierarchical cell                 Absolute   Percent  Combi-    Noncombi-  Black-
+                                  Total      Total    national  national   boxes   Design
+--------------------------------  ---------  -------  --------  ---------  ------  ---------
+taint                                0.0000      0.0    0.0000     0.0000  0.0000  taint
+--------------------------------  ---------  -------  --------  ---------  ------  ---------
+Total                                                   0.0000     0.0000  0.0000
+
+1
