@@ -1,0 +1,53 @@
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : secjmp
+Version: I-2013.12-SP2
+Date   : Fri Mar 23 14:54:31 2018
+****************************************
+
+
+Library(s) Used:
+
+    tcbn40lpbwpbc (File: /apps/synopsys/VCS/work/libs/tcbn40lpbwpbc.db)
+
+
+Operating Conditions: BCCOM   Library: tcbn40lpbwpbc
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+secjmp                 ZeroWireload      tcbn40lpbwpbc
+
+
+Global Operating Voltage = 1.21 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+  Cell Internal Power  =   4.5851 uW   (95%)
+  Net Switching Power  = 244.2701 nW    (5%)
+                         ---------
+Total Dynamic Power    =   4.8294 uW  (100%)
+
+Cell Leakage Power     =  30.8538 nW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
+register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational  4.5851e-03        2.4427e-04           30.8538        4.8603e-03  ( 100.00%)
+--------------------------------------------------------------------------------------------------
+Total          4.5851e-03 mW     2.4427e-04 mW        30.8538 nW     4.8603e-03 mW
+1
