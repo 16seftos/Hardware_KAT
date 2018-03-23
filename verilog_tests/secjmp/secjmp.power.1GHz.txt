@@ -1,10 +1,14 @@
+Loading db file '/apps/synopsys/VCS/work/libs/tcbn40lpbwpbc.db'
+Information: Updating design information... (UID-85)
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
  
 ****************************************
 Report : power
         -analysis_effort low
 Design : secjmp
 Version: I-2013.12-SP2
-Date   : Fri Mar 23 14:54:31 2018
+Date   : Fri Mar 23 16:25:24 2018
 ****************************************
 
 
@@ -30,12 +34,12 @@ Power-specific unit information :
     Leakage Power Units = 1nW
 
 
-  Cell Internal Power  =   4.5851 uW   (95%)
-  Net Switching Power  = 244.2701 nW    (5%)
+  Cell Internal Power  =   4.4745 uW   (95%)
+  Net Switching Power  = 214.6610 nW    (5%)
                          ---------
-Total Dynamic Power    =   4.8294 uW  (100%)
+Total Dynamic Power    =   4.6892 uW  (100%)
 
-Cell Leakage Power     =  30.8538 nW
+Cell Leakage Power     =  30.7011 nW
 
 
                  Internal         Switching           Leakage            Total
@@ -47,7 +51,7 @@ black_box          0.0000            0.0000            0.0000            0.0000 
 clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
 register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
 sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
-combinational  4.5851e-03        2.4427e-04           30.8538        4.8603e-03  ( 100.00%)
+combinational  4.4745e-03        2.1466e-04           30.7011        4.7199e-03  ( 100.00%)
 --------------------------------------------------------------------------------------------------
-Total          4.5851e-03 mW     2.4427e-04 mW        30.8538 nW     4.8603e-03 mW
+Total          4.4745e-03 mW     2.1466e-04 mW        30.7011 nW     4.7199e-03 mW
 1

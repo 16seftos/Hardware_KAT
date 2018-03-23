@@ -3,7 +3,7 @@
 Report : area
 Design : secjmp
 Version: I-2013.12-SP2
-Date   : Thu Mar 22 19:03:10 2018
+Date   : Fri Mar 23 16:26:26 2018
 ****************************************
 
 Library(s) Used:
@@ -19,13 +19,13 @@ Number of macros/black boxes:               0
 Number of buf/inv:                          4
 Number of references:                       7
 
-Combinational area:                 52.038002
+Combinational area:                 51.156001
 Buf/Inv area:                        2.646000
 Noncombinational area:               0.000000
 Macro/Black Box area:                0.000000
 Net Interconnect area:      undefined  (Wire load has zero net area)
 
-Total cell area:                    52.038002
+Total cell area:                    51.156001
 Total area:                 undefined
 
 Hierarchical area distribution
@@ -36,8 +36,8 @@ Hierarchical area distribution
 Hierarchical cell                 Absolute   Percent  Combi-    Noncombi-  Black-
                                   Total      Total    national  national   boxes   Design
 --------------------------------  ---------  -------  --------  ---------  ------  ---------
-secjmp                              52.0380    100.0   52.0380     0.0000  0.0000  secjmp
+secjmp                              51.1560    100.0   51.1560     0.0000  0.0000  secjmp
 --------------------------------  ---------  -------  --------  ---------  ------  ---------
-Total                                                  52.0380     0.0000  0.0000
+Total                                                  51.1560     0.0000  0.0000
 
 1

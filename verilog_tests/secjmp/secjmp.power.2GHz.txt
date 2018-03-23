@@ -1,10 +1,13 @@
+Information: Updating design information... (UID-85)
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
  
 ****************************************
 Report : power
         -analysis_effort low
 Design : secjmp
 Version: I-2013.12-SP2
-Date   : Fri Mar 23 14:32:55 2018
+Date   : Fri Mar 23 16:26:24 2018
 ****************************************
 
 
@@ -30,12 +33,12 @@ Power-specific unit information :
     Leakage Power Units = 1nW
 
 
-  Cell Internal Power  =   9.1703 uW   (95%)
-  Net Switching Power  = 488.5402 nW    (5%)
+  Cell Internal Power  =   8.4636 uW   (95%)
+  Net Switching Power  = 411.8931 nW    (5%)
                          ---------
-Total Dynamic Power    =   9.6588 uW  (100%)
+Total Dynamic Power    =   8.8755 uW  (100%)
 
-Cell Leakage Power     =  30.8538 nW
+Cell Leakage Power     =  29.9517 nW
 
 
                  Internal         Switching           Leakage            Total
@@ -47,7 +50,7 @@ black_box          0.0000            0.0000            0.0000            0.0000 
 clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
 register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
 sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
-combinational  9.1703e-03        4.8854e-04           30.8538        9.6897e-03  ( 100.00%)
+combinational  8.4636e-03        4.1189e-04           29.9517        8.9054e-03  ( 100.00%)
 --------------------------------------------------------------------------------------------------
-Total          9.1703e-03 mW     4.8854e-04 mW        30.8538 nW     9.6897e-03 mW
+Total          8.4636e-03 mW     4.1189e-04 mW        29.9517 nW     8.9054e-03 mW
 1
