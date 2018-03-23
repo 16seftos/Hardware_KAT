@@ -1,0 +1,11 @@
+ALL ALU integer INSTRUCTIONS:
+Instructions that have 2 src registers, e.g.:
+
+ADD
+DADD
+(not DADDI or any immediates, but that's not as important)
+MULT
+DMULT
+
+
+
