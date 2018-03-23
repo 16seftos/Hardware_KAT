@@ -432,11 +432,15 @@ Section sec_ctrlflow. (*SCF*)
   Definition sec_addr_j := BField JField (Int64.repr 0). (*FIXME*)
   Definition sec_addr32 := BField EffAddr (Int64.repr 0). (*FIXME*)
 
+  Infix "`andpred`" := (BPred OAnd) (at level 60).
+  Definition op_special_and_op_special_j      := op_special `andpred` op_special_j.
+  Definition op_reg_imm_and_op_reg_imm_branch := op_reg_imm `andpred` op_reg_imm_branch.
+
   Definition scf : pol :=
     `IF` op_branch `THEN` PTest (BNeg sec_addr32) PId
     `ELSE` (`IF` op_j `THEN` PTest (BNeg sec_addr_j) PId
-    `ELSE` (`IF` op_special `THEN` PTest op_special_j (PTest (BNeg sec_addr32) PId) 
-    `ELSE` (`IF` op_reg_imm `THEN` PTest op_reg_imm_branch (PTest (BNeg sec_addr32) PId)
+    `ELSE` (`IF` op_special_and_op_special_j      `THEN` PTest (BNeg sec_addr32) PId 
+    `ELSE` (`IF` op_reg_imm_and_op_reg_imm_branch `THEN` PTest (BNeg sec_addr32) PId
     `ELSE` PId))).
 
   Require Import syntax.
@@ -505,6 +509,7 @@ Definition ro : id TVec64 := "ro".
 Definition sec_jmp_compiled : prog := compile i o sec_jmp.
 Definition SFI_compiled : prog := compile ri ro sfi.
 Definition taint_compiled : prog := compile i o Taint.taint.
+Definition scf_compiled : prog := compile i o scf.
 
 Definition pretty_print_sec_jmp :=
   pretty_print_tb "secjmp" sec_jmp_compiled.
@@ -512,6 +517,8 @@ Definition pretty_print_SFI :=
   pretty_print_tb "SFI" SFI_compiled.
 Definition pretty_print_taint := 
   pretty_print_tb "taint" taint_compiled.
+Definition pretty_print_SCF := 
+  pretty_print_tb "SCF" scf_compiled.
 
 Eval vm_compute in pretty_print_sec_jmp.
 Eval vm_compute in pretty_print_SFI.
@@ -524,5 +531,6 @@ Extract Constant main => "Prelude.putStrLn pretty_print_SFI".
 Extraction "secjmp.hs" pretty_print_sec_jmp.
 Extraction "SFI.hs" pretty_print_SFI.
 Extraction "taint.hs" pretty_print_taint.
+Extraction "SCF.hs" pretty_print_SCF.
 
 
