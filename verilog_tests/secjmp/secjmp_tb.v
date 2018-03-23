@@ -80,6 +80,28 @@ module secjmp_tb;
         $monitor("\tFailed");
       end
     #10;
+	 
+	 $monitor("\nTesting secure jump and link (should noop)");
+      i     <= 32'h0C000000;
+      exp_o <= 32'h00000000;
+      #1;
+      if(exp_o == o) begin
+        $monitor("\tPassed");
+      end else begin
+        $monitor("\tFailed");
+      end
+    #10;
+    
+    $monitor("\nTestintg insecure jump and link (should pass through)");
+      i     <= 32'h0C00FACE;
+      exp_o <= 32'h0C00FACE;
+      #1;
+      if(exp_o == o) begin
+        $monitor("\tPassed");
+      end else begin
+        $monitor("\tFailed");
+      end
+    #10;
     
     $monitor("\nDone testing, exiting\n");#1;
     $finish();
