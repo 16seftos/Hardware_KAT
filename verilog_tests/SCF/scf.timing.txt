@@ -1,0 +1,44 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : scf
+Version: I-2013.12-SP2
+Date   : Fri Mar 23 18:07:51 2018
+****************************************
+
+Operating Conditions: BCCOM   Library: tcbn40lpbwpbc
+Wire Load Model Mode: segmented
+
+  Startpoint: i[51] (input port)
+  Endpoint: o[55] (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  scf                ZeroWireload          tcbn40lpbwpbc
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  input external delay                     0.00       0.00 f
+  i[51] (in)                               0.00       0.00 f
+  U244/ZN (INVD1BWP)                       0.01       0.01 r
+  U159/ZN (ND4D1BWP)                       0.03       0.04 f
+  U165/ZN (NR4D0BWP)                       0.05       0.09 r
+  U163/ZN (ND2D1BWP)                       0.02       0.11 f
+  U231/ZN (IND2D1BWP)                      0.03       0.14 f
+  U153/ZN (AOI22D1BWP)                     0.02       0.16 r
+  U151/ZN (MAOI22D0BWP)                    0.06       0.22 r
+  U149/Z (CKBD1BWP)                        0.03       0.25 r
+  U145/Z (CKBD1BWP)                        0.05       0.30 r
+  U187/ZN (NR2XD0BWP)                      0.01       0.32 f
+  o[55] (out)                              0.00       0.32 f
+  data arrival time                                   0.32
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+1
