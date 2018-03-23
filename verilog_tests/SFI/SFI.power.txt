@@ -8,7 +8,7 @@ Report : power
         -analysis_effort low
 Design : SFI
 Version: I-2013.12-SP2
-Date   : Thu Mar 22 19:04:39 2018
+Date   : Fri Mar 23 14:34:16 2018
 ****************************************
 
 
@@ -34,10 +34,10 @@ Power-specific unit information :
     Leakage Power Units = 1nW
 
 
-  Cell Internal Power  =  26.1498 nW   (83%)
-  Net Switching Power  =   5.3868 nW   (17%)
+  Cell Internal Power  =   5.2300 uW   (83%)
+  Net Switching Power  =   1.0774 uW   (17%)
                          ---------
-Total Dynamic Power    =  31.5366 nW  (100%)
+Total Dynamic Power    =   6.3073 uW  (100%)
 
 Cell Leakage Power     =   8.3955 nW
 
@@ -51,7 +51,7 @@ black_box          0.0000            0.0000            0.0000            0.0000 
 clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
 register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
 sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
-combinational  2.6150e-05        5.3868e-06            8.3955        3.9932e-05  ( 100.00%)
+combinational  5.2300e-03        1.0774e-03            8.3955        6.3157e-03  ( 100.00%)
 --------------------------------------------------------------------------------------------------
-Total          2.6150e-05 mW     5.3868e-06 mW         8.3955 nW     3.9932e-05 mW
+Total          5.2300e-03 mW     1.0774e-03 mW         8.3955 nW     6.3157e-03 mW
 1

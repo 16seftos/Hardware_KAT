@@ -1,3 +1,4 @@
+Loading db file '/apps/synopsys/VCS/work/libs/tcbn40lpbwpbc.db'
 Information: Updating design information... (UID-85)
 Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
 Warning: Design has unannotated primary inputs. (PWR-414)
@@ -7,13 +8,13 @@ Report : power
         -analysis_effort low
 Design : taint
 Version: I-2013.12-SP2
-Date   : Thu Mar 22 19:05:31 2018
+Date   : Fri Mar 23 14:34:52 2018
 ****************************************
 
 
 Library(s) Used:
 
-    gtech (File: /apps/synopsys/Synopsys-2013/libraries/syn/gtech.db)
+    tcbn40lpbwpbc (File: /apps/synopsys/VCS/work/libs/tcbn40lpbwpbc.db)
 
 
 Operating Conditions: BCCOM   Library: tcbn40lpbwpbc
@@ -33,24 +34,24 @@ Power-specific unit information :
     Leakage Power Units = 1nW
 
 
-  Cell Internal Power  =   0.0000 mW        
-  Net Switching Power  =   0.0000 mW        
+  Cell Internal Power  = 403.2949 nW  (100%)
+  Net Switching Power  =   0.0000 mW    (0%)
                          ---------
-Total Dynamic Power    =   0.0000 mW        
+Total Dynamic Power    = 403.2949 nW  (100%)
 
-Cell Leakage Power     =   0.0000 nW
+Cell Leakage Power     = 495.3081 pW
 
 
                  Internal         Switching           Leakage            Total
 Power Group      Power            Power               Power              Power   (   %    )  Attrs
 --------------------------------------------------------------------------------------------------
-io_pad             0.0000            0.0000            0.0000            0.0000  (     N/A)
-memory             0.0000            0.0000            0.0000            0.0000  (     N/A)
-black_box          0.0000            0.0000            0.0000            0.0000  (     N/A)
-clock_network      0.0000            0.0000            0.0000            0.0000  (     N/A)
-register           0.0000            0.0000            0.0000            0.0000  (     N/A)
-sequential         0.0000            0.0000            0.0000            0.0000  (     N/A)
-combinational      0.0000            0.0000            0.0000            0.0000  (     N/A)
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
+register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational  4.0329e-04            0.0000            0.4953        4.0379e-04  ( 100.00%)
 --------------------------------------------------------------------------------------------------
-Total              0.0000 mW         0.0000 mW         0.0000 nW         0.0000 mW
+Total          4.0329e-04 mW         0.0000 mW         0.4953 nW     4.0379e-04 mW
 1
