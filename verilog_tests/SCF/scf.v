@@ -39,28 +39,22 @@ module SCF(i, o);
       end else begin
       end
       if (~((((i >> 26) & (-1 >> 58)) == 2) | (((i >> 26) & (-1 >> 58)) == 3))) begin
-        if ((((i >> 26) & (-1 >> 58)) == 0)) begin
-          if (((((i >> 0) & (-1 >> 58)) == 9) | (((i >> 0) & (-1 >> 58)) == 8))) begin
-            if (~(((i >> 32) & (-1 >> 32)) == 0)) begin
-              internal4 = i;
-            end else begin
-            end
+        if (((((i >> 26) & (-1 >> 58)) == 0) & ((((i >> 0) & (-1 >> 58)) == 9) | (((i >> 0) & (-1 >> 58)) == 8)))) begin //special
+          if (~(((i >> 32) & (-1 >> 32)) == 0)) begin
+            internal4 = i;
           end else begin
           end
         end else begin
         end
-        if (~(((i >> 26) & (-1 >> 58)) == 0)) begin
-          if ((((i >> 26) & (-1 >> 58)) == 1)) begin
-            if (((((((i >> 16) & (-1 >> 59)) == 1) | (((i >> 16) & (-1 >> 59)) == 17)) | (((i >> 16) & (-1 >> 59)) == 0)) | (((i >> 16) & (-1 >> 59)) == 16))) begin
-              if (~(((i >> 32) & (-1 >> 32)) == 0)) begin
-                internal6 = i;
-              end else begin
-              end
+        if (~((((i >> 26) & (-1 >> 58)) == 0) & ((((i >> 0) & (-1 >> 58)) == 9) | (((i >> 0) & (-1 >> 58)) == 8)))) begin
+          if (((((i >> 26) & (-1 >> 58)) == 1) & ((((((i >> 16) & (-1 >> 59)) == 1) | (((i >> 16) & (-1 >> 59)) == 17)) | (((i >> 16) & (-1 >> 59)) == 0)) | (((i >> 16) & (-1 >> 59)) == 16)))) begin //reg_imm
+            if (~(((i >> 32) & (-1 >> 32)) == 0)) begin
+              internal6 = i;
             end else begin
             end
           end else begin
           end
-          if (~(((i >> 26) & (-1 >> 58)) == 1)) begin
+          if (~((((i >> 26) & (-1 >> 58)) == 1) & ((((((i >> 16) & (-1 >> 59)) == 1) | (((i >> 16) & (-1 >> 59)) == 17)) | (((i >> 16) & (-1 >> 59)) == 0)) | (((i >> 16) & (-1 >> 59)) == 16)))) begin
             internal7 = i;
           end else begin
           end
@@ -74,6 +68,6 @@ module SCF(i, o);
     end else begin 
     end
     o = (internal0 | internal1);
-    
+
   end
 endmodule
