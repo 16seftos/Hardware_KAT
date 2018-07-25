@@ -14,11 +14,14 @@ Require Import lang.
 Inductive fld : Type := OpCode | JField | EffAddr | EffTag 
   | SpecialCode | RegImmCode
   | Reg_rsAddr | Reg_rtAddr | Reg_rdAddr | ImmediateV (* r-type instructions *)
-  | TaintBit : Int64.int -> fld.
+  | TaintBit : Int64.int -> fld
+  | OffsetFld : Int64.int -> fld -> fld.
+  (*OffsetFld i f: Increase offset of f by i bits. OffsetFld is used primarily 
+    to test the high-order bits of particular fields, like the EffAddr.*)
 
 (* SIGNATURE: i:<n/a><instr>  r:<exeout><instr> *)
 (* Instr r-t:  i{6} rs{5} rt{5} rd{5} 0* sp{6} *)
-Definition offset (f : fld) : Int64.int :=
+Fixpoint offset (f : fld) : Int64.int :=
   match f with
   | OpCode  => Int64.repr 26
   | JField  => Int64.repr  0 (* Jump field offset, of instr *)
@@ -31,9 +34,10 @@ Definition offset (f : fld) : Int64.int :=
   | Reg_rdAddr  => Int64.repr 11
   | ImmediateV  => Int64.repr  0 (* r-type instr immediate *)
   | TaintBit off => off
+  | OffsetFld i f => Int64.add i (offset f)
   end.
 
-Definition size (f : fld) : Int64.int :=
+Fixpoint size (f : fld) : Int64.int :=
   match f with
   | OpCode  => Int64.repr  6
   | JField  => Int64.repr 26 (* Jump field size, of instr *)
@@ -46,6 +50,7 @@ Definition size (f : fld) : Int64.int :=
   | Reg_rdAddr  => Int64.repr  5
   | ImmediateV  => Int64.repr 16 (* r-type instr immediate *)
   | TaintBit _ => Int64.one  (* Taint bits are always size-1 *)
+  | OffsetFld _ f => size f
   end.
 
 Inductive pred : Type := 
@@ -53,6 +58,10 @@ Inductive pred : Type :=
 | BZero : pred
 | BNeg : pred -> pred
 | BField : fld -> bvec64 -> pred.
+
+(*BFieldRange f size v: check whether the 'size' higher-order bits of 'fld' equal 'v'*) 
+Definition BFieldRange (f:fld) (i:Int64.int) (v:bvec64) : pred :=
+  BField (OffsetFld i f) v.
 
 Inductive pol : Type :=
 | PTest : pred -> pol -> pol
@@ -407,7 +416,7 @@ End opcodes.
 Section test_secjmp.
   Variables i o : id TVec64.
 
-  Definition sec_addr := BField JField (Int64.repr 0). (*FIXME*)
+  Definition sec_addr := BFieldRange JField (Int64.repr 10) (Int64.repr 0). (*high-order 10 bits zeroed*)
   
   Definition sec_jmp : pol :=
     PChoice
@@ -429,8 +438,8 @@ Section sec_ctrlflow. (*SCF*)
   (* assumes that the branch addr. is pre-calculated in the top 32b *)
   Variables i o : id TVec64.
 
-  Definition sec_addr_j := BField JField (Int64.repr 0). (*FIXME*)
-  Definition sec_addr32 := BField EffAddr (Int64.repr 0). (*FIXME*)
+  Definition sec_addr_j := BFieldRange JField (Int64.repr 10) (Int64.repr 0). 
+  Definition sec_addr32 := BFieldRange EffAddr (Int64.repr 10) (Int64.repr 0).
 
   Infix "`andpred`" := (BPred OAnd) (at level 60).
   Definition op_special_and_op_special_j      := op_special `andpred` op_special_j.
@@ -508,6 +517,19 @@ Definition ro : id TVec64 := "ro".
 
 Definition sec_jmp_compiled : prog := compile i o sec_jmp.
 Definition SFI_compiled : prog := compile ri ro sfi.
+
+Definition sec_jmp_sfi : prog := compile i o (PConcat sec_jmp sfi).
+Opaque sec_jmp.
+Opaque sfi.
+Lemma xx : sec_jmp_sfi = sec_jmp_sfi.
+Proof.
+  unfold sec_jmp_sfi.
+  simpl.
+  unfold compile.
+  unfold compile_pol.
+  fold compile_pol.
+  simpl.
+
 Definition taint_compiled : prog := compile i o Taint.taint.
 Definition scf_compiled : prog := compile i o scf.
 
