@@ -48,9 +48,17 @@ def main(binary):
           exit = (instr.split()[0][:-1], instr.split()[-1][1:])
         exits.append(exit)
 
-    # Add the node name, entrance, and list of exits to a list of all nodes
-    nodeinfo.append([name, entrance, exits])
+    # Add the node name, entrance, and a list of exits to a list of all nodes
+    nodeinfo.append([name, entrance, exits, []])
     counter += 1
+
+  # Populates list of direct successors in list at the end of each node
+  for index, info in enumerate(nodeinfo):
+    remaining = nodeinfo[index+1:]
+    for nextnode in remaining:
+      for exitpoint in info[2]:
+        if nextnode[1] in exitpoint[-1]:
+          info[-1].append(nextnode[0])
 
   build_cfi(nodeinfo)
 
@@ -85,7 +93,7 @@ Section CFI.
 
   # Builds a list of the nodes, to be stored as an integer by cfi.v
   for node in node_components:
-    node_end = node[-1][-1][0]
+    node_end = node[2][-1][0]
     node_start = node[1]
     node_end = str(int(node_end, 16))
     node_start = str(int(node_start, 16))
@@ -97,6 +105,19 @@ Section CFI.
 
   # MISSING
   # When the current instruction is a jump, determine if the jump is allowed by the CFG
+  ids = [[node_components[0][0]]]
+  for node in node_components:
+    if node[-1] and node[-1] not in ids:
+      ids.append(node[-1])
+    print(str(node[0]) + " -> " + str(node[-1]))
+
+  f.write("(* CFI DEBUG INFO\n")
+  for node in node_components:
+    f.write(str(node[-1]) + '\n')
+  f.write("IDS\n")
+  for node in ids:
+    f.write(str(node) + '\n')
+  f.write(" END CFI DEBUG INFO *)\n")
 
   f.write("End CFI.\n")
   f.close()
