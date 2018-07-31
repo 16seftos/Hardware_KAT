@@ -7,7 +7,7 @@ def main(binary):
   # Initialize arrays
   build_node = []
   nodes = []
-  nodeinfo = []
+  node_components = []
 
   # Run bap on the provided binary, and remove the first 5 lines
   lines = subprocess.getoutput("bap " + binary + " -d --print-symbol=main")
@@ -49,24 +49,33 @@ def main(binary):
         exits.append(exit)
 
     # Add the node name, entrance, and a list of exits to a list of all nodes
-    nodeinfo.append([name, entrance, exits, []])
+    node_components.append([name, entrance, exits, []])
     counter += 1
 
   # Populates list of direct successors in list at the end of each node
-  for index, info in enumerate(nodeinfo):
-    remaining = nodeinfo[index+1:]
+  for index, node in enumerate(node_components):
+    remaining = node_components[index+1:]
     for nextnode in remaining:
-      for exitpoint in info[2]:
+      for exitpoint in node[2]:
         if nextnode[1] in exitpoint[-1]:
-          info[-1].append(nextnode[0])
+          node[-1].append(nextnode[0])
 
-  build_cfi(nodeinfo)
+  # Builds list of ids for CFI
+  ids = [[node_components[0][0]]]
+  for index, node1 in enumerate(node_components):
+    if node1[-1] and node1[-1] not in ids:
+      ids.append(node1[-1])
+
+  for index, value in enumerate(ids):
+    print(index, value)
+
+  build_cfi(node_components, ids)
 
 # This function generates cfi.v based on the information from bap
-def build_cfi(node_components):
+def build_cfi(node_components, ids):
   nodes = []
 
-# This string contains all the necessary imports, and the header for the CFI section.
+  # This string contains all the necessary imports, and the header for the CFI section.
   cfi_header = """Set Implicit Arguments.
 Unset Strict Implicit.
 
@@ -105,11 +114,8 @@ Section CFI.
 
   # MISSING
   # When the current instruction is a jump, determine if the jump is allowed by the CFG
-  ids = [[node_components[0][0]]]
-  for node in node_components:
-    if node[-1] and node[-1] not in ids:
-      ids.append(node[-1])
-    print(str(node[0]) + " -> " + str(node[-1]))
+  f.write("  Definition cfi : pol :=\n")
+  f.write("    PId.\n")
 
   f.write("(* CFI DEBUG INFO\n")
   for node in node_components:
