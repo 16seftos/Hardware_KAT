@@ -89,27 +89,9 @@ def build_ids(nodes):
 def build_cfi(node_components, ids):
   nodes = []
 
-  # This string contains all the necessary imports, and the header for the CFI section.
-  cfi_header = """Set Implicit Arguments.
-Unset Strict Implicit.
-
-Require Import Arith ZArith.
-Require Import Vector. 
-Require Import String.
-Require Import JMeq.
-Require Import List. Import ListNotations.
-
-Require Import Integers.
-
-Require Import lang.
-Require Import combinators.
-
-
-Section CFI.
-  Variables i o : id TVec64.
-
-  Definition lowerbits := Int64.repr 4095.
-  Definition upperbits := Int64.repr 16773120.\n\n"""
+  # Opens a file with the necessary imports and header for the CFI section and stores it as a string.
+  with open("cfi-header.txt", "r") as f:
+    cfi_header = f.read()
 
   f = open('../src/cfi.v', 'w')
   f.write(cfi_header)
